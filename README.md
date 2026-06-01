@@ -28,40 +28,7 @@ Foundation models have transformed AI from an esoteric discipline into a powerfu
 > [!IMPORTANT]
 > This is not a tutorial. It is a **decision framework** for selecting the right models, techniques, data strategies and deployment patterns for your specific needs. It teaches you *how to think* about AI engineering, not just how to use a particular tool or API.
 
-## Book at a Glance
-
-```mermaid
-graph LR
-    subgraph Foundation["Part I. Foundation"]
-        style Foundation fill:#1a1a2e,stroke:#e94560,color:#eee
-        C1["Ch 1. Introduction"]
-        C2["Ch 2. Foundation Models"]
-    end
-
-    subgraph Evaluate["Part II. Evaluate"]
-        style Evaluate fill:#16213e,stroke:#0f3460,color:#eee
-        C3["Ch 3. Evaluation Methodology"]
-        C4["Ch 4. Evaluate AI Systems"]
-    end
-
-    subgraph Build["Part III. Adapt"]
-        style Build fill:#0f3460,stroke:#533483,color:#eee
-        C5["Ch 5. Prompt Engineering"]
-        C6["Ch 6. RAG and Agents"]
-        C7["Ch 7. Finetuning"]
-    end
-
-    subgraph Data["Part IV. Data and Ops"]
-        style Data fill:#533483,stroke:#e94560,color:#eee
-        C8["Ch 8. Dataset Engineering"]
-        C9["Ch 9. Inference Optimization"]
-        C10["Ch 10. Architecture and Feedback"]
-    end
-
-    C1 --> C2 --> C3 --> C4 --> C5 --> C6 --> C7 --> C8 --> C9 --> C10
-```
-
-## Chapter Index
+## Chapters
 
 | # | Chapter | Core Question It Answers | Figures |
 |:-:|---------|--------------------------|:-------:|
