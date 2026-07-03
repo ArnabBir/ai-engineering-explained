@@ -81,6 +81,8 @@ jobs:
       - name: Setup Pages
         if: ${{ inputs.target == 'project' }}
         uses: actions/configure-pages@v5
+        with:
+          enablement: true
 
       - name: Build site
         run: mkdocs build --strict -f mkdocs.deploy.yml
