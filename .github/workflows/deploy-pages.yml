@@ -1,0 +1,107 @@
+name: Deploy GitHub Pages
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: Deployment target
+        required: true
+        default: project
+        type: choice
+        options:
+          - project
+          - portfolio
+      portfolio_repository:
+        description: External repo for portfolio deployment
+        required: false
+        default: ArnabBir/arnabbir.github.io
+        type: string
+      portfolio_branch:
+        description: Branch for portfolio deployment
+        required: false
+        default: main
+        type: string
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install MkDocs
+        run: |
+          python -m pip install --upgrade pip
+          pip install mkdocs mkdocs-material pymdown-extensions
+
+      - name: Prepare MkDocs config for target
+        env:
+          DEPLOY_TARGET: ${{ inputs.target }}
+        run: |
+          python - <<'PY'
+          import os
+          import yaml
+
+          with open("mkdocs.yml", "r", encoding="utf-8") as f:
+              config = yaml.safe_load(f)
+
+          target = os.environ["DEPLOY_TARGET"]
+          if target == "portfolio":
+              config["site_url"] = "https://arnabbir.github.io/"
+          else:
+              config["site_url"] = "https://arnabbir.github.io/ai-engineering-explained/"
+
+          with open("mkdocs.deploy.yml", "w", encoding="utf-8") as f:
+              yaml.safe_dump(config, f, sort_keys=False)
+          PY
+
+      - name: Setup Pages
+        if: ${{ inputs.target == 'project' }}
+        uses: actions/configure-pages@v5
+
+      - name: Build site
+        run: mkdocs build --strict -f mkdocs.deploy.yml
+
+      - name: Upload Pages artifact
+        if: ${{ inputs.target == 'project' }}
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+      - name: Deploy to portfolio repository
+        if: ${{ inputs.target == 'portfolio' }}
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          personal_token: ${{ secrets.PAGES_DEPLOY_TOKEN }}
+          external_repository: ${{ inputs.portfolio_repository }}
+          publish_branch: ${{ inputs.portfolio_branch }}
+          publish_dir: ./site
+          force_orphan: true
+
+  deploy:
+    if: ${{ inputs.target == 'project' }}
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
