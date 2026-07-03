@@ -18,6 +18,9 @@ Based on *AI Engineering. Building Applications with Foundation Models* by **Chi
 > [!NOTE]
 > This playbook distills the entire book into structured, actionable chapters designed for Principal AI Engineers, technical leads and practitioners building real world AI systems. Every chapter contains architecture diagrams, extracted book figures, author insights, practitioner checklists and deep technical breakdowns.
 
+> [!TIP]
+> **Read the GitBook-style version online:** [https://arnabbir.github.io/ai-engineering-explained/](https://arnabbir.github.io/ai-engineering-explained/)
+
 > "Tools become outdated quickly, but fundamentals should last longer."
 > Chip Huyen
 
