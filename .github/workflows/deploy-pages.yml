@@ -55,19 +55,27 @@ jobs:
         run: |
           python - <<'PY'
           import os
-          import yaml
+          import re
 
           with open("mkdocs.yml", "r", encoding="utf-8") as f:
-              config = yaml.safe_load(f)
+              config_text = f.read()
 
           target = os.environ["DEPLOY_TARGET"]
           if target == "portfolio":
-              config["site_url"] = "https://arnabbir.github.io/"
+              site_url = "https://arnabbir.github.io/"
           else:
-              config["site_url"] = "https://arnabbir.github.io/ai-engineering-explained/"
+              site_url = "https://arnabbir.github.io/ai-engineering-explained/"
+
+          config_text = re.sub(
+              r"^site_url:\s*.*$",
+              f"site_url: {site_url}",
+              config_text,
+              count=1,
+              flags=re.MULTILINE,
+          )
 
           with open("mkdocs.deploy.yml", "w", encoding="utf-8") as f:
-              yaml.safe_dump(config, f, sort_keys=False)
+              f.write(config_text)
           PY
 
       - name: Setup Pages
