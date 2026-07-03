@@ -1,0 +1,1981 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A polished field guide to building production AI applications with foundation models.">
+      
+      
+      
+        <link rel="canonical" href="https://arnabbir.github.io/ai-engineering-explained/chapters/02-understanding-foundation-models/">
+      
+      
+        <link rel="prev" href="../01-introduction/">
+      
+      
+        <link rel="next" href="../03-evaluation-methodology/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/cover/book-cover.jpg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>02. Understanding Foundation Models - AI Engineering Playbook</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="pink">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#chapter-2-understanding-foundation-models" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="AI Engineering Playbook" class="md-header__button md-logo" aria-label="AI Engineering Playbook" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m19 2-5 4.5v11l5-4.5zM6.5 5C4.55 5 2.45 5.4 1 6.5v14.66c0 .25.25.5.5.5.1 0 .15-.07.25-.07 1.35-.65 3.3-1.09 4.75-1.09 1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.31 4.75 1.06.1.05.15.03.25.03.25 0 .5-.25.5-.5V6.5c-.6-.45-1.25-.75-2-1V19c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V6.5C10.55 5.4 8.45 5 6.5 5"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            AI Engineering Playbook
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              02. Understanding Foundation Models
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="pink"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="pink"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/ArnabBir/ai-engineering-explained" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../overview/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Overview
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../01-introduction/" class="md-tabs__link">
+          
+  
+  
+  Chapters
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="AI Engineering Playbook" class="md-nav__button md-logo" aria-label="AI Engineering Playbook" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m19 2-5 4.5v11l5-4.5zM6.5 5C4.55 5 2.45 5.4 1 6.5v14.66c0 .25.25.5.5.5.1 0 .15-.07.25-.07 1.35-.65 3.3-1.09 4.75-1.09 1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.31 4.75 1.06.1.05.15.03.25.03.25 0 .5-.25.5-.5V6.5c-.6-.45-1.25-.75-2-1V19c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V6.5C10.55 5.4 8.45 5 6.5 5"/></svg>
+
+    </a>
+    AI Engineering Playbook
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/ArnabBir/ai-engineering-explained" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapters
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Chapters
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    01. Introduction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    02. Understanding Foundation Models
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    02. Understanding Foundation Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table of Contents
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#foundation-model-development-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Foundation Model Development Pipeline
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#training-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Training Data
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Training Data">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-foundation-is-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Foundation Is Data
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#internet-data-and-its-limitations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Internet Data and Its Limitations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#domain-specific-and-multilingual-data-challenges" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Domain-Specific and Multilingual Data Challenges
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-quality-vs-quantity-tradeoffs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Quality vs. Quantity Tradeoffs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pre-training-data-composition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pre-Training Data Composition
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#modeling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Modeling
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Modeling">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-transformer-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Transformer Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#attention-as-a-soft-dictionary-lookup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Attention as a Soft Dictionary Lookup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#model-architecture-choices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Model Architecture Choices
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#model-size-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Model Size Considerations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scaling-laws" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scaling Laws
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scaling-bottlenecks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scaling Bottlenecks
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#post-training" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Post-Training
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Post-Training">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#supervised-finetuning-sft" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Supervised Finetuning (SFT)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#preference-finetuning-rlhf-and-dpo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preference Finetuning (RLHF and DPO)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Preference Finetuning (RLHF and DPO)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rlhf-reinforcement-learning-from-human-feedback" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RLHF: Reinforcement Learning from Human Feedback
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dpo-direct-preference-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DPO: Direct Preference Optimization
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#best-of-n-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best of N Strategy
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-overall-post-training-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Overall Post-Training Pipeline
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sampling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sampling
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Sampling">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sampling-fundamentals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sampling Fundamentals
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#temperature" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Temperature
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#top-k-sampling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Top-k Sampling
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#top-p-nucleus-sampling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Top-p (Nucleus) Sampling
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stopping-conditions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stopping Conditions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test-time-compute" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Time Compute
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#structured-outputs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Structured Outputs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-probabilistic-nature-of-ai" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Probabilistic Nature of AI
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Probabilistic Nature of AI">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#inconsistency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inconsistency
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hallucination" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hallucination
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#chapter-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Chapter Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#navigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Navigation
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-evaluation-methodology/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03. Evaluation Methodology
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-evaluate-ai-systems/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    04. Evaluate AI Systems
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-prompt-engineering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    05. Prompt Engineering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-rag-and-agents/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    06. RAG and Agents
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-finetuning/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    07. Finetuning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-dataset-engineering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    08. Dataset Engineering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-inference-optimization/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    09. Inference Optimization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-ai-engineering-architecture-and-user-feedback/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10. Architecture and User Feedback
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="chapter-2-understanding-foundation-models">Chapter 2: Understanding Foundation Models<a class="headerlink" href="#chapter-2-understanding-foundation-models" title="Permanent link">&para;</a></h1>
+<h2 id="table-of-contents">Table of Contents<a class="headerlink" href="#table-of-contents" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="#overview">Overview</a></li>
+<li><a href="#foundation-model-development-pipeline">Foundation Model Development Pipeline</a></li>
+<li><a href="#training-data">Training Data</a></li>
+<li><a href="#modeling">Modeling</a></li>
+<li><a href="#post-training">Post-Training</a></li>
+<li><a href="#sampling">Sampling</a></li>
+<li><a href="#the-probabilistic-nature-of-ai">The Probabilistic Nature of AI</a></li>
+<li><a href="#chapter-summary">Chapter Summary</a></li>
+<li><a href="#navigation">Navigation</a></li>
+</ul>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>Foundation models are the bedrock of modern AI engineering. Understanding how they are built, trained and configured is essential for anyone working with them in production. This chapter traces the full lifecycle of a foundation model, from the raw data it learns from, through the architectural choices that shape its capabilities, to the post-training techniques that align it with human preferences and finally to the sampling strategies that govern how it generates outputs.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>You do not need to build foundation models from scratch to be an effective AI engineer. However, understanding <strong>how</strong> they work will make you dramatically better at using them, debugging failures and designing robust systems.</p>
+</div>
+<blockquote>
+<p>"Foundation models are usually trained using a large amount of data. They are aggregations of the opinions of the masses, containing within them, literally, a world of possibilities."</p>
+</blockquote>
+<h2 id="foundation-model-development-pipeline">Foundation Model Development Pipeline<a class="headerlink" href="#foundation-model-development-pipeline" title="Permanent link">&para;</a></h2>
+<p>The journey from raw data to a deployed, useful AI model follows a multi-stage pipeline. Each stage builds on the previous one, progressively refining the model's capabilities and alignment with human intent.</p>
+<pre class="mermaid"><code>flowchart LR
+    A["&lt;b&gt;Raw Data&lt;/b&gt;&lt;br/&gt;Internet text,&lt;br/&gt;books, code"] --&gt; B["&lt;b&gt;Pre-Training&lt;/b&gt;&lt;br/&gt;Next token prediction&lt;br/&gt;on massive corpora"]
+    B --&gt; C["&lt;b&gt;Supervised&lt;br/&gt;Finetuning (SFT)&lt;/b&gt;&lt;br/&gt;Instruction following&lt;br/&gt;with curated examples"]
+    C --&gt; D["&lt;b&gt;Preference&lt;br/&gt;Finetuning (RLHF)&lt;/b&gt;&lt;br/&gt;Alignment with&lt;br/&gt;human preferences"]
+    D --&gt; E["&lt;b&gt;Deployment&lt;/b&gt;&lt;br/&gt;Sampling, serving,&lt;br/&gt;and inference"]
+
+    style A fill:#2D3748,stroke:#E2E8F0,color:#E2E8F0
+    style B fill:#3B5998,stroke:#E2E8F0,color:#E2E8F0
+    style C fill:#5B8C5A,stroke:#E2E8F0,color:#E2E8F0
+    style D fill:#D4A017,stroke:#1A202C,color:#1A202C
+    style E fill:#9B2335,stroke:#E2E8F0,color:#E2E8F0</code></pre>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Not every model goes through all stages. Some models skip preference finetuning. Others skip SFT entirely and go straight from pre-training to deployment. The pipeline shown above represents the most common full workflow as of the time of writing.</p>
+</div>
+<h2 id="training-data">Training Data<a class="headerlink" href="#training-data" title="Permanent link">&para;</a></h2>
+<h3 id="the-foundation-is-data">The Foundation Is Data<a class="headerlink" href="#the-foundation-is-data" title="Permanent link">&para;</a></h3>
+<p>Everything begins with data. The quality, diversity and volume of training data fundamentally constrain what a model can learn. No amount of architectural cleverness or post-training refinement can compensate for gaps in the pre-training corpus.</p>
+<blockquote>
+<p>The model is only as good as its training data. Biases, gaps and errors in the training corpus are inherited by the model and often amplified during generation.</p>
+</blockquote>
+<h3 id="internet-data-and-its-limitations">Internet Data and Its Limitations<a class="headerlink" href="#internet-data-and-its-limitations" title="Permanent link">&para;</a></h3>
+<p>The vast majority of foundation model training data comes from the internet. Massive web crawls such as Common Crawl provide trillions of tokens of text, forming the backbone of datasets like C4, The Pile and RefinedWeb. However, internet data comes with significant limitations.</p>
+<p><strong>Coverage bias.</strong> The internet disproportionately represents English language content, certain demographics and particular viewpoints. Topics that are popular online receive heavy coverage while specialized professional knowledge, oral traditions and content from underrepresented communities remain sparse.</p>
+<p><strong>Quality variance.</strong> Internet data includes everything from peer-reviewed scientific papers to spam, misinformation and machine-generated filler content. Without careful filtering, a model trained on raw web data will learn to reproduce all of these patterns indiscriminately.</p>
+<p><strong>Temporal cutoff.</strong> Training data has a fixed collection date. The model has no knowledge of events, discoveries or cultural shifts that occurred after its data was gathered. This creates a fundamental knowledge boundary that no amount of training can overcome.</p>
+<p><strong>Legal and ethical concerns.</strong> Web-scraped data often includes copyrighted material, personally identifiable information and content created without the expectation that it would be used for AI training. These issues remain legally and ethically unresolved.</p>
+<h3 id="domain-specific-and-multilingual-data-challenges">Domain-Specific and Multilingual Data Challenges<a class="headerlink" href="#domain-specific-and-multilingual-data-challenges" title="Permanent link">&para;</a></h3>
+<p>Models intended for specialized domains face acute data scarcity problems. Medical, legal and scientific texts exist in far smaller quantities than general web content. Moreover, the data that does exist is often behind paywalls, subject to privacy regulations or in formats that are difficult to process.</p>
+<p>Multilingual capabilities present a similar challenge. While English dominates internet content, many languages have limited digital presence. Low-resource languages may have only a few million tokens of available text, compared to the trillions of tokens available in English. This creates a stark capability gap across languages.</p>
+<p><img alt="Figure 2-1. On the MMLU benchmark, GPT-4 performs better in English than in any other language" src="../../assets/ch02/fig-2-1-gpt4-mmlu-across-languages.png" width="700" /></p>
+<p class="figure-caption">Figure 2-1. On the MMLU benchmark, GPT-4 performs better in English than in any other language</p>
+
+<p><img alt="Figure 2-2. GPT-4 is much better at math in English than in other languages" src="../../assets/ch02/fig-2-2-gpt4-math-across-languages.png" width="700" /></p>
+<p class="figure-caption">Figure 2-2. GPT-4 is much better at math in English than in other languages</p>
+
+<h3 id="data-quality-vs-quantity-tradeoffs">Data Quality vs. Quantity Tradeoffs<a class="headerlink" href="#data-quality-vs-quantity-tradeoffs" title="Permanent link">&para;</a></h3>
+<p>A recurring finding in foundation model research is that <strong>data quality often matters more than data quantity</strong>. The Phi series of models from Microsoft demonstrated that carefully curated, high-quality datasets can produce surprisingly capable small models. Similarly, research on data filtering has shown that training on a smaller set of high-quality data can outperform training on a much larger set of unfiltered data.</p>
+<p>Key quality signals used in data filtering include:</p>
+<ul>
+<li><strong>Perplexity filtering.</strong> Using an existing language model to score text and removing passages that are too predictable (repetitive, boilerplate) or too unpredictable (garbled, nonsensical).</li>
+<li><strong>Deduplication.</strong> Removing duplicate or near-duplicate documents to prevent the model from memorizing specific passages.</li>
+<li><strong>Heuristic filters.</strong> Rules based on document length, character ratios, presence of specific markers and other surface-level features.</li>
+<li><strong>Classifier-based filtering.</strong> Training a separate model to distinguish high-quality text from low-quality text and using it to filter the corpus.</li>
+</ul>
+<h3 id="pre-training-data-composition">Pre-Training Data Composition<a class="headerlink" href="#pre-training-data-composition" title="Permanent link">&para;</a></h3>
+<p>The composition of the pre-training dataset, meaning the relative proportions of different data sources, significantly affects the model's capabilities. A model trained primarily on code will excel at programming tasks but may struggle with conversational fluency. A model trained mostly on books and Wikipedia will have strong factual knowledge but may lack the informal patterns needed for natural dialogue.</p>
+<p>Major pre-training datasets typically blend several sources.</p>
+<p><img alt="Figure 2-3. Distribution of domains in the C4 dataset" src="../../assets/ch02/fig-2-3-c4-dataset-domains.png" width="700" /></p>
+<p class="figure-caption">Figure 2-3. Distribution of domains in the C4 dataset</p>
+
+<table>
+<thead>
+<tr>
+<th>Source</th>
+<th>Typical Proportion</th>
+<th>Contribution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Web crawl (Common Crawl, etc.)</td>
+<td>50% to 70%</td>
+<td>Broad language coverage, diverse topics</td>
+</tr>
+<tr>
+<td>Books and long-form text</td>
+<td>5% to 15%</td>
+<td>Coherent reasoning, narrative structure</td>
+</tr>
+<tr>
+<td>Code repositories</td>
+<td>5% to 15%</td>
+<td>Logical reasoning, structured output</td>
+</tr>
+<tr>
+<td>Wikipedia and reference texts</td>
+<td>3% to 8%</td>
+<td>Factual knowledge, neutral tone</td>
+</tr>
+<tr>
+<td>Scientific papers</td>
+<td>2% to 5%</td>
+<td>Technical reasoning, domain knowledge</td>
+</tr>
+<tr>
+<td>Conversational data</td>
+<td>2% to 5%</td>
+<td>Dialogue patterns, informal language</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>When evaluating a foundation model for your use case, understanding its training data composition can help predict its strengths and weaknesses. Models with more code in their training data tend to perform better on structured reasoning tasks, even outside of programming.</p>
+</div>
+<h2 id="modeling">Modeling<a class="headerlink" href="#modeling" title="Permanent link">&para;</a></h2>
+<h3 id="the-transformer-architecture">The Transformer Architecture<a class="headerlink" href="#the-transformer-architecture" title="Permanent link">&para;</a></h3>
+<p>The Transformer, introduced in the 2017 paper "Attention Is All You Need" by Vaswani et al., is the dominant architecture for foundation models. Nearly every major language model, from BERT to GPT-4 to LLaMA, is built on the Transformer or close variants of it.</p>
+<pre class="mermaid"><code>flowchart TB
+    subgraph Input ["&lt;b&gt;Input Processing&lt;/b&gt;"]
+        A["Token&lt;br/&gt;Embeddings"] --&gt; B["Positional&lt;br/&gt;Encoding"]
+    end
+
+    subgraph Layers ["&lt;b&gt;Transformer Layers (repeated N times)&lt;/b&gt;"]
+        C["Multi-Head&lt;br/&gt;Self-Attention"] --&gt; D["Add &amp; Normalize"]
+        D --&gt; E["Feed-Forward&lt;br/&gt;Network"]
+        E --&gt; F["Add &amp; Normalize"]
+    end
+
+    subgraph Output ["&lt;b&gt;Output&lt;/b&gt;"]
+        G["Linear&lt;br/&gt;Projection"] --&gt; H["Softmax over&lt;br/&gt;Vocabulary"]
+    end
+
+    B --&gt; C
+    F --&gt; G
+
+    style A fill:#3B5998,stroke:#E2E8F0,color:#E2E8F0
+    style B fill:#3B5998,stroke:#E2E8F0,color:#E2E8F0
+    style C fill:#5B8C5A,stroke:#E2E8F0,color:#E2E8F0
+    style D fill:#5B8C5A,stroke:#E2E8F0,color:#E2E8F0
+    style E fill:#5B8C5A,stroke:#E2E8F0,color:#E2E8F0
+    style F fill:#5B8C5A,stroke:#E2E8F0,color:#E2E8F0
+    style G fill:#9B2335,stroke:#E2E8F0,color:#E2E8F0
+    style H fill:#9B2335,stroke:#E2E8F0,color:#E2E8F0
+    style Input fill:#1A202C,stroke:#4A5568,color:#E2E8F0
+    style Layers fill:#1A202C,stroke:#4A5568,color:#E2E8F0
+    style Output fill:#1A202C,stroke:#4A5568,color:#E2E8F0</code></pre>
+<p>The key components of the Transformer are as follows.</p>
+<p><img alt="Figure 2-6. Transformer model architecture" src="../../assets/ch02/fig-2-6-transformer-architecture.png" width="700" /></p>
+<p class="figure-caption">Figure 2-6. Transformer model architecture</p>
+
+<p><strong>Token embeddings.</strong> Input text is first tokenized (split into subword units) and each token is mapped to a dense vector representation. These embeddings are learned during training.</p>
+<p><strong>Positional encoding.</strong> Because the Transformer processes all tokens in parallel (unlike RNNs which process sequentially), it needs explicit information about token positions. Positional encodings, whether learned or sinusoidal, are added to the token embeddings to provide this ordering information.</p>
+<p><strong>Multi-head self-attention.</strong> This is the core innovation of the Transformer. Self-attention allows every token to attend to every other token in the sequence, dynamically weighting how much each token influences the representation of every other token.</p>
+<p><strong>Feed-forward network.</strong> After attention, each token's representation passes through a position-wise feed-forward network (typically two linear layers with a nonlinearity in between). This is where much of the model's "knowledge" is stored.</p>
+<p><strong>Layer normalization and residual connections.</strong> These stabilize training and allow gradients to flow through deep networks.</p>
+<h3 id="attention-as-a-soft-dictionary-lookup">Attention as a Soft Dictionary Lookup<a class="headerlink" href="#attention-as-a-soft-dictionary-lookup" title="Permanent link">&para;</a></h3>
+<p>The attention mechanism can be understood intuitively as a <strong>soft dictionary lookup</strong>. In a traditional dictionary, you have a key and you retrieve the exact matching value. In attention, you have a query and you retrieve a weighted combination of all values, where the weights are determined by how well each key matches your query.</p>
+<pre class="mermaid"><code>flowchart LR
+    subgraph Inputs ["&lt;b&gt;Input Projections&lt;/b&gt;"]
+        Q["&lt;b&gt;Query (Q)&lt;/b&gt;&lt;br/&gt;What am I looking for?"]
+        K["&lt;b&gt;Key (K)&lt;/b&gt;&lt;br/&gt;What do I contain?"]
+        V["&lt;b&gt;Value (V)&lt;/b&gt;&lt;br/&gt;What do I offer?"]
+    end
+
+    subgraph Compute ["&lt;b&gt;Attention Computation&lt;/b&gt;"]
+        S["Score = Q * K^T&lt;br/&gt;(dot product similarity)"]
+        SC["Scale by 1/sqrt(d_k)"]
+        SM["Softmax&lt;br/&gt;(normalize to&lt;br/&gt;probabilities)"]
+    end
+
+    subgraph Result ["&lt;b&gt;Output&lt;/b&gt;"]
+        O["Weighted sum&lt;br/&gt;of Values"]
+    end
+
+    Q --&gt; S
+    K --&gt; S
+    S --&gt; SC
+    SC --&gt; SM
+    SM --&gt; O
+    V --&gt; O
+
+    style Q fill:#3B5998,stroke:#E2E8F0,color:#E2E8F0
+    style K fill:#5B8C5A,stroke:#E2E8F0,color:#E2E8F0
+    style V fill:#D4A017,stroke:#1A202C,color:#1A202C
+    style S fill:#6B4C9A,stroke:#E2E8F0,color:#E2E8F0
+    style SC fill:#6B4C9A,stroke:#E2E8F0,color:#E2E8F0
+    style SM fill:#6B4C9A,stroke:#E2E8F0,color:#E2E8F0
+    style O fill:#9B2335,stroke:#E2E8F0,color:#E2E8F0
+    style Inputs fill:#1A202C,stroke:#4A5568,color:#E2E8F0
+    style Compute fill:#1A202C,stroke:#4A5568,color:#E2E8F0
+    style Result fill:#1A202C,stroke:#4A5568,color:#E2E8F0</code></pre>
+<p>Formally, attention is computed as:</p>
+<p><strong>Attention(Q, K, V) = softmax(QK^T / sqrt(d_k)) V</strong></p>
+<p>Where <strong>d_k</strong> is the dimensionality of the keys. The scaling factor <strong>1/sqrt(d_k)</strong> prevents the dot products from growing too large, which would push the softmax into regions with extremely small gradients.</p>
+<p><strong>Multi-head attention</strong> runs this computation multiple times in parallel with different learned projections. Each "head" can learn to attend to different types of relationships (syntactic, semantic, positional, etc.). The outputs of all heads are concatenated and projected to produce the final attention output.</p>
+<p><img alt="Figure 2-5. An example of the attention mechanism in action" src="../../assets/ch02/fig-2-5-attention-mechanism.png" width="700" /></p>
+<p class="figure-caption">Figure 2-5. An example of the attention mechanism in action</p>
+
+<h3 id="model-architecture-choices">Model Architecture Choices<a class="headerlink" href="#model-architecture-choices" title="Permanent link">&para;</a></h3>
+<p>The original Transformer included both an encoder and a decoder. Subsequent research found that using only one or the other could be more effective for specific tasks.</p>
+<pre class="mermaid"><code>flowchart TB
+    subgraph EO ["&lt;b&gt;Encoder-Only&lt;/b&gt;&lt;br/&gt;(e.g., BERT, RoBERTa)"]
+        direction TB
+        EO1["Bidirectional attention.&lt;br/&gt;Every token sees every&lt;br/&gt;other token."]
+        EO2["Best for understanding&lt;br/&gt;tasks: classification,&lt;br/&gt;NER, similarity."]
+    end
+
+    subgraph DO ["&lt;b&gt;Decoder-Only&lt;/b&gt;&lt;br/&gt;(e.g., GPT, LLaMA, Claude)"]
+        direction TB
+        DO1["Causal (left-to-right)&lt;br/&gt;attention. Each token&lt;br/&gt;only sees preceding tokens."]
+        DO2["Best for generation&lt;br/&gt;tasks: text completion,&lt;br/&gt;conversation, code."]
+    end
+
+    subgraph ED ["&lt;b&gt;Encoder-Decoder&lt;/b&gt;&lt;br/&gt;(e.g., T5, BART)"]
+        direction TB
+        ED1["Encoder uses bidirectional&lt;br/&gt;attention. Decoder uses&lt;br/&gt;causal attention with&lt;br/&gt;cross-attention to encoder."]
+        ED2["Best for sequence-to-sequence&lt;br/&gt;tasks: translation,&lt;br/&gt;summarization."]
+    end
+
+    style EO fill:#3B5998,stroke:#E2E8F0,color:#E2E8F0
+    style DO fill:#5B8C5A,stroke:#E2E8F0,color:#E2E8F0
+    style ED fill:#D4A017,stroke:#1A202C,color:#1A202C
+    style EO1 fill:#2D3748,stroke:#4A5568,color:#E2E8F0
+    style EO2 fill:#2D3748,stroke:#4A5568,color:#E2E8F0
+    style DO1 fill:#2D3748,stroke:#4A5568,color:#E2E8F0
+    style DO2 fill:#2D3748,stroke:#4A5568,color:#E2E8F0
+    style ED1 fill:#2D3748,stroke:#4A5568,color:#E2E8F0
+    style ED2 fill:#2D3748,stroke:#4A5568,color:#E2E8F0</code></pre>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Encoder-Only (BERT)</th>
+<th>Decoder-Only (GPT)</th>
+<th>Encoder-Decoder (T5)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Attention type</strong></td>
+<td>Bidirectional</td>
+<td>Causal (left-to-right)</td>
+<td>Bidirectional encoder, causal decoder</td>
+</tr>
+<tr>
+<td><strong>Training objective</strong></td>
+<td>Masked language modeling</td>
+<td>Next token prediction</td>
+<td>Span corruption / seq-to-seq</td>
+</tr>
+<tr>
+<td><strong>Primary strength</strong></td>
+<td>Understanding, classification</td>
+<td>Generation, open-ended tasks</td>
+<td>Conditional generation</td>
+</tr>
+<tr>
+<td><strong>Context usage</strong></td>
+<td>Sees full input at once</td>
+<td>Generates one token at a time</td>
+<td>Encodes input, then generates</td>
+</tr>
+<tr>
+<td><strong>Notable examples</strong></td>
+<td>BERT, RoBERTa, DeBERTa</td>
+<td>GPT-3/4, LLaMA, Claude, Gemini</td>
+<td>T5, BART, Flan-T5</td>
+</tr>
+<tr>
+<td><strong>Current dominance</strong></td>
+<td>Declining for LLMs</td>
+<td>Dominant paradigm</td>
+<td>Niche use cases</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The industry has overwhelmingly converged on <strong>decoder-only</strong> architectures for large-scale foundation models. The simplicity of the next token prediction objective, combined with its surprising effectiveness at learning broad capabilities, has made it the default choice. Encoder-only models remain useful for embedding and classification tasks, but decoder-only models increasingly handle those too.</p>
+</div>
+<p><img alt="Figure 2-7. Transformer, Mamba, and Jamba blocks" src="../../assets/ch02/fig-2-7-transformer-mamba-jamba.png" width="700" /></p>
+<p class="figure-caption">Figure 2-7. Transformer, Mamba, and Jamba blocks</p>
+
+<h3 id="model-size-considerations">Model Size Considerations<a class="headerlink" href="#model-size-considerations" title="Permanent link">&para;</a></h3>
+<p>The size of a foundation model is typically described using three related quantities.</p>
+<p><strong>Parameters.</strong> The number of learnable weights in the model. A 70B model has 70 billion parameters. More parameters means more capacity to store knowledge and represent complex patterns, but also more compute and memory required for training and inference.</p>
+<p><strong>Tokens.</strong> The amount of training data, measured in the number of tokens the model processes during pre-training. A model might be trained on 2 trillion tokens. More tokens means more exposure to language patterns.</p>
+<p><strong>FLOPs.</strong> Floating-point operations. This measures the total compute used during training. It is roughly proportional to the product of parameters and tokens: <strong>FLOPs approximately equals 6 * N * D</strong>, where N is the number of parameters and D is the number of tokens.</p>
+<h3 id="scaling-laws">Scaling Laws<a class="headerlink" href="#scaling-laws" title="Permanent link">&para;</a></h3>
+<p>One of the most important discoveries in foundation model research is that model performance follows predictable <strong>scaling laws</strong>. As you increase model size, data size and compute, performance improves in a smooth, predictable manner (measured by loss on held-out data).</p>
+<p>Two major scaling laws have been proposed, and they lead to very different conclusions about how to allocate a fixed compute budget.</p>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>Kaplan Scaling Law (OpenAI, 2020)</th>
+<th>Chinchilla Scaling Law (DeepMind, 2022)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Key finding</strong></td>
+<td>Performance is most sensitive to model size</td>
+<td>Model size and data should be scaled equally</td>
+</tr>
+<tr>
+<td><strong>Recommendation</strong></td>
+<td>Prioritize larger models, even with less data</td>
+<td>Train smaller models on more data</td>
+</tr>
+<tr>
+<td><strong>Optimal ratio</strong></td>
+<td>Favors larger N (parameters) relative to D (data)</td>
+<td>N and D should scale proportionally. For a compute-optimal model, tokens should be approximately 20x the parameter count</td>
+</tr>
+<tr>
+<td><strong>Practical impact</strong></td>
+<td>Led to very large, undertrained models (GPT-3: 175B params on 300B tokens)</td>
+<td>Led to smaller, better-trained models (Chinchilla: 70B params on 1.4T tokens matched 280B Gopher)</td>
+</tr>
+<tr>
+<td><strong>Inference cost implication</strong></td>
+<td>High. Larger models cost more to serve</td>
+<td>Lower. Smaller models are cheaper to serve with comparable quality</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>"Currently, scaling up a model generally makes it better. But how long will this continue to be true?"</p>
+</blockquote>
+<p>The Chinchilla result was a turning point. It showed that many large models (including the original GPT-3 and Gopher) were <strong>significantly undertrained</strong> relative to their size. You could get the same performance with a smaller model trained on more data, which would be much cheaper to deploy.</p>
+<p><img alt="Figure 2-8. Scaling laws for predicting optimal parameters and training data" src="../../assets/ch02/fig-2-8-scaling-laws.png" width="700" /></p>
+<p class="figure-caption">Figure 2-8. Scaling laws for predicting optimal parameters and training data</p>
+
+<h3 id="scaling-bottlenecks">Scaling Bottlenecks<a class="headerlink" href="#scaling-bottlenecks" title="Permanent link">&para;</a></h3>
+<p>Even if scaling laws predict continued improvement, practical bottlenecks limit how far we can scale.</p>
+<p><strong>Data bottleneck.</strong> High-quality text data on the internet is finite. Estimates suggest we may exhaust the supply of high-quality English text within a few years at current training data growth rates. Synthetic data and multimodal data are being explored as potential solutions.</p>
+<p><strong>Compute bottleneck.</strong> Training frontier models requires thousands of specialized accelerators (GPUs, TPUs) running for months. The cost is measured in hundreds of millions of dollars. Energy consumption and hardware availability are real constraints.</p>
+<p><strong>Memory bottleneck.</strong> Large models require distributed training across many devices, introducing communication overhead. The memory needed to store model parameters, optimizer states and activations during training grows with model size.</p>
+<p><strong>Diminishing returns.</strong> While loss decreases predictably with scale, the translation of lower loss into meaningfully better downstream performance is not always linear. Some capabilities emerge suddenly at certain scales (so-called "emergent abilities"), while others plateau.</p>
+<h2 id="post-training">Post-Training<a class="headerlink" href="#post-training" title="Permanent link">&para;</a></h2>
+<p>Pre-trained models are remarkably capable, but they are not immediately useful. A model trained purely on next token prediction will complete text in the style of the internet, which means it will sometimes produce harmful content, ignore instructions or generate plausible-sounding but incorrect information. Post-training transforms a capable but unruly text completer into a helpful, harmless and honest assistant.</p>
+<p><img alt="Figure 2-10. The overall training workflow with pre-training, SFT, and RLHF" src="../../assets/ch02/fig-2-10-training-workflow.png" width="700" /></p>
+<p class="figure-caption">Figure 2-10. The overall training workflow with pre-training, SFT, and RLHF</p>
+
+<blockquote>
+<p>"Both SFT and preference finetuning are steps taken to address the problem created by the low quality of data used for pre-training."</p>
+</blockquote>
+<h3 id="supervised-finetuning-sft">Supervised Finetuning (SFT)<a class="headerlink" href="#supervised-finetuning-sft" title="Permanent link">&para;</a></h3>
+<p>The first post-training step is <strong>Supervised Finetuning (SFT)</strong>, where the model is trained on curated examples of desired input-output behavior. These examples typically take the form of instruction-response pairs.</p>
+<p><strong>How SFT works.</strong> The model is shown examples like:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Instruction: Summarize the following article in three bullet points.
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>[Article text]
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>Response:
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>- First key point
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>- Second key point
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>- Third key point
+</code></pre></div>
+<p>The model is trained using the same next token prediction objective, but only on high-quality, curated examples that demonstrate the desired behavior. This teaches the model to follow instructions, maintain appropriate tone and produce well-structured responses.</p>
+<p><strong>SFT data characteristics.</strong></p>
+<ul>
+<li><strong>Volume.</strong> Surprisingly little data is needed. Studies have shown that as few as 1,000 to 10,000 high-quality examples can produce significant improvements in instruction following.</li>
+<li><strong>Quality.</strong> Data quality is paramount. Poorly written or inconsistent examples degrade performance. Many leading labs use expert human annotators or carefully prompted AI systems to generate SFT data.</li>
+<li><strong>Diversity.</strong> The examples should cover a wide range of tasks, styles and difficulty levels to produce a general-purpose assistant.</li>
+</ul>
+<p><img alt="Figure 2-12. Distribution of prompts used to finetune InstructGPT" src="../../assets/ch02/fig-2-12-instructgpt-prompt-distribution.png" width="700" /></p>
+<p class="figure-caption">Figure 2-12. Distribution of prompts used to finetune InstructGPT</p>
+
+<h3 id="preference-finetuning-rlhf-and-dpo">Preference Finetuning (RLHF and DPO)<a class="headerlink" href="#preference-finetuning-rlhf-and-dpo" title="Permanent link">&para;</a></h3>
+<p>SFT teaches the model <em>what</em> good outputs look like, but it has limitations. For many tasks, it is easier for humans to judge which of two outputs is better than to write the perfect output from scratch. <strong>Preference finetuning</strong> leverages this insight.</p>
+<pre class="mermaid"><code>flowchart TB
+    subgraph Phase1 ["&lt;b&gt;Phase 1: Collect Comparison Data&lt;/b&gt;"]
+        A["Given a prompt, generate&lt;br/&gt;two or more responses&lt;br/&gt;from the SFT model"] --&gt; B["Human annotators rank&lt;br/&gt;responses from best to worst"]
+    end
+
+    subgraph Phase2 ["&lt;b&gt;Phase 2: Train Reward Model&lt;/b&gt;"]
+        C["Train a model to predict&lt;br/&gt;human preference scores&lt;br/&gt;given a prompt + response"]
+    end
+
+    subgraph Phase3 ["&lt;b&gt;Phase 3: Optimize Policy with PPO&lt;/b&gt;"]
+        D["Use the reward model&lt;br/&gt;to score outputs"] --&gt; E["Update the SFT model&lt;br/&gt;using PPO to maximize&lt;br/&gt;reward while staying close&lt;br/&gt;to the SFT model"]
+    end
+
+    B --&gt; C
+    C --&gt; D
+
+    style A fill:#3B5998,stroke:#E2E8F0,color:#E2E8F0
+    style B fill:#3B5998,stroke:#E2E8F0,color:#E2E8F0
+    style C fill:#5B8C5A,stroke:#E2E8F0,color:#E2E8F0
+    style D fill:#D4A017,stroke:#1A202C,color:#1A202C
+    style E fill:#D4A017,stroke:#1A202C,color:#1A202C
+    style Phase1 fill:#1A202C,stroke:#4A5568,color:#E2E8F0
+    style Phase2 fill:#1A202C,stroke:#4A5568,color:#E2E8F0
+    style Phase3 fill:#1A202C,stroke:#4A5568,color:#E2E8F0</code></pre>
+<h4 id="rlhf-reinforcement-learning-from-human-feedback">RLHF: Reinforcement Learning from Human Feedback<a class="headerlink" href="#rlhf-reinforcement-learning-from-human-feedback" title="Permanent link">&para;</a></h4>
+<p>The classic preference finetuning approach, <strong>RLHF</strong>, proceeds in three stages.</p>
+<p><strong>Stage 1. Collect comparison data.</strong> For a set of prompts, the SFT model generates multiple candidate responses. Human annotators compare these responses and rank them, typically indicating which response they prefer and why.</p>
+<p><img alt="Figure 2-13. OpenAI labeler UI for creating comparison data" src="../../assets/ch02/fig-2-13-openai-labeler-ui.png" width="700" /></p>
+<p class="figure-caption">Figure 2-13. OpenAI labeler UI for creating comparison data</p>
+
+<p><strong>Stage 2. Train a reward model.</strong> Using the comparison data, a reward model is trained to predict a scalar score for any given (prompt, response) pair. This model learns to approximate human judgment. The reward model is typically initialized from the SFT model itself and trained with a ranking loss that ensures preferred responses receive higher scores.</p>
+<p><strong>Stage 3. Optimize with PPO.</strong> The SFT model is then finetuned using <strong>Proximal Policy Optimization (PPO)</strong>, a reinforcement learning algorithm. The reward model provides the reward signal. A critical addition is a KL divergence penalty that prevents the model from drifting too far from the SFT model. Without this constraint, the model can "hack" the reward model by producing degenerate outputs that receive high scores but are not actually useful.</p>
+<h4 id="dpo-direct-preference-optimization">DPO: Direct Preference Optimization<a class="headerlink" href="#dpo-direct-preference-optimization" title="Permanent link">&para;</a></h4>
+<p><strong>Direct Preference Optimization (DPO)</strong> simplifies the RLHF pipeline by eliminating the need for a separate reward model and RL training loop entirely. DPO reformulates the RLHF objective into a simple classification loss on the preference data directly.</p>
+<p>Given a prompt and a pair of responses (one preferred, one rejected), DPO adjusts the model weights to increase the probability of the preferred response and decrease the probability of the rejected response. The mathematical insight is that the optimal policy under the RLHF objective can be expressed in closed form, allowing direct optimization without the instability and complexity of PPO.</p>
+<p><strong>Advantages of DPO.</strong> Simpler to implement, more stable to train, requires less compute and eliminates the reward model as a potential failure point.</p>
+<h4 id="best-of-n-strategy">Best of N Strategy<a class="headerlink" href="#best-of-n-strategy" title="Permanent link">&para;</a></h4>
+<p>A simpler alternative to PPO is the <strong>Best of N</strong> strategy. Instead of updating the model weights, you generate N candidate responses at inference time and use the reward model to select the best one. This is computationally expensive at inference time but avoids the complexity and instability of RL training.</p>
+<h3 id="the-overall-post-training-pipeline">The Overall Post-Training Pipeline<a class="headerlink" href="#the-overall-post-training-pipeline" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>flowchart LR
+    A["&lt;b&gt;Pre-Trained&lt;br/&gt;Base Model&lt;/b&gt;&lt;br/&gt;Text completion&lt;br/&gt;only"] --&gt; B["&lt;b&gt;SFT&lt;/b&gt;&lt;br/&gt;Learns to follow&lt;br/&gt;instructions"]
+    B --&gt; C["&lt;b&gt;Preference&lt;br/&gt;Finetuning&lt;/b&gt;&lt;br/&gt;Aligns with human&lt;br/&gt;preferences"]
+    C --&gt; D["&lt;b&gt;Aligned&lt;br/&gt;Model&lt;/b&gt;&lt;br/&gt;Helpful, harmless,&lt;br/&gt;honest"]
+
+    style A fill:#2D3748,stroke:#E2E8F0,color:#E2E8F0
+    style B fill:#3B5998,stroke:#E2E8F0,color:#E2E8F0
+    style C fill:#5B8C5A,stroke:#E2E8F0,color:#E2E8F0
+    style D fill:#D4A017,stroke:#1A202C,color:#1A202C</code></pre>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Post-training is a double-edged process. While it makes models more useful and safe, it can also reduce the model's raw capabilities in certain areas. A heavily aligned model may refuse to answer legitimate questions that it interprets as potentially harmful, or it may become overly cautious and verbose. Finding the right balance is an ongoing challenge for model developers.</p>
+</div>
+<h2 id="sampling">Sampling<a class="headerlink" href="#sampling" title="Permanent link">&para;</a></h2>
+<p>Once a model is trained, the way you <strong>sample</strong> from it, meaning how you convert the model's raw outputs into actual text, has an enormous impact on the quality and character of the generated output. Sampling is where theory meets practice for AI engineers.</p>
+<h3 id="sampling-fundamentals">Sampling Fundamentals<a class="headerlink" href="#sampling-fundamentals" title="Permanent link">&para;</a></h3>
+<p>At each step of generation, the model produces a vector of <strong>logits</strong>, one for each token in its vocabulary. These logits are raw, unnormalized scores. To convert them into a probability distribution, the <strong>softmax</strong> function is applied.</p>
+<p><strong>softmax(z_i) = exp(z_i) / sum(exp(z_j) for all j)</strong></p>
+<p>The result is a probability distribution over the entire vocabulary. The next token is then selected from this distribution. How exactly the selection happens is controlled by several sampling parameters.</p>
+<p><img alt="Figure 2-14. To generate the next token, the language model computes probability distribution" src="../../assets/ch02/fig-2-14-next-token-probability.png" width="700" /></p>
+<p class="figure-caption">Figure 2-14. To generate the next token, the language model computes probability distribution</p>
+
+<pre class="mermaid"><code>flowchart LR
+    A["&lt;b&gt;Model Output&lt;/b&gt;&lt;br/&gt;Raw logits&lt;br/&gt;for each token&lt;br/&gt;in vocabulary"] --&gt; B["&lt;b&gt;Temperature&lt;/b&gt;&lt;br/&gt;Scale logits&lt;br/&gt;by 1/T"]
+    B --&gt; C["&lt;b&gt;Top-k Filter&lt;/b&gt;&lt;br/&gt;Keep only the&lt;br/&gt;k highest-scoring&lt;br/&gt;tokens"]
+    C --&gt; D["&lt;b&gt;Top-p Filter&lt;/b&gt;&lt;br/&gt;Keep tokens whose&lt;br/&gt;cumulative probability&lt;br/&gt;is less than p"]
+    D --&gt; E["&lt;b&gt;Softmax&lt;/b&gt;&lt;br/&gt;Convert filtered&lt;br/&gt;logits to&lt;br/&gt;probabilities"]
+    E --&gt; F["&lt;b&gt;Sample&lt;/b&gt;&lt;br/&gt;Select token&lt;br/&gt;from distribution"]
+
+    style A fill:#2D3748,stroke:#E2E8F0,color:#E2E8F0
+    style B fill:#3B5998,stroke:#E2E8F0,color:#E2E8F0
+    style C fill:#5B8C5A,stroke:#E2E8F0,color:#E2E8F0
+    style D fill:#D4A017,stroke:#1A202C,color:#1A202C
+    style E fill:#6B4C9A,stroke:#E2E8F0,color:#E2E8F0
+    style F fill:#9B2335,stroke:#E2E8F0,color:#E2E8F0</code></pre>
+<h3 id="temperature">Temperature<a class="headerlink" href="#temperature" title="Permanent link">&para;</a></h3>
+<p><strong>Temperature</strong> is the most important sampling parameter. It controls how "sharp" or "flat" the probability distribution is.</p>
+<p>Given logits <strong>z</strong>, the temperature-scaled softmax is:</p>
+<p><strong>P(token_i) = exp(z_i / T) / sum(exp(z_j / T) for all j)</strong></p>
+<p>Where <strong>T</strong> is the temperature.</p>
+<ul>
+<li><strong>T = 1.0</strong> uses the model's learned distribution as-is.</li>
+<li><strong>T &lt; 1.0</strong> makes the distribution sharper, concentrating probability on the highest-scoring tokens. At T = 0, sampling becomes deterministic (always picking the highest-probability token, equivalent to greedy decoding).</li>
+<li><strong>T &gt; 1.0</strong> makes the distribution flatter, giving lower-probability tokens a better chance of being selected. This increases randomness and creativity but also increases the chance of incoherent or nonsensical output.</li>
+</ul>
+<p><img alt="Figure 2-16. Softmax probabilities at different temperatures" src="../../assets/ch02/fig-2-16-softmax-temperature.png" width="700" /></p>
+<p class="figure-caption">Figure 2-16. Softmax probabilities at different temperatures</p>
+
+<h3 id="top-k-sampling">Top-k Sampling<a class="headerlink" href="#top-k-sampling" title="Permanent link">&para;</a></h3>
+<p><strong>Top-k sampling</strong> restricts the candidate set to the <strong>k</strong> tokens with the highest probabilities. All other tokens have their probabilities set to zero, and the remaining probabilities are renormalized.</p>
+<p>The advantage of top-k is simplicity. The disadvantage is that a fixed k does not adapt to the shape of the distribution. When the model is highly confident (one token has 95% probability), k=50 still keeps 49 mostly-irrelevant tokens. When the model is uncertain (probability spread across many tokens), k=50 might exclude viable candidates.</p>
+<h3 id="top-p-nucleus-sampling">Top-p (Nucleus) Sampling<a class="headerlink" href="#top-p-nucleus-sampling" title="Permanent link">&para;</a></h3>
+<p><strong>Top-p sampling</strong> (also called nucleus sampling) addresses the inflexibility of top-k by dynamically adjusting the candidate set. Instead of keeping a fixed number of tokens, it keeps the smallest set of tokens whose cumulative probability exceeds a threshold <strong>p</strong>.</p>
+<p>When the model is confident, this might mean keeping only 2 or 3 tokens. When the model is uncertain, it might keep hundreds. This adaptive behavior makes top-p generally more robust than top-k.</p>
+<p><img alt="Figure 2-17. How logits, probabilities, and logprobs are computed" src="../../assets/ch02/fig-2-17-logits-probabilities-logprobs.png" width="700" /></p>
+<p class="figure-caption">Figure 2-17. How logits, probabilities, and logprobs are computed</p>
+
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Effect When Low</th>
+<th>Effect When High</th>
+<th>Typical Range</th>
+<th>Best For</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Temperature</strong></td>
+<td>Deterministic, focused, repetitive</td>
+<td>Creative, diverse, potentially incoherent</td>
+<td>0.0 to 2.0</td>
+<td>Controlling overall randomness</td>
+</tr>
+<tr>
+<td><strong>Top-k</strong></td>
+<td>Very selective, may miss good tokens</td>
+<td>Permissive, includes unlikely tokens</td>
+<td>1 to 100</td>
+<td>Simple truncation of unlikely tokens</td>
+</tr>
+<tr>
+<td><strong>Top-p</strong></td>
+<td>Very selective, adapts to confidence</td>
+<td>Permissive, includes most of distribution</td>
+<td>0.1 to 1.0</td>
+<td>Adaptive candidate filtering</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>For most production applications, a good starting point is <strong>temperature 0.0 to 0.3</strong> for factual/deterministic tasks (code generation, extraction, classification) and <strong>temperature 0.7 to 1.0</strong> for creative tasks (writing, brainstorming). Top-p of 0.9 to 0.95 is a reasonable default. You rarely need to adjust top-k if you are already using top-p.</p>
+</div>
+<h3 id="stopping-conditions">Stopping Conditions<a class="headerlink" href="#stopping-conditions" title="Permanent link">&para;</a></h3>
+<p>Generation must stop at some point. Common stopping conditions include:</p>
+<ul>
+<li><strong>End-of-sequence token.</strong> The model generates a special token indicating it has finished.</li>
+<li><strong>Maximum length.</strong> A hard limit on the number of tokens generated.</li>
+<li><strong>Stop sequences.</strong> Specific strings that, when generated, signal the end of the desired output (e.g., a newline after a single-line answer).</li>
+<li><strong>Custom logic.</strong> Application-specific rules, such as stopping when a complete JSON object has been generated.</li>
+</ul>
+<h3 id="test-time-compute">Test Time Compute<a class="headerlink" href="#test-time-compute" title="Permanent link">&para;</a></h3>
+<p>A powerful and increasingly important idea is to invest more compute at <strong>inference time</strong> (test time) to improve output quality. Rather than simply generating one response and returning it, you can use additional computation to find better answers.</p>
+<blockquote>
+<p>DeepMind has argued that scaling test time compute can be more efficient than scaling model parameters. Investing more compute at inference to improve a smaller model's outputs can be more cost-effective than training and serving a larger model.</p>
+</blockquote>
+<p><strong>Best of N.</strong> Generate N candidate responses and select the best one using a reward model, a separate evaluator or self-evaluation. Simple but effective.</p>
+<p><strong>Beam search.</strong> Instead of greedily selecting one token at a time, maintain the top B (beam width) partial sequences at each step and continue expanding all of them. This explores a broader space of possible outputs but is more expensive.</p>
+<p><strong>Majority voting (self-consistency).</strong> Generate multiple responses, extract the answer from each, and take the most common answer. This is particularly effective for reasoning tasks where different reasoning paths can lead to the same correct answer.</p>
+<p><img alt="Figure 2-19. Sampling more outputs led to better performance" src="../../assets/ch02/fig-2-19-sampling-more-outputs.png" width="700" /></p>
+<p class="figure-caption">Figure 2-19. Sampling more outputs led to better performance</p>
+
+<p><strong>Chain-of-thought with verification.</strong> Generate a reasoning chain, then verify each step. Discard or regenerate steps that fail verification.</p>
+<h3 id="structured-outputs">Structured Outputs<a class="headerlink" href="#structured-outputs" title="Permanent link">&para;</a></h3>
+<p>Many applications require the model to produce output in a specific format, such as JSON, XML, SQL or a constrained set of labels. Ensuring structured output is a critical engineering challenge.</p>
+<pre class="mermaid"><code>flowchart TB
+    subgraph Approaches ["&lt;b&gt;Structured Output Approaches&lt;/b&gt;"]
+        direction TB
+        A["&lt;b&gt;Prompting&lt;/b&gt;&lt;br/&gt;Describe the desired&lt;br/&gt;format in the prompt"]
+        B["&lt;b&gt;Post-Processing&lt;/b&gt;&lt;br/&gt;Parse and fix the&lt;br/&gt;model's raw output"]
+        C["&lt;b&gt;Constrained&lt;br/&gt;Sampling&lt;/b&gt;&lt;br/&gt;Restrict token selection&lt;br/&gt;to valid continuations"]
+        D["&lt;b&gt;Finetuning&lt;/b&gt;&lt;br/&gt;Train the model on&lt;br/&gt;examples of the&lt;br/&gt;desired format"]
+    end
+
+    style A fill:#3B5998,stroke:#E2E8F0,color:#E2E8F0
+    style B fill:#5B8C5A,stroke:#E2E8F0,color:#E2E8F0
+    style C fill:#D4A017,stroke:#1A202C,color:#1A202C
+    style D fill:#9B2335,stroke:#E2E8F0,color:#E2E8F0
+    style Approaches fill:#1A202C,stroke:#4A5568,color:#E2E8F0</code></pre>
+<table>
+<thead>
+<tr>
+<th>Approach</th>
+<th>Mechanism</th>
+<th>Reliability</th>
+<th>Flexibility</th>
+<th>Cost</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Prompting</strong></td>
+<td>Include format instructions, examples and schema in the prompt</td>
+<td>Medium. Model may deviate from format</td>
+<td>High. Easy to change</td>
+<td>Low. No extra infrastructure</td>
+</tr>
+<tr>
+<td><strong>Post-Processing</strong></td>
+<td>Regex, parsers or repair heuristics applied to raw output</td>
+<td>Medium. Depends on how badly output deviates</td>
+<td>Medium. Custom logic per format</td>
+<td>Low to medium. Engineering effort</td>
+</tr>
+<tr>
+<td><strong>Constrained Sampling</strong></td>
+<td>At each token, mask out tokens that would create invalid output</td>
+<td>Very high. Guaranteed valid structure</td>
+<td>Medium. Requires grammar/schema definition</td>
+<td>Medium. Needs modified inference</td>
+</tr>
+<tr>
+<td><strong>Finetuning</strong></td>
+<td>Train the model on many examples of the desired format</td>
+<td>High. Model learns the pattern</td>
+<td>Low. Specific to the trained format</td>
+<td>High. Training cost</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p><strong>Constrained sampling</strong> (also called grammar-guided decoding or structured generation) is the most reliable approach for guaranteed format compliance. Tools like Outlines, Guidance and LMQL implement this by maintaining a finite-state machine or context-free grammar alongside the model and masking out tokens that would violate the grammar at each step. Many API providers (OpenAI, Anthropic) now offer built-in JSON mode or structured output features that use similar techniques internally.</p>
+</div>
+<p><img alt="Figure 2-20. Using guidance to generate constrained outputs" src="../../assets/ch02/fig-2-20-guided-constrained-outputs.png" width="700" /></p>
+<p class="figure-caption">Figure 2-20. Using guidance to generate constrained outputs</p>
+
+<p><img alt="Figure 2-22. Adding a classifier head to your base model" src="../../assets/ch02/fig-2-22-classifier-head.png" width="700" /></p>
+<p class="figure-caption">Figure 2-22. Adding a classifier head to your base model</p>
+
+<h2 id="the-probabilistic-nature-of-ai">The Probabilistic Nature of AI<a class="headerlink" href="#the-probabilistic-nature-of-ai" title="Permanent link">&para;</a></h2>
+<p>Foundation models are fundamentally <strong>probabilistic</strong>. They do not compute deterministic answers. They sample from probability distributions. This has profound implications for how we build systems on top of them.</p>
+<h3 id="inconsistency">Inconsistency<a class="headerlink" href="#inconsistency" title="Permanent link">&para;</a></h3>
+<p><strong>Same input, different outputs.</strong> With any temperature above zero, the same prompt can produce different responses on each run. Even at temperature zero, implementation details (floating-point nondeterminism across different hardware, batching effects) can sometimes produce slightly different outputs.</p>
+<p><strong>Slightly different input, drastically different outputs.</strong> Small changes in wording, punctuation or ordering can significantly alter the model's response. Adding a single word to a prompt, reordering few-shot examples or even changing capitalization can shift which reasoning path the model follows.</p>
+<p>This inconsistency is not a bug. It is an inherent property of how these models work. Building reliable systems requires designing for this variability through techniques like retries, majority voting, validation layers and robust evaluation.</p>
+<h3 id="hallucination">Hallucination<a class="headerlink" href="#hallucination" title="Permanent link">&para;</a></h3>
+<p>Hallucination, the generation of plausible-sounding but factually incorrect or entirely fabricated content, is one of the most significant challenges with foundation models.</p>
+<pre class="mermaid"><code>flowchart TB
+    H["&lt;b&gt;Hallucination&lt;/b&gt;&lt;br/&gt;Model generates plausible&lt;br/&gt;but incorrect content"]
+    H --&gt; SD["&lt;b&gt;Self-Delusion&lt;br/&gt;Hypothesis&lt;/b&gt;&lt;br/&gt;The model convinces&lt;br/&gt;itself of false claims&lt;br/&gt;through its own&lt;br/&gt;generation process"]
+    H --&gt; MK["&lt;b&gt;Mismatched Internal&lt;br/&gt;Knowledge Hypothesis&lt;/b&gt;&lt;br/&gt;The model has learned&lt;br/&gt;conflicting information&lt;br/&gt;and resolves the conflict&lt;br/&gt;incorrectly"]
+    H --&gt; KC["&lt;b&gt;Knowledge Cutoff&lt;/b&gt;&lt;br/&gt;The model lacks&lt;br/&gt;information about&lt;br/&gt;events after its&lt;br/&gt;training data"]
+    H --&gt; DS["&lt;b&gt;Distribution Shift&lt;/b&gt;&lt;br/&gt;The query requires&lt;br/&gt;knowledge outside&lt;br/&gt;the model's training&lt;br/&gt;distribution"]
+
+    style H fill:#9B2335,stroke:#E2E8F0,color:#E2E8F0
+    style SD fill:#3B5998,stroke:#E2E8F0,color:#E2E8F0
+    style MK fill:#5B8C5A,stroke:#E2E8F0,color:#E2E8F0
+    style KC fill:#D4A017,stroke:#1A202C,color:#1A202C
+    style DS fill:#6B4C9A,stroke:#E2E8F0,color:#E2E8F0</code></pre>
+<p><strong>The self-delusion hypothesis.</strong> Proposed by Ortega et al. at DeepMind (2021), this hypothesis suggests that autoregressive models can "hallucinate" because they condition on their own previously generated tokens. If an early token in the generation is slightly off, subsequent tokens build on that error, compounding it into a confident-sounding but entirely fabricated statement. The model essentially talks itself into believing something false.</p>
+<p><img alt="Figure 2-24. An example of self-delusion by LLaVA-v1.5-7B" src="../../assets/ch02/fig-2-24-llava-self-delusion.png" width="700" /></p>
+<p class="figure-caption">Figure 2-24. An example of self-delusion by LLaVA-v1.5-7B</p>
+
+<blockquote>
+<p>The self-delusion hypothesis frames hallucination not as a random failure but as a systematic consequence of autoregressive generation. The model does not "know" it is wrong because each subsequent token is generated conditional on the (incorrect) preceding tokens, creating an internally consistent but externally false narrative.</p>
+</blockquote>
+<p><strong>The mismatched internal knowledge hypothesis.</strong> The model's training data contains contradictory information. Different sources may state different "facts" about the same topic. When queried, the model must resolve this ambiguity, and it does not always choose the correct resolution. The model's internal representation is a blend of many sources, and it can surface the wrong one.</p>
+<p><img alt="Figure 2-26. Hallucination is worse for the model that uses both RLHF and SFT" src="../../assets/ch02/fig-2-26-hallucination-rlhf-sft.png" width="700" /></p>
+<p class="figure-caption">Figure 2-26. Hallucination is worse for the model that uses both RLHF and SFT</p>
+
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Hallucination cannot be fully eliminated through prompting or post-training alone. It is a structural consequence of how language models work. Production systems must include verification layers, retrieval augmentation or human review for high-stakes applications. Never deploy an unguarded language model in a context where factual accuracy is critical.</p>
+</div>
+<h2 id="chapter-summary">Chapter Summary<a class="headerlink" href="#chapter-summary" title="Permanent link">&para;</a></h2>
+<p>This chapter covered the four pillars of foundation models.</p>
+<p><strong>Training data</strong> is the raw material. Internet data provides scale but introduces biases, quality issues and coverage gaps. Data quality consistently matters more than quantity, and careful curation can enable smaller models to punch above their weight.</p>
+<p><strong>Modeling</strong> is the architecture. The Transformer, built on self-attention, is the dominant paradigm. Decoder-only architectures have won out for large-scale language models. Scaling laws provide predictable relationships between compute, data, model size and performance. The Chinchilla result showed that many early large models were significantly undertrained.</p>
+<p><strong>Post-training</strong> is the alignment process. SFT teaches models to follow instructions using curated examples. Preference finetuning (RLHF or DPO) further refines the model using human judgments of output quality. Together, these steps transform a raw text completer into a useful assistant.</p>
+<p><strong>Sampling</strong> is the interface between the model and the world. Temperature, top-k and top-p control the randomness and diversity of outputs. Test time compute techniques like Best of N and majority voting can improve quality at the cost of inference compute. Structured output approaches ensure the model produces properly formatted results.</p>
+<p>Underpinning all of this is the <strong>probabilistic nature</strong> of these models. They are not deterministic machines. They are stochastic systems that sample from learned distributions. Inconsistency and hallucination are not bugs to be patched. They are inherent properties to be managed through careful system design.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>As an AI engineer, you will rarely train foundation models from scratch. But understanding the concepts in this chapter, from training data composition to sampling strategies, will make you far more effective at selecting models, diagnosing failures and building reliable systems on top of them.</p>
+</div>
+<h2 id="navigation">Navigation<a class="headerlink" href="#navigation" title="Permanent link">&para;</a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../01-introduction/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 01. Introduction">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                01. Introduction
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../03-evaluation-methodology/" class="md-footer__link md-footer__link--next" aria-label="Next: 03. Evaluation Methodology">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                03. Evaluation Methodology
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "navigation.footer", "toc.follow", "toc.integrate", "content.tabs.link", "search.highlight", "search.suggest", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@10/dist/mermaid.min.js"></script>
+      
+        <script src="../../javascripts/mermaid.js"></script>
+      
+    
+  </body>
+</html>

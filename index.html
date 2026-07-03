@@ -1,0 +1,1162 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A polished field guide to building production AI applications with foundation models.">
+      
+      
+      
+        <link rel="canonical" href="https://arnabbir.github.io/ai-engineering-explained/">
+      
+      
+      
+        <link rel="next" href="overview/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="assets/cover/book-cover.jpg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>AI Engineering Playbook</title>
+      
+    
+    
+      <link rel="stylesheet" href="assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="stylesheets/extra.css">
+    
+    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="pink">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#ai-engineering-playbook" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="." title="AI Engineering Playbook" class="md-header__button md-logo" aria-label="AI Engineering Playbook" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m19 2-5 4.5v11l5-4.5zM6.5 5C4.55 5 2.45 5.4 1 6.5v14.66c0 .25.25.5.5.5.1 0 .15-.07.25-.07 1.35-.65 3.3-1.09 4.75-1.09 1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.31 4.75 1.06.1.05.15.03.25.03.25 0 .5-.25.5-.5V6.5c-.6-.45-1.25-.75-2-1V19c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V6.5C10.55 5.4 8.45 5 6.5 5"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            AI Engineering Playbook
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Home
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="pink"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="pink"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/ArnabBir/ai-engineering-explained" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="overview/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Overview
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="chapters/01-introduction/" class="md-tabs__link">
+          
+  
+  
+  Chapters
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="." title="AI Engineering Playbook" class="md-nav__button md-logo" aria-label="AI Engineering Playbook" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m19 2-5 4.5v11l5-4.5zM6.5 5C4.55 5 2.45 5.4 1 6.5v14.66c0 .25.25.5.5.5.1 0 .15-.07.25-.07 1.35-.65 3.3-1.09 4.75-1.09 1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.31 4.75 1.06.1.05.15.03.25.03.25 0 .5-.25.5-.5V6.5c-.6-.45-1.25-.75-2-1V19c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V6.5C10.55 5.4 8.45 5 6.5 5"/></svg>
+
+    </a>
+    AI Engineering Playbook
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/ArnabBir/ai-engineering-explained" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+      <a href="." class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapters
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Chapters
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="chapters/01-introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    01. Introduction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="chapters/02-understanding-foundation-models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    02. Understanding Foundation Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="chapters/03-evaluation-methodology/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03. Evaluation Methodology
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="chapters/04-evaluate-ai-systems/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    04. Evaluate AI Systems
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="chapters/05-prompt-engineering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    05. Prompt Engineering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="chapters/06-rag-and-agents/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    06. RAG and Agents
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="chapters/07-finetuning/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    07. Finetuning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="chapters/08-dataset-engineering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    08. Dataset Engineering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="chapters/09-inference-optimization/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    09. Inference Optimization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="chapters/10-ai-engineering-architecture-and-user-feedback/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10. Architecture and User Feedback
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="ai-engineering-playbook">AI Engineering Playbook<a class="headerlink" href="#ai-engineering-playbook" title="Permanent link">&para;</a></h1>
+<div class="book-hero">
+  <div class="book-hero__copy">
+    <p class="book-hero__eyebrow">Printable playbook. Visual handbook. Production reference.</p>
+    <p class="book-hero__lede">A richly structured guide to building AI applications with foundation models, reworked as a fast, navigable reading experience for the web.</p>
+    <div class="book-hero__actions">
+      <a class="md-button md-button--primary" href="chapters/01-introduction/">Start reading</a>
+      <a class="md-button" href="overview/">Browse the roadmap</a>
+    </div>
+  </div>
+  <div class="book-hero__cover">
+    <img src="assets/cover/book-cover.jpg" alt="AI Engineering Playbook cover" width="320" />
+  </div>
+</div>
+
+<div class="book-grid">
+  <div class="book-card">
+    <h2>10 Chapters</h2>
+    <p>From foundations and evaluation through RAG, finetuning, inference optimization, and production architecture.</p>
+  </div>
+  <div class="book-card">
+    <h2>Figures + Diagrams</h2>
+    <p>Visual explanations, Mermaid workflows, and embedded source figures preserved across the site.</p>
+  </div>
+  <div class="book-card">
+    <h2>Built For Reading</h2>
+    <p>Improved navigation, readable typography, and polished content blocks designed for long-form study.</p>
+  </div>
+</div>
+
+<hr />
+<p><img src="assets/cover/book-cover.jpg" alt="AI Engineering by Chip Huyen" width="280"/></p>
+<h1 id="ai-engineering-playbook_1">AI Engineering Playbook<a class="headerlink" href="#ai-engineering-playbook_1" title="Permanent link">&para;</a></h1>
+<p><strong>A comprehensive field guide to building production AI applications with foundation models</strong></p>
+<p>Based on <em>AI Engineering. Building Applications with Foundation Models</em> by <strong>Chip Huyen</strong> (O'Reilly, 2025)</p>
+<p><img alt="Chapters" src="https://img.shields.io/badge/Chapters-10-e94560?style=for-the-badge&amp;labelColor=1a1a2e" />
+<img alt="Figures" src="https://img.shields.io/badge/Figures-157-533483?style=for-the-badge&amp;labelColor=1a1a2e" />
+<img alt="Diagrams" src="https://img.shields.io/badge/Mermaid_Diagrams-70+-0f3460?style=for-the-badge&amp;labelColor=1a1a2e" />
+<img alt="Pages" src="https://img.shields.io/badge/Book_Pages-400+-16213e?style=for-the-badge&amp;labelColor=1a1a2e" /></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This playbook distills the entire book into structured, actionable chapters designed for Principal AI Engineers, technical leads and practitioners building real world AI systems. Every chapter contains architecture diagrams, extracted book figures, author insights, practitioner checklists and deep technical breakdowns.</p>
+</div>
+<blockquote>
+<p>"Tools become outdated quickly, but fundamentals should last longer."
+Chip Huyen</p>
+</blockquote>
+<h2 id="why-this-playbook-exists">Why This Playbook Exists<a class="headerlink" href="#why-this-playbook-exists" title="Permanent link">&para;</a></h2>
+<p>Foundation models have transformed AI from an esoteric discipline into a powerful development tool that anyone can use. The barrier to entry for building AI products has dropped dramatically, but the barrier to building <strong>production grade</strong> AI products remains high. This playbook bridges that gap.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>This is not a tutorial. It is a <strong>decision framework</strong> for selecting the right models, techniques, data strategies and deployment patterns for your specific needs. It teaches you <em>how to think</em> about AI engineering, not just how to use a particular tool or API.</p>
+</div>
+<h2 id="chapters">Chapters<a class="headerlink" href="#chapters" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">#</th>
+<th>Chapter</th>
+<th>Core Question It Answers</th>
+<th style="text-align: center;">Figures</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">01</td>
+<td><a href="chapters/01-introduction/"><strong>Introduction to Building AI Applications</strong></a></td>
+<td>What is AI engineering, why does it matter now and what can you build with it?</td>
+<td style="text-align: center;">16</td>
+</tr>
+<tr>
+<td style="text-align: center;">02</td>
+<td><a href="chapters/02-understanding-foundation-models/"><strong>Understanding Foundation Models</strong></a></td>
+<td>How do foundation models work under the hood, and why do they behave the way they do?</td>
+<td style="text-align: center;">26</td>
+</tr>
+<tr>
+<td style="text-align: center;">03</td>
+<td><a href="chapters/03-evaluation-methodology/"><strong>Evaluation Methodology</strong></a></td>
+<td>How do you measure whether a model is actually good at what you need it to do?</td>
+<td style="text-align: center;">10</td>
+</tr>
+<tr>
+<td style="text-align: center;">04</td>
+<td><a href="chapters/04-evaluate-ai-systems/"><strong>Evaluate AI Systems</strong></a></td>
+<td>How do you build a reliable, systematic evaluation pipeline for your application?</td>
+<td style="text-align: center;">10</td>
+</tr>
+<tr>
+<td style="text-align: center;">05</td>
+<td><a href="chapters/05-prompt-engineering/"><strong>Prompt Engineering</strong></a></td>
+<td>How do you craft instructions that consistently get the model to do what you want?</td>
+<td style="text-align: center;">16</td>
+</tr>
+<tr>
+<td style="text-align: center;">06</td>
+<td><a href="chapters/06-rag-and-agents/"><strong>RAG and Agents</strong></a></td>
+<td>How do you give models access to external knowledge and the ability to take actions?</td>
+<td style="text-align: center;">16</td>
+</tr>
+<tr>
+<td style="text-align: center;">07</td>
+<td><a href="chapters/07-finetuning/"><strong>Finetuning</strong></a></td>
+<td>When and how should you change the model itself to improve performance?</td>
+<td style="text-align: center;">20</td>
+</tr>
+<tr>
+<td style="text-align: center;">08</td>
+<td><a href="chapters/08-dataset-engineering/"><strong>Dataset Engineering</strong></a></td>
+<td>How do you acquire, curate, synthesize and validate the data that powers your AI?</td>
+<td style="text-align: center;">7</td>
+</tr>
+<tr>
+<td style="text-align: center;">09</td>
+<td><a href="chapters/09-inference-optimization/"><strong>Inference Optimization</strong></a></td>
+<td>How do you make model inference faster and cheaper without sacrificing quality?</td>
+<td style="text-align: center;">19</td>
+</tr>
+<tr>
+<td style="text-align: center;">10</td>
+<td><a href="chapters/10-ai-engineering-architecture-and-user-feedback/"><strong>Architecture and User Feedback</strong></a></td>
+<td>How do you bring everything together into a production system that improves over time?</td>
+<td style="text-align: center;">21</td>
+</tr>
+</tbody>
+</table>
+<h2 id="the-ai-application-development-process">The AI Application Development Process<a class="headerlink" href="#the-ai-application-development-process" title="Permanent link">&para;</a></h2>
+<p>This playbook follows the typical process for developing an AI application. The diagram below shows how each chapter maps to the development lifecycle.</p>
+<pre class="mermaid"><code>flowchart TD
+    A["Identify Use Case&lt;br/&gt;&lt;i&gt;Ch 1&lt;/i&gt;"] --&gt; B["Understand Your Model&lt;br/&gt;&lt;i&gt;Ch 2&lt;/i&gt;"]
+    B --&gt; C["Set Up Evaluation&lt;br/&gt;&lt;i&gt;Ch 3, Ch 4&lt;/i&gt;"]
+    C --&gt; D{"Adapt the Model"}
+
+    D --&gt;|"Change Instructions"| E["Prompt Engineering&lt;br/&gt;&lt;i&gt;Ch 5&lt;/i&gt;"]
+    D --&gt;|"Add Context"| F["RAG and Agents&lt;br/&gt;&lt;i&gt;Ch 6&lt;/i&gt;"]
+    D --&gt;|"Change the Model"| G["Finetuning&lt;br/&gt;&lt;i&gt;Ch 7&lt;/i&gt;"]
+
+    E --&gt; H["Curate Data&lt;br/&gt;&lt;i&gt;Ch 8&lt;/i&gt;"]
+    F --&gt; H
+    G --&gt; H
+
+    H --&gt; I["Optimize Inference&lt;br/&gt;&lt;i&gt;Ch 9&lt;/i&gt;"]
+    I --&gt; J["Deploy and Monitor&lt;br/&gt;&lt;i&gt;Ch 10&lt;/i&gt;"]
+    J --&gt;|"Feedback Loop"| C
+
+    style A fill:#e94560,stroke:#1a1a2e,color:#fff
+    style B fill:#e94560,stroke:#1a1a2e,color:#fff
+    style C fill:#0f3460,stroke:#1a1a2e,color:#fff
+    style D fill:#533483,stroke:#1a1a2e,color:#fff
+    style E fill:#533483,stroke:#1a1a2e,color:#fff
+    style F fill:#533483,stroke:#1a1a2e,color:#fff
+    style G fill:#533483,stroke:#1a1a2e,color:#fff
+    style H fill:#e94560,stroke:#1a1a2e,color:#fff
+    style I fill:#0f3460,stroke:#1a1a2e,color:#fff
+    style J fill:#16213e,stroke:#e94560,color:#fff</code></pre>
+<h2 id="three-layers-of-the-ai-stack">Three Layers of the AI Stack<a class="headerlink" href="#three-layers-of-the-ai-stack" title="Permanent link">&para;</a></h2>
+<p>Every AI application, regardless of complexity, sits on top of three fundamental layers.</p>
+<pre class="mermaid"><code>graph TD
+    subgraph AppDev["Application Development"]
+        style AppDev fill:#e94560,stroke:#1a1a2e,color:#fff
+        P["Prompt Engineering"]
+        E["Evaluation"]
+        UI["AI Interface / UX"]
+    end
+
+    subgraph ModelDev["Model Development"]
+        style ModelDev fill:#533483,stroke:#1a1a2e,color:#fff
+        T["Training / Finetuning"]
+        D["Dataset Engineering"]
+        IO["Inference Optimization"]
+    end
+
+    subgraph Infra["Infrastructure"]
+        style Infra fill:#0f3460,stroke:#1a1a2e,color:#fff
+        S["Model Serving"]
+        C["Compute / GPU Management"]
+        M["Monitoring / Observability"]
+    end
+
+    AppDev --&gt; ModelDev --&gt; Infra</code></pre>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>When developing an AI application, you will likely start from the top layer (Application Development) and move down only as needed. Many successful applications never go beyond prompt engineering and evaluation. Only move to finetuning or infrastructure optimization when you have evidence that simpler approaches are insufficient.</p>
+</div>
+<h2 id="who-this-playbook-is-for">Who This Playbook Is For<a class="headerlink" href="#who-this-playbook-is-for" title="Permanent link">&para;</a></h2>
+<p>This playbook is for you if you can relate to one of the following scenarios.</p>
+<p><strong>You are building or optimizing an AI application.</strong> Whether starting from scratch or looking to move beyond the demo phase into a production ready stage. You may also be facing issues like hallucinations, security, latency or costs and need targeted solutions.</p>
+<p><strong>You want to streamline your team's AI development process.</strong> Making it more systematic, faster and reliable.</p>
+<p><strong>You want to understand how your organization can leverage foundation models</strong> to improve the business's bottom line and how to build a team to do so.</p>
+<p><strong>You are a tool developer</strong> who wants to identify underserved areas in AI engineering to position your products in the ecosystem.</p>
+<p><strong>You are a researcher</strong> who wants to better understand AI use cases and production challenges.</p>
+<h2 id="quick-navigation-by-topic">Quick Navigation by Topic<a class="headerlink" href="#quick-navigation-by-topic" title="Permanent link">&para;</a></h2>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Use these shortcuts if you already know what challenge you are facing.</p>
+</div>
+<table>
+<thead>
+<tr>
+<th>If You Need To...</th>
+<th>Start Here</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Understand what AI engineering is and plan your project</td>
+<td><a href="chapters/01-introduction/">Ch 1. Introduction</a></td>
+</tr>
+<tr>
+<td>Learn how transformers, attention and sampling work</td>
+<td><a href="chapters/02-understanding-foundation-models/">Ch 2. Foundation Models</a></td>
+</tr>
+<tr>
+<td>Set up metrics and benchmarks for model quality</td>
+<td><a href="chapters/03-evaluation-methodology/">Ch 3. Evaluation Methodology</a></td>
+</tr>
+<tr>
+<td>Build a systematic evaluation pipeline for your app</td>
+<td><a href="chapters/04-evaluate-ai-systems/">Ch 4. Evaluate AI Systems</a></td>
+</tr>
+<tr>
+<td>Write better prompts and defend against attacks</td>
+<td><a href="chapters/05-prompt-engineering/">Ch 5. Prompt Engineering</a></td>
+</tr>
+<tr>
+<td>Add external knowledge or build AI agents</td>
+<td><a href="chapters/06-rag-and-agents/">Ch 6. RAG and Agents</a></td>
+</tr>
+<tr>
+<td>Decide when and how to finetune a model</td>
+<td><a href="chapters/07-finetuning/">Ch 7. Finetuning</a></td>
+</tr>
+<tr>
+<td>Curate, synthesize or clean training data</td>
+<td><a href="chapters/08-dataset-engineering/">Ch 8. Dataset Engineering</a></td>
+</tr>
+<tr>
+<td>Make inference faster, cheaper or more efficient</td>
+<td><a href="chapters/09-inference-optimization/">Ch 9. Inference Optimization</a></td>
+</tr>
+<tr>
+<td>Design production architecture with feedback loops</td>
+<td><a href="chapters/10-ai-engineering-architecture-and-user-feedback/">Ch 10. Architecture and Feedback</a></td>
+</tr>
+</tbody>
+</table>
+<h2 id="key-themes-across-the-book">Key Themes Across the Book<a class="headerlink" href="#key-themes-across-the-book" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Theme</th>
+<th>Where It Appears</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Evaluation is the hardest problem</strong></td>
+<td>Ch 3, Ch 4 and revisited in every subsequent chapter</td>
+</tr>
+<tr>
+<td><strong>Start simple, add complexity only when needed</strong></td>
+<td>Ch 5 (prompting before finetuning), Ch 6 (RAG before agents), Ch 7 (LoRA before full finetuning)</td>
+</tr>
+<tr>
+<td><strong>Data quality matters more than data quantity</strong></td>
+<td>Ch 2 (training data), Ch 7 (finetuning data), Ch 8 (dataset engineering)</td>
+</tr>
+<tr>
+<td><strong>The last mile is the hardest</strong></td>
+<td>Ch 1 (planning), Ch 10 (production feedback loops)</td>
+</tr>
+<tr>
+<td><strong>Cost and latency are first class concerns</strong></td>
+<td>Ch 4 (evaluation criteria), Ch 9 (inference optimization), Ch 10 (caching, routing)</td>
+</tr>
+<tr>
+<td><strong>Buy vs Build is a recurring decision</strong></td>
+<td>Ch 1 (planning), Ch 4 (model selection), Ch 7 (finetune vs API), Ch 9 (self host vs API)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="how-to-use-this-playbook">How to Use This Playbook<a class="headerlink" href="#how-to-use-this-playbook" title="Permanent link">&para;</a></h2>
+<p><strong>Read linearly</strong> if you are new to AI engineering. The chapters build on each other and follow the natural development lifecycle.</p>
+<p><strong>Jump to a specific chapter</strong> if you are an experienced practitioner facing a specific challenge. Each chapter is designed to be self contained.</p>
+<p><strong>Use the diagrams</strong> as reference architectures for your team's design discussions and architecture reviews.</p>
+<p><strong>Use the checklists</strong> at the end of each chapter as quality gates before moving to the next phase of your project.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The AI field moves at an extraordinary pace. Models, tools and pricing change constantly. This playbook focuses on <strong>fundamentals and decision frameworks</strong> that outlast any specific tool. When a specific model or tool is mentioned, treat it as an illustrative example rather than a permanent recommendation.</p>
+</div>
+<h2 id="repository-structure">Repository Structure<a class="headerlink" href="#repository-structure" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ai-engineering-playbook/
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>├── README.md                          # This file. Start here.
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>├── chapters/
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   ├── 01-introduction.md             # AI engineering landscape and planning
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   ├── 02-understanding-foundation-models.md  # Transformers, training, sampling
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   ├── 03-evaluation-methodology.md   # Metrics, benchmarks, AI judges
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   ├── 04-evaluate-ai-systems.md      # Evaluation pipelines for applications
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   ├── 05-prompt-engineering.md       # Prompt design, optimization, defense
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   ├── 06-rag-and-agents.md           # Retrieval augmented generation, agents
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   ├── 07-finetuning.md              # LoRA, QLoRA, model merging
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   ├── 08-dataset-engineering.md      # Data curation, synthesis, quality
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   ├── 09-inference-optimization.md   # Quantization, batching, parallelism
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│   └── 10-ai-engineering-architecture-and-user-feedback.md  # Production systems
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>└── assets/
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    ├── cover/                         # Book cover image
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    ├── ch01/ through ch10/            # Extracted figures per chapter
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    └── (157 figures total)
+</code></pre></div>
+<h2 id="source">Source<a class="headerlink" href="#source" title="Permanent link">&para;</a></h2>
+<p><strong>AI Engineering. Building Applications with Foundation Models</strong>
+<em>Chip Huyen. O'Reilly Media, December 2024. First Edition.</em>
+ISBN 978-1-098-16630-4</p>
+<p><strong>About the Author.</strong> Chip Huyen works at the intersection of AI, data and storytelling. Previously with Snorkel AI and NVIDIA, she founded an AI infrastructure startup (acquired) and taught machine learning systems design at Stanford. Her book <em>Designing Machine Learning Systems</em> (O'Reilly) has been translated into over 10 languages.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>This playbook is a study companion and reference guide. It does not replace the original book. For the complete text, examples and full context, please purchase the book from O'Reilly.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+        
+          
+          <a href="overview/" class="md-footer__link md-footer__link--next" aria-label="Next: Overview">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Overview
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "navigation.footer", "toc.follow", "toc.integrate", "content.tabs.link", "search.highlight", "search.suggest", "content.code.copy"], "search": "assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@10/dist/mermaid.min.js"></script>
+      
+        <script src="javascripts/mermaid.js"></script>
+      
+    
+  </body>
+</html>

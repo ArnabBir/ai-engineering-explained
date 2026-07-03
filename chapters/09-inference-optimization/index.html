@@ -1,0 +1,2482 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A polished field guide to building production AI applications with foundation models.">
+      
+      
+      
+        <link rel="canonical" href="https://arnabbir.github.io/ai-engineering-explained/chapters/09-inference-optimization/">
+      
+      
+        <link rel="prev" href="../08-dataset-engineering/">
+      
+      
+        <link rel="next" href="../10-ai-engineering-architecture-and-user-feedback/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/cover/book-cover.jpg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>09. Inference Optimization - AI Engineering Playbook</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="pink">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#chapter-9-inference-optimization" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="AI Engineering Playbook" class="md-header__button md-logo" aria-label="AI Engineering Playbook" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m19 2-5 4.5v11l5-4.5zM6.5 5C4.55 5 2.45 5.4 1 6.5v14.66c0 .25.25.5.5.5.1 0 .15-.07.25-.07 1.35-.65 3.3-1.09 4.75-1.09 1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.31 4.75 1.06.1.05.15.03.25.03.25 0 .5-.25.5-.5V6.5c-.6-.45-1.25-.75-2-1V19c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V6.5C10.55 5.4 8.45 5 6.5 5"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            AI Engineering Playbook
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              09. Inference Optimization
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="pink"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="pink"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/ArnabBir/ai-engineering-explained" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../overview/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Overview
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../01-introduction/" class="md-tabs__link">
+          
+  
+  
+  Chapters
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="AI Engineering Playbook" class="md-nav__button md-logo" aria-label="AI Engineering Playbook" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m19 2-5 4.5v11l5-4.5zM6.5 5C4.55 5 2.45 5.4 1 6.5v14.66c0 .25.25.5.5.5.1 0 .15-.07.25-.07 1.35-.65 3.3-1.09 4.75-1.09 1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.31 4.75 1.06.1.05.15.03.25.03.25 0 .5-.25.5-.5V6.5c-.6-.45-1.25-.75-2-1V19c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V6.5C10.55 5.4 8.45 5 6.5 5"/></svg>
+
+    </a>
+    AI Engineering Playbook
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/ArnabBir/ai-engineering-explained" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapters
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Chapters
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    01. Introduction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-understanding-foundation-models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    02. Understanding Foundation Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-evaluation-methodology/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03. Evaluation Methodology
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-evaluate-ai-systems/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    04. Evaluate AI Systems
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-prompt-engineering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    05. Prompt Engineering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-rag-and-agents/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    06. RAG and Agents
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-finetuning/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    07. Finetuning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-dataset-engineering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    08. Dataset Engineering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    09. Inference Optimization
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    09. Inference Optimization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table of Contents
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#understanding-inference-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understanding Inference Optimization
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Understanding Inference Optimization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#inference-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inference Metrics
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prefill-vs-decode-phases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prefill vs Decode Phases
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#compute-bound-vs-memory-bandwidth-bound" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compute Bound vs Memory Bandwidth Bound
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#model-flops-utilization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Model FLOP/s Utilization
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#numerical-representations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Numerical Representations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hardware-foundations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hardware Foundations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Hardware Foundations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cpu-vs-gpu-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CPU vs GPU Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#specialized-ai-chips" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Specialized AI Chips
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#computational-capabilities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Computational Capabilities
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#memory-hierarchy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Memory Hierarchy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#memory-bandwidth-and-power-consumption" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Memory Bandwidth and Power Consumption
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#selecting-accelerators" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Selecting Accelerators
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#model-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Model Optimization
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Model Optimization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#model-compression" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Model Compression
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Model Compression">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#quantization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quantization
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#distillation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Distillation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pruning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pruning
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#overcoming-the-autoregressive-decoding-bottleneck" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overcoming the Autoregressive Decoding Bottleneck
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Overcoming the Autoregressive Decoding Bottleneck">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#speculative-decoding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Speculative Decoding
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#inference-with-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inference with Reference
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parallel-decoding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parallel Decoding
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#attention-mechanism-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Attention Mechanism Optimization
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Attention Mechanism Optimization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#kv-cache" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        KV Cache
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#redesigning-attention" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Redesigning Attention
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#optimizing-kv-cache-size" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Optimizing KV Cache Size
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#writing-kernels-for-attention-flashattention" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Writing Kernels for Attention. FlashAttention
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kernels-and-compilers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kernels and Compilers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Kernels and Compilers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-are-kernels" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Are Kernels?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kernel-optimization-techniques" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kernel Optimization Techniques
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#compilers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compilers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pytorch-optimization-case-study" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PyTorch Optimization Case Study
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#inference-service-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inference Service Optimization
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Inference Service Optimization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#batching-strategies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Batching Strategies
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#decoupling-prefill-and-decode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decoupling Prefill and Decode
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prompt-caching" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prompt Caching
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parallelism-strategies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parallelism Strategies
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parallelism Strategies">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#replica-parallelism" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Replica Parallelism
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#model-parallelism" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Model Parallelism
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#contextsequence-parallelism" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Context/Sequence Parallelism
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#practitioner-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Practitioner Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-ai-engineering-architecture-and-user-feedback/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10. Architecture and User Feedback
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="chapter-9-inference-optimization">Chapter 9. Inference Optimization<a class="headerlink" href="#chapter-9-inference-optimization" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p>"Inference can exceed the cost of training in commonly used systems, and inference accounts for up to 90% of the machine learning costs for deployed AI systems."
+Chip Huyen</p>
+</blockquote>
+<p>Inference optimization is the discipline of making AI models run faster, cheaper and more efficiently in production. While training a model happens once (or a few times), inference happens millions or billions of times over the lifetime of a deployed system. This chapter provides a comprehensive guide to the techniques, hardware considerations and system level strategies that make inference practical at scale. From numerical precision and GPU memory hierarchies to speculative decoding and continuous batching, every layer of the inference stack offers opportunities for dramatic improvement.</p>
+<p><img alt="Figure 9-1. A simple inference service" src="../../assets/ch09/fig-9-1-simple-inference-service.png" width="700" /></p>
+<p class="figure-caption">Figure 9-1. A simple inference service</p>
+
+<h2 id="table-of-contents">Table of Contents<a class="headerlink" href="#table-of-contents" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="#understanding-inference-optimization">Understanding Inference Optimization</a></li>
+<li><a href="#inference-metrics">Inference Metrics</a></li>
+<li><a href="#prefill-vs-decode-phases">Prefill vs Decode Phases</a></li>
+<li><a href="#compute-bound-vs-memory-bandwidth-bound">Compute Bound vs Memory Bandwidth Bound</a></li>
+<li><a href="#model-flops-utilization">Model FLOP/s Utilization</a></li>
+<li><a href="#numerical-representations">Numerical Representations</a></li>
+<li><a href="#hardware-foundations">Hardware Foundations</a></li>
+<li><a href="#selecting-accelerators">Selecting Accelerators</a></li>
+<li><a href="#model-optimization">Model Optimization</a></li>
+<li><a href="#model-compression">Model Compression</a></li>
+<li><a href="#overcoming-the-autoregressive-decoding-bottleneck">Overcoming the Autoregressive Decoding Bottleneck</a></li>
+<li><a href="#attention-mechanism-optimization">Attention Mechanism Optimization</a></li>
+<li><a href="#kernels-and-compilers">Kernels and Compilers</a></li>
+<li><a href="#inference-service-optimization">Inference Service Optimization</a></li>
+<li><a href="#batching-strategies">Batching Strategies</a></li>
+<li><a href="#decoupling-prefill-and-decode">Decoupling Prefill and Decode</a></li>
+<li><a href="#prompt-caching">Prompt Caching</a></li>
+<li><a href="#parallelism-strategies">Parallelism Strategies</a></li>
+<li><a href="#summary">Summary</a></li>
+<li><a href="#practitioner-checklist">Practitioner Checklist</a></li>
+</ul>
+<h2 id="understanding-inference-optimization">Understanding Inference Optimization<a class="headerlink" href="#understanding-inference-optimization" title="Permanent link">&para;</a></h2>
+<p>Before diving into specific optimization techniques, it is essential to understand the metrics that define inference performance, the phases of text generation, the hardware that powers it all and the numerical formats that govern precision and speed tradeoffs.</p>
+<pre class="mermaid"><code>graph TD
+    A["Inference Optimization"] --&gt; B["Model Level"]
+    A --&gt; C["Hardware Level"]
+    A --&gt; D["Service Level"]
+
+    B --&gt; B1["Compression&lt;br/&gt;(Quantization, Distillation, Pruning)"]
+    B --&gt; B2["Decoding Strategies&lt;br/&gt;(Speculative, Parallel)"]
+    B --&gt; B3["Attention Optimization&lt;br/&gt;(KV Cache, FlashAttention)"]
+    B --&gt; B4["Kernels and Compilers"]
+
+    C --&gt; C1["GPU Architecture"]
+    C --&gt; C2["Memory Hierarchy"]
+    C --&gt; C3["Specialized AI Chips"]
+    C --&gt; C4["Numerical Precision"]
+
+    D --&gt; D1["Batching&lt;br/&gt;(Static, Dynamic, Continuous)"]
+    D --&gt; D2["Prompt Caching"]
+    D --&gt; D3["Parallelism&lt;br/&gt;(Replica, Tensor, Pipeline)"]
+    D --&gt; D4["Prefill/Decode&lt;br/&gt;Decoupling"]
+
+    style A fill:#1a1a2e,stroke:#e94560,color:#ffffff
+    style B fill:#16213e,stroke:#0f3460,color:#ffffff
+    style C fill:#16213e,stroke:#0f3460,color:#ffffff
+    style D fill:#16213e,stroke:#0f3460,color:#ffffff
+    style B1 fill:#0f3460,stroke:#533483,color:#ffffff
+    style B2 fill:#0f3460,stroke:#533483,color:#ffffff
+    style B3 fill:#0f3460,stroke:#533483,color:#ffffff
+    style B4 fill:#0f3460,stroke:#533483,color:#ffffff
+    style C1 fill:#0f3460,stroke:#533483,color:#ffffff
+    style C2 fill:#0f3460,stroke:#533483,color:#ffffff
+    style C3 fill:#0f3460,stroke:#533483,color:#ffffff
+    style C4 fill:#0f3460,stroke:#533483,color:#ffffff
+    style D1 fill:#0f3460,stroke:#533483,color:#ffffff
+    style D2 fill:#0f3460,stroke:#533483,color:#ffffff
+    style D3 fill:#0f3460,stroke:#533483,color:#ffffff
+    style D4 fill:#0f3460,stroke:#533483,color:#ffffff</code></pre>
+<h3 id="inference-metrics">Inference Metrics<a class="headerlink" href="#inference-metrics" title="Permanent link">&para;</a></h3>
+<p>Inference performance is measured across two primary dimensions. <strong>Latency</strong> captures how quickly an individual request is served. <strong>Throughput</strong> captures how many requests or tokens a system can handle over time. Understanding these metrics is the foundation for every optimization decision.</p>
+<p>There is a fundamental tension between latency and throughput. Techniques that maximize throughput (like large batch sizes) often increase individual request latency. Conversely, optimizing for minimum latency (processing one request at a time) wastes hardware capacity. Production systems must carefully balance these competing objectives based on application requirements.</p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Full Name</th>
+<th>Definition</th>
+<th>Optimizing For</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>TTFT</strong></td>
+<td>Time to First Token</td>
+<td>Time from when a request is sent until the first token is generated</td>
+<td>Interactive applications, chat UIs, streaming</td>
+</tr>
+<tr>
+<td><strong>TPOT</strong></td>
+<td>Time Per Output Token</td>
+<td>Average time to generate each subsequent token after the first</td>
+<td>Smooth streaming experience</td>
+</tr>
+<tr>
+<td><strong>Total Latency</strong></td>
+<td>End to End Latency</td>
+<td>Total time from request to final token. Equals TTFT + (TPOT x number of output tokens)</td>
+<td>Batch processing, non interactive workloads</td>
+</tr>
+<tr>
+<td><strong>TPS</strong></td>
+<td>Tokens Per Second</td>
+<td>Number of tokens generated per second across all requests</td>
+<td>System capacity planning</td>
+</tr>
+<tr>
+<td><strong>RPS</strong></td>
+<td>Requests Per Second</td>
+<td>Number of complete requests handled per second</td>
+<td>API throughput and scaling</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>TTFT and TPOT often have <strong>opposing optimization strategies</strong>. Reducing TTFT may require prioritizing prefill computation, while reducing TPOT requires optimizing the decode phase. System designers must decide which metric matters most for their use case.</p>
+</div>
+<p><strong>Latency</strong> is what individual users feel. A chatbot needs low TTFT so users see a response starting quickly, and low TPOT so the streaming text appears fluid. <strong>Throughput</strong> is what system operators care about. Higher throughput means more users served per GPU, which directly translates to lower cost per request.</p>
+<h3 id="prefill-vs-decode-phases">Prefill vs Decode Phases<a class="headerlink" href="#prefill-vs-decode-phases" title="Permanent link">&para;</a></h3>
+<p>Autoregressive text generation happens in two distinct phases, each with fundamentally different computational characteristics.</p>
+<pre class="mermaid"><code>graph LR
+    subgraph Prefill["Prefill Phase"]
+        direction TB
+        P1["Process entire input&lt;br/&gt;prompt in parallel"] --&gt; P2["Compute KV cache&lt;br/&gt;for all input tokens"]
+        P2 --&gt; P3["Generate first&lt;br/&gt;output token"]
+    end
+
+    subgraph Decode["Decode Phase"]
+        direction TB
+        D1["Generate one&lt;br/&gt;token at a time"] --&gt; D2["Attend to all&lt;br/&gt;previous KV cache"]
+        D2 --&gt; D3["Append new KV&lt;br/&gt;to cache"]
+        D3 --&gt; D4["Repeat until EOS&lt;br/&gt;or max length"]
+    end
+
+    Prefill --&gt;|"First token&lt;br/&gt;produced"| Decode
+
+    style Prefill fill:#2d6a4f,stroke:#1b4332,color:#ffffff
+    style Decode fill:#e76f51,stroke:#9c4228,color:#ffffff
+    style P1 fill:#40916c,stroke:#2d6a4f,color:#ffffff
+    style P2 fill:#40916c,stroke:#2d6a4f,color:#ffffff
+    style P3 fill:#40916c,stroke:#2d6a4f,color:#ffffff
+    style D1 fill:#f4a261,stroke:#e76f51,color:#1a1a1a
+    style D2 fill:#f4a261,stroke:#e76f51,color:#1a1a1a
+    style D3 fill:#f4a261,stroke:#e76f51,color:#1a1a1a
+    style D4 fill:#f4a261,stroke:#e76f51,color:#1a1a1a</code></pre>
+<p><strong>Prefill phase.</strong> The entire input prompt is processed in parallel. All input tokens are fed through the model simultaneously, and the key value (KV) pairs for each token at each layer are computed and stored. This phase is <strong>compute bound</strong> because the GPU is performing a large number of floating point operations on the full prompt. The duration of the prefill phase determines <strong>TTFT</strong>.</p>
+<p><strong>Decode phase.</strong> Tokens are generated one at a time, autoregressively. Each new token requires attending to all previously generated KV pairs. This phase is <strong>memory bandwidth bound</strong> because at each step, only a single token is processed, but the entire KV cache must be read from GPU memory. The GPU's arithmetic units are underutilized while waiting for memory reads to complete. The speed of the decode phase determines <strong>TPOT</strong>.</p>
+<p><img alt="Figure 9-3. Prefilling and decoding phases" src="../../assets/ch09/fig-9-3-prefilling-and-decoding.png" width="700" /></p>
+<p class="figure-caption">Figure 9-3. Prefilling and decoding phases</p>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The distinction between prefill and decode is critical for understanding why different optimization techniques target different phases. Techniques like prompt caching and FlashAttention primarily help the prefill phase, while speculative decoding and KV cache optimization primarily help the decode phase.</p>
+</div>
+<h3 id="compute-bound-vs-memory-bandwidth-bound">Compute Bound vs Memory Bandwidth Bound<a class="headerlink" href="#compute-bound-vs-memory-bandwidth-bound" title="Permanent link">&para;</a></h3>
+<p>An operation is <strong>compute bound</strong> when the bottleneck is the number of floating point operations the hardware can perform. An operation is <strong>memory bandwidth bound</strong> when the bottleneck is how quickly data can be moved from memory to the compute units. This distinction is captured by the concept of <strong>arithmetic intensity</strong>, which is the ratio of floating point operations to bytes accessed from memory.</p>
+<p>If the arithmetic intensity of an operation exceeds the hardware's <strong>ops:byte ratio</strong> (the ratio of peak FLOP/s to peak memory bandwidth), the operation is compute bound. Otherwise, it is memory bandwidth bound.</p>
+<p><img alt="Figure 9-2. Roofline chart for analyzing compute vs memory bottlenecks" src="../../assets/ch09/fig-9-2-roofline-chart.png" width="700" /></p>
+<p class="figure-caption">Figure 9-2. Roofline chart for analyzing compute vs memory bottlenecks</p>
+
+<p>For transformer inference:
+- <strong>Prefill</strong> with large batch sizes or long prompts tends to be <strong>compute bound</strong>. There are many tokens to process, and the matrix multiplications have high arithmetic intensity.
+- <strong>Decode</strong> with small batch sizes tends to be <strong>memory bandwidth bound</strong>. Processing a single token requires reading the full model weights and the entire KV cache from memory, but performs relatively few operations per byte read.</p>
+<h3 id="model-flops-utilization">Model FLOP/s Utilization<a class="headerlink" href="#model-flops-utilization" title="Permanent link">&para;</a></h3>
+<p><strong>MFU (Model FLOP/s Utilization)</strong> measures how efficiently the hardware is being used. It is the ratio of the actual FLOP/s achieved during model execution to the theoretical peak FLOP/s of the hardware.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>MFU = (Actual Model FLOP/s) / (Hardware Peak FLOP/s)
+</code></pre></div>
+<p>In practice, MFU is often surprisingly low. Achieving 30 to 50% MFU during training is considered good. During inference, MFU can be even lower, especially during the memory bandwidth bound decode phase. Low MFU during decode is not necessarily a sign of poor engineering. It reflects the fundamental nature of autoregressive generation, where the bottleneck is moving data rather than computing on it.</p>
+<p>A useful related concept is <strong>MBU (Model Bandwidth Utilization)</strong>, which measures how efficiently memory bandwidth is being used during memory bandwidth bound operations. For the decode phase, MBU is often a more meaningful metric than MFU. If MBU is high but MFU is low, the system is efficiently using its memory bandwidth but simply cannot compute faster because it is waiting for data. Optimizing further requires either reducing the amount of data that needs to be read (through quantization or smaller KV caches) or using hardware with higher memory bandwidth.</p>
+<h3 id="numerical-representations">Numerical Representations<a class="headerlink" href="#numerical-representations" title="Permanent link">&para;</a></h3>
+<p>The choice of numerical precision directly impacts model size, memory usage, computation speed and model quality. Lower precision formats use fewer bits per number, enabling faster computation and smaller memory footprints at the cost of reduced numerical range and precision.</p>
+<table>
+<thead>
+<tr>
+<th>Format</th>
+<th>Bits</th>
+<th>Exponent Bits</th>
+<th>Mantissa Bits</th>
+<th>Approximate Range</th>
+<th>Primary Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>FP32</strong></td>
+<td>32</td>
+<td>8</td>
+<td>23</td>
+<td>±3.4 x 10^38</td>
+<td>Training (traditional default), master weights</td>
+</tr>
+<tr>
+<td><strong>TF32</strong></td>
+<td>19</td>
+<td>8</td>
+<td>10</td>
+<td>±3.4 x 10^38</td>
+<td>Training on NVIDIA Ampere+, drop in FP32 replacement</td>
+</tr>
+<tr>
+<td><strong>FP16</strong></td>
+<td>16</td>
+<td>5</td>
+<td>10</td>
+<td>±65,504</td>
+<td>Mixed precision training, inference</td>
+</tr>
+<tr>
+<td><strong>BF16</strong></td>
+<td>16</td>
+<td>8</td>
+<td>7</td>
+<td>±3.4 x 10^38</td>
+<td>Training and inference on modern GPUs, preferred for LLMs</td>
+</tr>
+<tr>
+<td><strong>INT8</strong></td>
+<td>8</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>-128 to 127</td>
+<td>Post training quantization, inference</td>
+</tr>
+<tr>
+<td><strong>FP8 (E4M3)</strong></td>
+<td>8</td>
+<td>4</td>
+<td>3</td>
+<td>±448</td>
+<td>Training and inference on Hopper+ GPUs</td>
+</tr>
+<tr>
+<td><strong>FP8 (E5M2)</strong></td>
+<td>8</td>
+<td>5</td>
+<td>2</td>
+<td>±57,344</td>
+<td>Gradient representation during training</td>
+</tr>
+<tr>
+<td><strong>FP4</strong></td>
+<td>4</td>
+<td>2</td>
+<td>1</td>
+<td>Limited</td>
+<td>Aggressive inference quantization</td>
+</tr>
+<tr>
+<td><strong>INT4</strong></td>
+<td>4</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>-8 to 7</td>
+<td>Weight only quantization for inference</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p><strong>BF16</strong> has become the preferred format for large language model training and inference. It offers the same dynamic range as FP32 (thanks to its 8 exponent bits) while using half the memory. This means fewer overflow/underflow issues compared to FP16, at the cost of slightly less precision in the mantissa.</p>
+</div>
+<p>The relationship between precision and model quality is not always linear. Many models can be quantized to INT8 or even INT4 with minimal quality degradation when proper quantization techniques are applied (covered in Chapter 7). The key insight is that not all parameters need the same precision, and weights tend to be more tolerant of lower precision than activations.</p>
+<h3 id="hardware-foundations">Hardware Foundations<a class="headerlink" href="#hardware-foundations" title="Permanent link">&para;</a></h3>
+<p>Understanding the hardware that powers inference is essential for making informed optimization decisions. The architecture of the accelerator determines which operations are fast, which are slow and where the bottlenecks lie.</p>
+<h4 id="cpu-vs-gpu-architecture">CPU vs GPU Architecture<a class="headerlink" href="#cpu-vs-gpu-architecture" title="Permanent link">&para;</a></h4>
+<p><strong>CPUs</strong> are designed for sequential, complex tasks. They have a small number of powerful cores (typically 8 to 128), large caches, and sophisticated branch prediction and out of order execution capabilities. CPUs excel at tasks with complex control flow but are poorly suited for the massively parallel matrix operations that dominate neural network inference.</p>
+<p><strong>GPUs</strong> are designed for massive parallelism. A modern GPU like the NVIDIA H100 has thousands of simpler cores organized into streaming multiprocessors (SMs). These cores can perform thousands of floating point operations simultaneously, making GPUs ideal for the matrix multiplications that are the core computation in transformer models.</p>
+<p>The fundamental difference comes down to how transistors are allocated. CPUs devote the majority of their transistor budget to control logic, caches and branch predictors, giving each core the ability to handle complex, unpredictable workloads efficiently. GPUs instead devote most transistors to arithmetic logic units (ALUs), trading single threaded performance for raw parallel throughput. A single CPU core might be 10x faster than a single GPU core for sequential tasks, but a GPU with thousands of cores delivers 100x or more aggregate throughput for parallel workloads like matrix multiplication.</p>
+<h4 id="specialized-ai-chips">Specialized AI Chips<a class="headerlink" href="#specialized-ai-chips" title="Permanent link">&para;</a></h4>
+<p>The demand for AI compute has spawned a diverse ecosystem of specialized accelerators.</p>
+<ul>
+<li><strong>NVIDIA GPUs (A100, H100, B200).</strong> The dominant platform for AI training and inference. NVIDIA's CUDA ecosystem provides a massive software advantage.</li>
+<li><strong>Google TPUs (Tensor Processing Units).</strong> Custom ASICs designed specifically for neural network workloads. TPUs use a systolic array architecture optimized for matrix multiplications and are tightly integrated with Google Cloud and JAX/TensorFlow.</li>
+<li><strong>Intel Gaudi.</strong> Designed as a cost effective alternative to NVIDIA GPUs for training and inference.</li>
+<li><strong>Groq LPU (Language Processing Unit).</strong> An inference focused chip using a deterministic architecture that avoids the memory bandwidth bottleneck by using large on chip SRAM instead of external HBM.</li>
+<li><strong>AWS Inferentia and Trainium.</strong> Amazon's custom chips for inference and training respectively, optimized for cost efficiency on AWS.</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The distinction between <strong>training chips</strong> and <strong>inference chips</strong> is important. Training requires high precision (FP32/BF16), large memory for optimizer states and fast chip to chip communication for distributed training. Inference can often use lower precision (INT8/INT4), needs less memory per model, but must optimize for latency and throughput per dollar.</p>
+</div>
+<h4 id="computational-capabilities">Computational Capabilities<a class="headerlink" href="#computational-capabilities" title="Permanent link">&para;</a></h4>
+<p>The NVIDIA H100 SXM demonstrates how computational throughput scales with reduced precision.</p>
+<table>
+<thead>
+<tr>
+<th>Precision</th>
+<th>Peak FLOP/s (H100 SXM)</th>
+<th>Relative to FP32</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>FP64</strong></td>
+<td>34 TFLOP/s</td>
+<td>0.5x</td>
+</tr>
+<tr>
+<td><strong>FP32</strong></td>
+<td>67 TFLOP/s</td>
+<td>1x</td>
+</tr>
+<tr>
+<td><strong>TF32</strong></td>
+<td>989 TFLOP/s</td>
+<td>~15x</td>
+</tr>
+<tr>
+<td><strong>BF16 / FP16</strong></td>
+<td>1,979 TFLOP/s</td>
+<td>~30x</td>
+</tr>
+<tr>
+<td><strong>FP8</strong></td>
+<td>3,958 TFLOP/s</td>
+<td>~59x</td>
+</tr>
+<tr>
+<td><strong>INT8</strong></td>
+<td>3,958 TOPS</td>
+<td>~59x</td>
+</tr>
+</tbody>
+</table>
+<p>The massive throughput gains from lower precision formats explain why quantization is one of the most impactful optimization techniques. Moving from FP32 to FP8 provides nearly a 60x increase in peak computational throughput.</p>
+<p><img alt="Figure 9-6. Different compute primitives" src="../../assets/ch09/fig-9-6-compute-primitives.png" width="700" /></p>
+<p class="figure-caption">Figure 9-6. Different compute primitives</p>
+
+<h4 id="memory-hierarchy">Memory Hierarchy<a class="headerlink" href="#memory-hierarchy" title="Permanent link">&para;</a></h4>
+<p>Understanding the memory hierarchy is critical for inference optimization because the decode phase is memory bandwidth bound. Data must travel through multiple levels of memory, each with dramatically different capacity and bandwidth characteristics.</p>
+<pre class="mermaid"><code>graph TD
+    subgraph CPU["CPU Memory"]
+        DRAM["CPU DRAM&lt;br/&gt;Capacity: 256 GB to 2 TB&lt;br/&gt;Bandwidth: ~100 GB/s"]
+    end
+
+    subgraph GPU["GPU Memory"]
+        HBM["GPU HBM (High Bandwidth Memory)&lt;br/&gt;Capacity: 80 GB (A100) / 80 GB (H100)&lt;br/&gt;Bandwidth: 2 TB/s (A100) / 3.35 TB/s (H100)"]
+        SRAM["GPU SRAM (On Chip)&lt;br/&gt;Capacity: ~50 MB (H100)&lt;br/&gt;Bandwidth: ~33 TB/s"]
+    end
+
+    DRAM --&gt;|"PCIe / NVLink&lt;br/&gt;~64 to 900 GB/s"| HBM
+    HBM --&gt;|"~3.35 TB/s"| SRAM
+    SRAM --&gt;|"Feeds compute cores&lt;br/&gt;directly"| Compute["Tensor Cores&lt;br/&gt;and CUDA Cores"]
+
+    style DRAM fill:#264653,stroke:#2a9d8f,color:#ffffff
+    style HBM fill:#2a9d8f,stroke:#264653,color:#ffffff
+    style SRAM fill:#e9c46a,stroke:#f4a261,color:#1a1a1a
+    style Compute fill:#e76f51,stroke:#264653,color:#ffffff
+    style CPU fill:#1a1a2e,stroke:#264653,color:#ffffff
+    style GPU fill:#1a1a2e,stroke:#2a9d8f,color:#ffffff</code></pre>
+<p>The key insight is the enormous gap between HBM bandwidth and SRAM bandwidth. <strong>FlashAttention</strong> exploits this gap by restructuring the attention computation to minimize HBM reads and maximize work done in SRAM.</p>
+<h4 id="memory-bandwidth-and-power-consumption">Memory Bandwidth and Power Consumption<a class="headerlink" href="#memory-bandwidth-and-power-consumption" title="Permanent link">&para;</a></h4>
+<blockquote>
+<p>"Electricity is a bottleneck to scaling up compute."
+Chip Huyen</p>
+</blockquote>
+<p>Memory bandwidth is often the true bottleneck for inference. During the decode phase, generating each token requires reading the entire model weights from HBM. For a 70B parameter model in FP16, that means reading 140 GB of data per token. Even with HBM3 bandwidth of 3.35 TB/s on an H100, this limits generation speed fundamentally.</p>
+<p><img alt="Figure 9-5. Bandwidth utilization for Llama 2-70B across different chips" src="../../assets/ch09/fig-9-5-bandwidth-utilization.png" width="700" /></p>
+<p class="figure-caption">Figure 9-5. Bandwidth utilization for Llama 2-70B across different chips</p>
+
+<p>Power consumption is an increasingly important consideration. A single NVIDIA H100 SXM draws up to 700W. A cluster of thousands of GPUs consumes megawatts of power, requiring massive cooling infrastructure. The environmental impact of large scale AI inference is significant and growing. Data center operators report that power availability is now the primary constraint on building new AI compute capacity, ahead of capital cost or chip supply. This has driven interest in more power efficient inference chips and techniques like quantization that reduce the total computation (and therefore energy) required per token.</p>
+<h3 id="selecting-accelerators">Selecting Accelerators<a class="headerlink" href="#selecting-accelerators" title="Permanent link">&para;</a></h3>
+<p>Choosing the right accelerator involves balancing multiple factors.</p>
+<ul>
+<li><strong>Workload characteristics.</strong> Is the workload compute bound (large batch inference, long prompts) or memory bandwidth bound (single request, short prompts with long outputs)?</li>
+<li><strong>Model size.</strong> Does the model fit in a single GPU's memory, or does it require model parallelism across multiple devices?</li>
+<li><strong>Precision requirements.</strong> Can the model be quantized to INT8 or INT4, or does it require BF16/FP16?</li>
+<li><strong>Cost.</strong> What is the total cost of ownership including hardware, power, cooling and software engineering effort?</li>
+<li><strong>Software ecosystem.</strong> NVIDIA's CUDA ecosystem is the most mature, with the broadest library and tool support. Alternative chips may offer better price/performance but require more engineering effort.</li>
+<li><strong>Latency vs throughput.</strong> Some accelerators (like Groq's LPU) are optimized for ultra low latency at the cost of throughput. Others optimize for throughput at the cost of latency.</li>
+<li><strong>Availability and supply.</strong> GPU supply constraints have been a real bottleneck for many organizations. Cloud availability, lead times for hardware procurement and the ability to scale up or down should factor into accelerator decisions.</li>
+<li><strong>Future proofing.</strong> Consider whether the accelerator supports emerging precision formats (FP8, INT4), upcoming model architectures and growing context lengths that demand more memory capacity and bandwidth.</li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Do not select hardware based solely on peak FLOP/s. Real world performance depends on memory bandwidth, software support and how well the workload maps to the hardware architecture. A chip with lower peak FLOP/s but higher memory bandwidth may outperform a "faster" chip for memory bandwidth bound inference workloads.</p>
+</div>
+<h2 id="model-optimization">Model Optimization<a class="headerlink" href="#model-optimization" title="Permanent link">&para;</a></h2>
+<p>Model optimization techniques modify the model itself to make it faster or smaller. These range from compression methods that reduce model size to architectural changes that fundamentally alter how inference is performed. The techniques in this section can be applied regardless of the serving infrastructure being used, making them portable across deployment environments.</p>
+<p>The following diagram summarizes the relationship between model optimization techniques and the bottlenecks they address.</p>
+<p><img alt="Figure 9-8. Inference optimization techniques overview" src="../../assets/ch09/fig-9-8-inference-optimization-techniques.png" width="700" /></p>
+<p class="figure-caption">Figure 9-8. Inference optimization techniques overview</p>
+
+<pre class="mermaid"><code>graph LR
+    subgraph Bottleneck["Inference Bottlenecks"]
+        CB["Compute Bound&lt;br/&gt;(Prefill Phase)"]
+        MB["Memory Bandwidth&lt;br/&gt;Bound (Decode Phase)"]
+        MC["Memory Capacity&lt;br/&gt;(Model + KV Cache)"]
+    end
+
+    subgraph Techniques["Optimization Techniques"]
+        Q["Quantization"]
+        D["Distillation"]
+        P["Pruning"]
+        SD["Speculative Decoding"]
+        FA["FlashAttention"]
+        GQA["GQA/MQA"]
+        KC["KV Cache Optimization"]
+    end
+
+    Q --&gt;|"Reduces bytes per param"| MB
+    Q --&gt;|"Enables lower precision compute"| CB
+    Q --&gt;|"Shrinks model size"| MC
+    D --&gt;|"Fewer parameters"| CB
+    D --&gt;|"Smaller model"| MC
+    P --&gt;|"Fewer operations"| CB
+    P --&gt;|"Fewer parameters"| MC
+    SD --&gt;|"Multiple tokens per step"| MB
+    FA --&gt;|"Reduces HBM reads"| MB
+    FA --&gt;|"Faster attention"| CB
+    GQA --&gt;|"Smaller KV cache"| MC
+    GQA --&gt;|"Less data to read"| MB
+    KC --&gt;|"Reduces cache memory"| MC
+
+    style Bottleneck fill:#1a1a2e,stroke:#e94560,color:#ffffff
+    style Techniques fill:#1a1a2e,stroke:#2a9d8f,color:#ffffff
+    style CB fill:#e94560,stroke:#1a1a2e,color:#ffffff
+    style MB fill:#e94560,stroke:#1a1a2e,color:#ffffff
+    style MC fill:#e94560,stroke:#1a1a2e,color:#ffffff
+    style Q fill:#2a9d8f,stroke:#1a1a2e,color:#ffffff
+    style D fill:#2a9d8f,stroke:#1a1a2e,color:#ffffff
+    style P fill:#2a9d8f,stroke:#1a1a2e,color:#ffffff
+    style SD fill:#2a9d8f,stroke:#1a1a2e,color:#ffffff
+    style FA fill:#2a9d8f,stroke:#1a1a2e,color:#ffffff
+    style GQA fill:#2a9d8f,stroke:#1a1a2e,color:#ffffff
+    style KC fill:#2a9d8f,stroke:#1a1a2e,color:#ffffff</code></pre>
+<h3 id="model-compression">Model Compression<a class="headerlink" href="#model-compression" title="Permanent link">&para;</a></h3>
+<p>Model compression reduces the size and computational cost of a model while attempting to preserve its quality. Three primary techniques are used.</p>
+<table>
+<thead>
+<tr>
+<th>Technique</th>
+<th>How It Works</th>
+<th>Quality Impact</th>
+<th>Speed Impact</th>
+<th>When to Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Quantization</strong></td>
+<td>Reduces numerical precision of weights and/or activations (e.g., FP16 to INT8)</td>
+<td>Minimal with proper calibration</td>
+<td>2 to 4x speedup typical</td>
+<td>Almost always. First optimization to try</td>
+</tr>
+<tr>
+<td><strong>Distillation</strong></td>
+<td>Trains a smaller "student" model to mimic a larger "teacher" model</td>
+<td>Moderate. Student is smaller but learns from teacher's distribution</td>
+<td>Proportional to student size reduction</td>
+<td>When you can afford the training cost and need a fundamentally smaller model</td>
+</tr>
+<tr>
+<td><strong>Pruning</strong></td>
+<td>Removes individual weights (unstructured) or entire neurons/heads (structured)</td>
+<td>Varies. Structured pruning has more impact</td>
+<td>Depends on sparsity level and hardware support</td>
+<td>When hardware supports sparse computation efficiently</td>
+</tr>
+</tbody>
+</table>
+<h4 id="quantization">Quantization<a class="headerlink" href="#quantization" title="Permanent link">&para;</a></h4>
+<p>Quantization is covered in depth in Chapter 7. The key points for inference optimization are that quantization reduces memory footprint (enabling larger batch sizes and fitting bigger models on fewer GPUs), reduces memory bandwidth requirements (critical for the memory bandwidth bound decode phase) and can leverage lower precision tensor cores for faster computation.</p>
+<h4 id="distillation">Distillation<a class="headerlink" href="#distillation" title="Permanent link">&para;</a></h4>
+<p>Knowledge distillation is covered in Chapter 8. For inference optimization, distillation produces a fundamentally smaller model that runs faster at every level of the stack, not just because of reduced precision, but because there are fewer parameters, fewer layers and fewer operations per forward pass.</p>
+<h4 id="pruning">Pruning<a class="headerlink" href="#pruning" title="Permanent link">&para;</a></h4>
+<p>Pruning removes parameters from a model to make it smaller and faster. There are two primary approaches.</p>
+<p><strong>Unstructured pruning</strong> sets individual weights to zero, creating a sparse weight matrix. While this can achieve high sparsity ratios (90%+ of weights set to zero), current GPU hardware does not efficiently support sparse matrix operations, limiting the practical speedup. The NVIDIA A100 introduced 2:4 structured sparsity support, which requires exactly 2 out of every 4 elements to be zero. This provides up to 2x speedup with hardware support.</p>
+<p><strong>Structured pruning</strong> removes entire neurons, attention heads or layers from the model. This produces a genuinely smaller dense model that runs faster on standard hardware without requiring specialized sparse computation support. However, structured pruning typically has a larger impact on model quality.</p>
+<p>The practical reality is that pruning is less widely adopted than quantization or distillation for LLM inference optimization. The hardware ecosystem has not yet caught up to make sparse computation efficient enough to justify the engineering investment in most cases. However, as sparsity aware hardware matures (NVIDIA's structured sparsity support, Cerebras' wafer scale engine with native sparsity), pruning may become more attractive.</p>
+<p><strong>Combining compression techniques</strong> is common and effective. A typical pipeline might distill a large model into a smaller one, then quantize the distilled model to INT8 or INT4. Some practitioners also apply pruning to the distilled model before quantization, achieving triple compression. The order of operations matters. Distillation is usually done first (since it produces a new model from scratch), followed by pruning (which removes structure), followed by quantization (which reduces precision of the remaining parameters).</p>
+<h3 id="overcoming-the-autoregressive-decoding-bottleneck">Overcoming the Autoregressive Decoding Bottleneck<a class="headerlink" href="#overcoming-the-autoregressive-decoding-bottleneck" title="Permanent link">&para;</a></h3>
+<p>The fundamental bottleneck in autoregressive generation is that tokens are produced one at a time. Each token generation step requires a full forward pass through the model, but only produces a single token. Several techniques attempt to overcome this limitation.</p>
+<h4 id="speculative-decoding">Speculative Decoding<a class="headerlink" href="#speculative-decoding" title="Permanent link">&para;</a></h4>
+<blockquote>
+<p>Speculative decoding is "relatively easy to implement and doesn't change a model's quality."
+Chip Huyen</p>
+</blockquote>
+<p>Speculative decoding uses a small, fast <strong>draft model</strong> to generate candidate tokens, which are then verified in parallel by the larger <strong>target model</strong>. Because the target model can verify multiple tokens in a single forward pass (similar to prefill), this approach can generate multiple tokens per forward pass of the target model.</p>
+<pre class="mermaid"><code>graph LR
+    subgraph Draft["Draft Model (Small, Fast)"]
+        D1["Generate K&lt;br/&gt;candidate tokens&lt;br/&gt;autoregressively"]
+    end
+
+    subgraph Verify["Target Model (Large, Accurate)"]
+        V1["Process all K tokens&lt;br/&gt;in single forward pass"]
+        V2{"Compare draft&lt;br/&gt;probabilities with&lt;br/&gt;target probabilities"}
+    end
+
+    subgraph Result["Output"]
+        R1["Accept matching&lt;br/&gt;tokens"]
+        R2["Reject divergent&lt;br/&gt;token and resample"]
+        R3["Continue from&lt;br/&gt;last accepted token"]
+    end
+
+    D1 --&gt;|"K candidate&lt;br/&gt;tokens"| V1
+    V1 --&gt; V2
+    V2 --&gt;|"Match"| R1
+    V2 --&gt;|"Mismatch"| R2
+    R1 --&gt; R3
+    R2 --&gt; R3
+
+    style Draft fill:#2d6a4f,stroke:#1b4332,color:#ffffff
+    style Verify fill:#e76f51,stroke:#9c4228,color:#ffffff
+    style Result fill:#264653,stroke:#2a9d8f,color:#ffffff
+    style D1 fill:#40916c,stroke:#2d6a4f,color:#ffffff
+    style V1 fill:#f4a261,stroke:#e76f51,color:#1a1a1a
+    style V2 fill:#f4a261,stroke:#e76f51,color:#1a1a1a
+    style R1 fill:#2a9d8f,stroke:#264653,color:#ffffff
+    style R2 fill:#2a9d8f,stroke:#264653,color:#ffffff
+    style R3 fill:#2a9d8f,stroke:#264653,color:#ffffff</code></pre>
+<p>The draft model can be a smaller version of the same model family (e.g., Llama 7B as draft for Llama 70B), a separately trained lightweight model or even an n-gram model for simple tasks. Some systems use the model's own earlier layers as a draft predictor (self speculative decoding), eliminating the need for a separate draft model entirely.</p>
+<p><strong>How it works in detail:</strong></p>
+<ol>
+<li>The draft model generates K tokens autoregressively (this is fast because the draft model is small).</li>
+<li>The target model processes all K tokens in a single forward pass, computing the probability distribution at each position.</li>
+<li>At each position, the target model's distribution is compared to the draft model's distribution. If the draft token is consistent with what the target model would have generated, it is <strong>accepted</strong>. If not, the token is <strong>rejected</strong>, a new token is sampled from the target model's distribution, and generation continues from that point.</li>
+<li>The process guarantees that the final output distribution is identical to what the target model would have produced on its own. Speculative decoding does not change model quality.</li>
+</ol>
+<p>The speedup depends on the <strong>acceptance rate</strong>, which is how often the draft model's tokens are accepted by the target model. A well chosen draft model that closely matches the target model's distribution can achieve acceptance rates of 70 to 90%, resulting in 2 to 3x speedup.</p>
+<h4 id="inference-with-reference">Inference with Reference<a class="headerlink" href="#inference-with-reference" title="Permanent link">&para;</a></h4>
+<p>When the output is expected to contain large portions of the input (as in summarization, editing or code refactoring), tokens can be <strong>copied</strong> from the input rather than generated. This avoids the slow autoregressive decode for tokens that already exist in the context. This technique is sometimes called <strong>prompt lookup decoding</strong> or <strong>input reuse</strong>.</p>
+<h4 id="parallel-decoding">Parallel Decoding<a class="headerlink" href="#parallel-decoding" title="Permanent link">&para;</a></h4>
+<p>Several approaches attempt to generate multiple tokens simultaneously rather than one at a time.</p>
+<p><strong>Jacobi decoding (Lookahead decoding).</strong> Instead of generating tokens left to right, multiple token positions are initialized with guesses and iteratively refined in parallel until convergence. This is based on the mathematical framework of Jacobi iteration for solving systems of equations. The key insight is that if the initial guesses are close to the correct tokens, convergence happens in very few iterations, effectively generating multiple tokens in the time it would normally take to generate one or two.</p>
+<p><strong>Medusa.</strong> Adds multiple prediction heads to the model, each trained to predict a token at a different future position. During inference, all heads produce predictions simultaneously, and the outputs are verified using a tree attention mechanism. This can generate 2 to 3 tokens per forward pass with minimal overhead after fine tuning the extra heads. The additional heads are lightweight (typically single linear layers) and add negligible memory overhead compared to the base model.</p>
+<p>Both Jacobi decoding and Medusa represent active research frontiers. Their adoption in production systems is growing but less widespread than speculative decoding, which has the advantage of not requiring any model modifications.</p>
+<h3 id="attention-mechanism-optimization">Attention Mechanism Optimization<a class="headerlink" href="#attention-mechanism-optimization" title="Permanent link">&para;</a></h3>
+<p>The attention mechanism is both the source of transformer models' power and their primary computational and memory bottleneck during inference. Optimizing attention is one of the most impactful areas of inference optimization.</p>
+<h4 id="kv-cache">KV Cache<a class="headerlink" href="#kv-cache" title="Permanent link">&para;</a></h4>
+<p>The <strong>KV cache</strong> stores the key and value projections for all previously processed tokens, so they do not need to be recomputed at each generation step. Without the KV cache, generating the Nth token would require reprocessing all N-1 previous tokens, making generation quadratically expensive.</p>
+<pre class="mermaid"><code>graph TD
+    subgraph Step1["Step 1: Prefill"]
+        I1["Input tokens:&lt;br/&gt;'The cat sat'"]
+        K1["Compute K,V for&lt;br/&gt;all input tokens"]
+        KV1["KV Cache:&lt;br/&gt;K_the, V_the&lt;br/&gt;K_cat, V_cat&lt;br/&gt;K_sat, V_sat"]
+        O1["Output: 'on'"]
+    end
+
+    subgraph Step2["Step 2: Decode"]
+        I2["New token: 'on'"]
+        K2["Compute K,V for&lt;br/&gt;'on' only"]
+        KV2["KV Cache:&lt;br/&gt;K_the, V_the&lt;br/&gt;K_cat, V_cat&lt;br/&gt;K_sat, V_sat&lt;br/&gt;K_on, V_on"]
+        O2["Attend to full cache&lt;br/&gt;Output: 'the'"]
+    end
+
+    subgraph Step3["Step 3: Decode"]
+        I3["New token: 'the'"]
+        K3["Compute K,V for&lt;br/&gt;'the' only"]
+        KV3["KV Cache:&lt;br/&gt;grows by one&lt;br/&gt;entry per step"]
+        O3["Attend to full cache&lt;br/&gt;Output: 'mat'"]
+    end
+
+    Step1 --&gt; Step2 --&gt; Step3
+
+    style Step1 fill:#1a1a2e,stroke:#e94560,color:#ffffff
+    style Step2 fill:#1a1a2e,stroke:#0f3460,color:#ffffff
+    style Step3 fill:#1a1a2e,stroke:#533483,color:#ffffff
+    style I1 fill:#e94560,stroke:#1a1a2e,color:#ffffff
+    style K1 fill:#e94560,stroke:#1a1a2e,color:#ffffff
+    style KV1 fill:#e94560,stroke:#1a1a2e,color:#ffffff
+    style O1 fill:#e94560,stroke:#1a1a2e,color:#ffffff
+    style I2 fill:#0f3460,stroke:#1a1a2e,color:#ffffff
+    style K2 fill:#0f3460,stroke:#1a1a2e,color:#ffffff
+    style KV2 fill:#0f3460,stroke:#1a1a2e,color:#ffffff
+    style O2 fill:#0f3460,stroke:#1a1a2e,color:#ffffff
+    style I3 fill:#533483,stroke:#1a1a2e,color:#ffffff
+    style K3 fill:#533483,stroke:#1a1a2e,color:#ffffff
+    style KV3 fill:#533483,stroke:#1a1a2e,color:#ffffff
+    style O3 fill:#533483,stroke:#1a1a2e,color:#ffffff</code></pre>
+<p><strong>KV Cache Size Calculation:</strong></p>
+<p>The KV cache size for a single request can be calculated as follows.</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Symbol</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Number of layers</td>
+<td>L</td>
+<td>Transformer layers in the model</td>
+</tr>
+<tr>
+<td>Number of KV heads</td>
+<td>H_kv</td>
+<td>Number of key/value attention heads (may differ from query heads in GQA)</td>
+</tr>
+<tr>
+<td>Head dimension</td>
+<td>D_h</td>
+<td>Dimensionality of each attention head</td>
+</tr>
+<tr>
+<td>Sequence length</td>
+<td>S</td>
+<td>Total number of tokens (input + generated)</td>
+</tr>
+<tr>
+<td>Bytes per parameter</td>
+<td>B</td>
+<td>Depends on precision (2 for FP16/BF16, 1 for INT8)</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>KV Cache Size = 2 x L x H_kv x D_h x S x B
+</code></pre></div>
+<p>The factor of 2 accounts for both the key and value tensors.</p>
+<p><strong>Example calculation for Llama 2 70B in FP16 with a 4,096 token sequence:</strong>
+- L = 80 layers
+- H_kv = 8 (grouped query attention)
+- D_h = 128
+- S = 4,096 tokens
+- B = 2 bytes (FP16)</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>KV Cache = 2 x 80 x 8 x 128 x 4,096 x 2 = 1.34 GB per request
+</code></pre></div>
+<p>For a model serving 100 concurrent requests, this becomes <strong>134 GB</strong> just for KV caches, which would not even fit on two H100 GPUs (80 GB each). This illustrates why KV cache management is critical for inference at scale.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>KV cache memory grows <strong>linearly</strong> with sequence length and batch size. As context windows grow to 128K, 1M or beyond, KV cache management becomes the dominant memory challenge, often exceeding the memory required for the model weights themselves.</p>
+</div>
+<h4 id="redesigning-attention">Redesigning Attention<a class="headerlink" href="#redesigning-attention" title="Permanent link">&para;</a></h4>
+<p>Several architectural modifications reduce the size and cost of the attention mechanism.</p>
+<pre class="mermaid"><code>graph TD
+    subgraph MHA["Multi Head Attention (MHA)"]
+        MHA_Q["Q Heads: N"]
+        MHA_K["K Heads: N"]
+        MHA_V["V Heads: N"]
+        MHA_Note["Each query head has&lt;br/&gt;its own KV head"]
+    end
+
+    subgraph MQA["Multi Query Attention (MQA)"]
+        MQA_Q["Q Heads: N"]
+        MQA_K["K Heads: 1"]
+        MQA_V["V Heads: 1"]
+        MQA_Note["All query heads share&lt;br/&gt;a single KV head"]
+    end
+
+    subgraph GQA["Grouped Query Attention (GQA)"]
+        GQA_Q["Q Heads: N"]
+        GQA_K["K Heads: G"]
+        GQA_V["V Heads: G"]
+        GQA_Note["Groups of query heads&lt;br/&gt;share KV heads.&lt;br/&gt;G is between 1 and N"]
+    end
+
+    subgraph Other["Other Approaches"]
+        LW["Local/Windowed Attention&lt;br/&gt;Only attend to nearby tokens"]
+        CL["Cross Layer Attention&lt;br/&gt;Share KV cache across layers"]
+    end
+
+    style MHA fill:#264653,stroke:#2a9d8f,color:#ffffff
+    style MQA fill:#2a9d8f,stroke:#264653,color:#ffffff
+    style GQA fill:#e9c46a,stroke:#f4a261,color:#1a1a1a
+    style Other fill:#e76f51,stroke:#264653,color:#ffffff
+    style MHA_Q fill:#264653,stroke:#ffffff,color:#ffffff
+    style MHA_K fill:#264653,stroke:#ffffff,color:#ffffff
+    style MHA_V fill:#264653,stroke:#ffffff,color:#ffffff
+    style MHA_Note fill:#264653,stroke:#ffffff,color:#ffffff
+    style MQA_Q fill:#2a9d8f,stroke:#ffffff,color:#ffffff
+    style MQA_K fill:#2a9d8f,stroke:#ffffff,color:#ffffff
+    style MQA_V fill:#2a9d8f,stroke:#ffffff,color:#ffffff
+    style MQA_Note fill:#2a9d8f,stroke:#ffffff,color:#ffffff
+    style GQA_Q fill:#e9c46a,stroke:#ffffff,color:#1a1a1a
+    style GQA_K fill:#e9c46a,stroke:#ffffff,color:#1a1a1a
+    style GQA_V fill:#e9c46a,stroke:#ffffff,color:#1a1a1a
+    style GQA_Note fill:#e9c46a,stroke:#ffffff,color:#1a1a1a
+    style LW fill:#f4a261,stroke:#ffffff,color:#1a1a1a
+    style CL fill:#f4a261,stroke:#ffffff,color:#1a1a1a</code></pre>
+<p><strong>Multi Query Attention (MQA).</strong> All query heads share a single set of key and value heads. This reduces the KV cache size by a factor of N (the number of query heads), dramatically reducing memory and bandwidth requirements. The quality impact is small for many tasks.</p>
+<p><strong>Grouped Query Attention (GQA).</strong> A middle ground between MHA and MQA. Query heads are divided into G groups, and each group shares one set of KV heads. Llama 2 70B uses GQA with 8 KV heads and 64 query heads, reducing the KV cache by 8x compared to full MHA while maintaining quality closer to MHA than MQA.</p>
+<p><strong>Local/Windowed Attention.</strong> Instead of attending to all previous tokens, each token only attends to a fixed window of nearby tokens. This reduces the cost from O(n^2) to O(n x w) where w is the window size. Models like Mistral use sliding window attention in some layers combined with full attention in others.</p>
+<p><strong>Cross Layer Attention.</strong> KV pairs from certain layers are reused in subsequent layers, reducing the total KV cache size. This is an active research area.</p>
+<blockquote>
+<p>Character.AI shared that attention mechanism design choices helped them "reduce KV cache by over 20 times."
+Chip Huyen</p>
+</blockquote>
+<h4 id="optimizing-kv-cache-size">Optimizing KV Cache Size<a class="headerlink" href="#optimizing-kv-cache-size" title="Permanent link">&para;</a></h4>
+<p>Beyond architectural changes, several techniques optimize KV cache management at the system level.</p>
+<p><strong>PagedAttention (vLLM).</strong> Inspired by virtual memory in operating systems, PagedAttention allocates KV cache in fixed size blocks (pages) rather than contiguous memory. This eliminates internal fragmentation (wasted memory from pre allocating maximum sequence length) and external fragmentation (gaps between allocated sequences). vLLM, which implements PagedAttention, has become one of the most popular open source inference engines.</p>
+<p><strong>KV cache quantization.</strong> The KV cache can be quantized to INT8 or even INT4 independently of the model weights, reducing memory requirements by 2 to 4x. Research shows that KV cache quantization often has less quality impact than weight quantization because KV values tend to have a more uniform distribution.</p>
+<p><strong>KV cache compression.</strong> Techniques like token eviction (removing KV entries for less important tokens), token merging (combining similar KV entries) and attention sink methods (always keeping the first few tokens' KV entries) reduce cache size for long sequences. The attention sink observation is particularly interesting. Research has shown that the first few tokens in a sequence receive disproportionately high attention scores regardless of their semantic content. Keeping these "sink" tokens' KV entries while evicting middle tokens preserves model quality much better than naive eviction strategies.</p>
+<h4 id="writing-kernels-for-attention-flashattention">Writing Kernels for Attention. FlashAttention<a class="headerlink" href="#writing-kernels-for-attention-flashattention" title="Permanent link">&para;</a></h4>
+<p><strong>FlashAttention</strong> is a custom CUDA kernel that restructures the attention computation to minimize reads and writes to GPU HBM. Standard attention computes the full attention matrix in HBM, which requires O(n^2) memory. FlashAttention uses a <strong>tiling</strong> approach to compute attention in blocks that fit in SRAM, fusing the softmax and attention computation so that intermediate results never need to be written to HBM.</p>
+<p>The result is both faster computation (2 to 4x speedup) and reduced memory usage (from O(n^2) to O(n) in attention memory). FlashAttention has become a standard component in modern inference engines.</p>
+<p><strong>FlashAttention 2</strong> improved upon the original by better partitioning work across GPU thread blocks and warps, achieving closer to theoretical peak throughput. <strong>FlashAttention 3</strong> takes advantage of features specific to the NVIDIA Hopper architecture (H100), including asynchronous memory copies and the Tensor Memory Accelerator (TMA), pushing performance even further. The evolution of FlashAttention illustrates how kernel optimization is hardware specific. Each new GPU generation introduces new capabilities that kernel developers can exploit for additional performance.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>FlashAttention is not a new attention mechanism. It computes <strong>exactly the same result</strong> as standard scaled dot product attention. The innovation is purely in how the computation is scheduled on the hardware to minimize memory bottlenecks. This is a powerful example of how kernel level optimization can provide dramatic speedups without any change to model architecture or quality.</p>
+</div>
+<h3 id="kernels-and-compilers">Kernels and Compilers<a class="headerlink" href="#kernels-and-compilers" title="Permanent link">&para;</a></h3>
+<h4 id="what-are-kernels">What Are Kernels?<a class="headerlink" href="#what-are-kernels" title="Permanent link">&para;</a></h4>
+<p>A <strong>kernel</strong> in the GPU computing context is a function that runs on the GPU. Every operation in a neural network (matrix multiplication, layer normalization, activation functions, etc.) is executed by one or more kernels. The efficiency of these kernels determines how effectively the hardware is utilized.</p>
+<p>Writing efficient GPU kernels requires deep understanding of GPU architecture, including thread hierarchies, memory coalescing, bank conflicts, warp scheduling and occupancy. Most practitioners rely on optimized kernel libraries (cuBLAS, cuDNN) or compiler generated kernels rather than writing them from scratch.</p>
+<h4 id="kernel-optimization-techniques">Kernel Optimization Techniques<a class="headerlink" href="#kernel-optimization-techniques" title="Permanent link">&para;</a></h4>
+<pre class="mermaid"><code>graph TD
+    A["Kernel Optimization&lt;br/&gt;Techniques"] --&gt; B["Vectorization"]
+    A --&gt; C["Parallelization"]
+    A --&gt; D["Loop Tiling"]
+    A --&gt; E["Operator Fusion"]
+
+    B --&gt; B1["Process multiple data&lt;br/&gt;elements per instruction&lt;br/&gt;using SIMD/vector units"]
+    C --&gt; C1["Distribute work across&lt;br/&gt;GPU threads, warps,&lt;br/&gt;and thread blocks"]
+    D --&gt; D1["Break large matrices&lt;br/&gt;into tiles that fit&lt;br/&gt;in SRAM/shared memory"]
+    E --&gt; E1["Combine multiple operations&lt;br/&gt;into a single kernel to&lt;br/&gt;reduce memory round trips"]
+
+    style A fill:#1a1a2e,stroke:#e94560,color:#ffffff
+    style B fill:#e94560,stroke:#1a1a2e,color:#ffffff
+    style C fill:#0f3460,stroke:#1a1a2e,color:#ffffff
+    style D fill:#533483,stroke:#1a1a2e,color:#ffffff
+    style E fill:#2a9d8f,stroke:#1a1a2e,color:#ffffff
+    style B1 fill:#e94560,stroke:#1a1a2e,color:#ffffff
+    style C1 fill:#0f3460,stroke:#1a1a2e,color:#ffffff
+    style D1 fill:#533483,stroke:#1a1a2e,color:#ffffff
+    style E1 fill:#2a9d8f,stroke:#1a1a2e,color:#ffffff</code></pre>
+<p><strong>Vectorization.</strong> Uses SIMD (Single Instruction Multiple Data) capabilities to process multiple data elements with a single instruction. Modern GPUs support vector load/store operations that can move 128 bits at a time.</p>
+<p><strong>Parallelization.</strong> Distributes computation across the GPU's thousands of threads. Effective parallelization requires balancing work across threads and minimizing synchronization overhead.</p>
+<p><strong>Loop tiling.</strong> Breaks large matrix operations into smaller tiles that fit in fast on chip SRAM. This maximizes data reuse in the memory hierarchy, reducing the number of slow HBM accesses. FlashAttention is a prime example of loop tiling applied to attention.</p>
+<p><strong>Operator fusion.</strong> Combines multiple sequential operations into a single kernel. Without fusion, each operation reads its input from HBM, computes and writes its output back to HBM. With fusion, intermediate results stay in registers or SRAM, eliminating redundant memory round trips. For example, fusing a matrix multiplication with a bias addition and a ReLU activation can be 2 to 3x faster than executing them as separate kernels.</p>
+<h4 id="compilers">Compilers<a class="headerlink" href="#compilers" title="Permanent link">&para;</a></h4>
+<p>AI compilers automatically optimize and generate kernels from high level model descriptions.</p>
+<ul>
+<li><strong>torch.compile (PyTorch 2.0+).</strong> Captures the computation graph and applies optimizations including operator fusion, memory planning and kernel selection. Often provides 10 to 30% speedup with minimal code changes. The key advantage of torch.compile is its ease of adoption. In many cases, adding a single line of code (<code>model = torch.compile(model)</code>) is sufficient to gain significant speedup.</li>
+<li><strong>XLA (Accelerated Linear Algebra).</strong> Google's compiler for JAX and TensorFlow. Performs whole graph optimization, aggressive operator fusion and generates efficient code for TPUs and GPUs. XLA's whole program compilation approach can find optimization opportunities that are invisible to per operator optimizers.</li>
+<li><strong>TensorRT (NVIDIA).</strong> NVIDIA's inference optimization SDK. Applies layer fusion, precision calibration, kernel autotuning and other optimizations to produce highly optimized inference engines for NVIDIA GPUs. TensorRT typically delivers the best absolute performance on NVIDIA hardware but requires an explicit export and compilation step.</li>
+<li><strong>TVM (Apache).</strong> An open source compiler framework that generates optimized kernels for diverse hardware backends through autotuning. TVM can target CPUs, GPUs and specialized accelerators, making it useful for deployment across heterogeneous environments.</li>
+</ul>
+<h4 id="pytorch-optimization-case-study">PyTorch Optimization Case Study<a class="headerlink" href="#pytorch-optimization-case-study" title="Permanent link">&para;</a></h4>
+<blockquote>
+<p>The PyTorch team demonstrated progressive optimization techniques that compound to achieve dramatic throughput improvements.
+Chip Huyen</p>
+</blockquote>
+<p>A revealing case study from the PyTorch team shows how different optimization techniques compound.</p>
+<table>
+<thead>
+<tr>
+<th>Optimization Step</th>
+<th>Technique Applied</th>
+<th>Cumulative Speedup</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Baseline</td>
+<td>Standard PyTorch eager mode</td>
+<td>1x</td>
+</tr>
+<tr>
+<td>+ torch.compile</td>
+<td>Graph capture and kernel fusion</td>
+<td>~1.3x</td>
+</tr>
+<tr>
+<td>+ INT8 weight quantization</td>
+<td>Reduce weight precision to INT8</td>
+<td>~2.5x</td>
+</tr>
+<tr>
+<td>+ INT4 weight quantization</td>
+<td>Reduce weight precision to INT4</td>
+<td>~3.5x</td>
+</tr>
+<tr>
+<td>+ Speculative decoding</td>
+<td>Draft model with parallel verification</td>
+<td>~5x+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>These optimizations are <strong>complementary</strong>, not competing. Each technique addresses a different bottleneck. torch.compile reduces kernel launch overhead and fuses operations. Quantization reduces memory bandwidth requirements. Speculative decoding amortizes per token overhead by generating multiple tokens per forward pass. The best inference systems apply <strong>all</strong> of these techniques simultaneously.</p>
+</div>
+<p><img alt="Figure 9-14. Throughput improvement by different optimization techniques" src="../../assets/ch09/fig-9-14-throughput-improvement.png" width="700" /></p>
+<p class="figure-caption">Figure 9-14. Throughput improvement by different optimization techniques</p>
+
+<h2 id="inference-service-optimization">Inference Service Optimization<a class="headerlink" href="#inference-service-optimization" title="Permanent link">&para;</a></h2>
+<p>Beyond optimizing the model itself, the inference <strong>serving system</strong> offers additional optimization opportunities. These techniques determine how requests are scheduled, batched and distributed across hardware. Service level optimizations are particularly impactful because they improve throughput and utilization without changing the model at all, meaning they preserve model quality by definition.</p>
+<p>The key insight behind service level optimization is that individual inference requests typically do not fully utilize the GPU. During the decode phase, a single request uses only a fraction of the GPU's compute capacity while being bottlenecked by memory bandwidth. Service level optimizations pack more useful work onto the GPU, improving the cost per token.</p>
+<h3 id="batching-strategies">Batching Strategies<a class="headerlink" href="#batching-strategies" title="Permanent link">&para;</a></h3>
+<p>Batching is the practice of grouping multiple requests together to process them simultaneously, improving hardware utilization and throughput. Without batching, each request would be processed individually, leaving most of the GPU's compute capacity idle during the memory bandwidth bound decode phase. Batching amortizes the cost of reading model weights from memory across multiple requests, dramatically improving the compute to memory ratio.</p>
+<pre class="mermaid"><code>graph TD
+    subgraph Static["Static Batching"]
+        S1["Collect fixed batch&lt;br/&gt;of N requests"]
+        S2["Process all requests&lt;br/&gt;together"]
+        S3["Wait for ALL requests&lt;br/&gt;to complete"]
+        S4["Return all results&lt;br/&gt;simultaneously"]
+        S1 --&gt; S2 --&gt; S3 --&gt; S4
+    end
+
+    subgraph Dynamic["Dynamic Batching"]
+        D1["Collect requests&lt;br/&gt;within time window"]
+        D2["Form batch from&lt;br/&gt;available requests"]
+        D3["Process batch&lt;br/&gt;together"]
+        D4["Wait for ALL&lt;br/&gt;to complete"]
+        D1 --&gt; D2 --&gt; D3 --&gt; D4
+    end
+
+    subgraph Continuous["Continuous / In Flight Batching"]
+        C1["Start processing&lt;br/&gt;incoming requests&lt;br/&gt;immediately"]
+        C2["When a request&lt;br/&gt;finishes, remove it&lt;br/&gt;from the batch"]
+        C3["Insert new request&lt;br/&gt;into the open slot&lt;br/&gt;immediately"]
+        C4["GPU never idles&lt;br/&gt;waiting for long&lt;br/&gt;requests"]
+        C1 --&gt; C2 --&gt; C3 --&gt; C4
+    end
+
+    style Static fill:#264653,stroke:#2a9d8f,color:#ffffff
+    style Dynamic fill:#2a9d8f,stroke:#264653,color:#ffffff
+    style Continuous fill:#e76f51,stroke:#264653,color:#ffffff
+    style S1 fill:#264653,stroke:#ffffff,color:#ffffff
+    style S2 fill:#264653,stroke:#ffffff,color:#ffffff
+    style S3 fill:#264653,stroke:#ffffff,color:#ffffff
+    style S4 fill:#264653,stroke:#ffffff,color:#ffffff
+    style D1 fill:#2a9d8f,stroke:#ffffff,color:#ffffff
+    style D2 fill:#2a9d8f,stroke:#ffffff,color:#ffffff
+    style D3 fill:#2a9d8f,stroke:#ffffff,color:#ffffff
+    style D4 fill:#2a9d8f,stroke:#ffffff,color:#ffffff
+    style C1 fill:#e76f51,stroke:#ffffff,color:#ffffff
+    style C2 fill:#e76f51,stroke:#ffffff,color:#ffffff
+    style C3 fill:#e76f51,stroke:#ffffff,color:#ffffff
+    style C4 fill:#e76f51,stroke:#ffffff,color:#ffffff</code></pre>
+<table>
+<thead>
+<tr>
+<th>Strategy</th>
+<th>How It Works</th>
+<th>Pros</th>
+<th>Cons</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Static Batching</strong></td>
+<td>Fixed batch size. Wait until batch is full, then process</td>
+<td>Simple to implement</td>
+<td>High latency for early arrivals. GPU idles while waiting for batch to fill</td>
+</tr>
+<tr>
+<td><strong>Dynamic Batching</strong></td>
+<td>Collect requests within a time window, form variable size batch</td>
+<td>Better latency than static</td>
+<td>Still wastes GPU cycles when short requests finish before long ones</td>
+</tr>
+<tr>
+<td><strong>Continuous Batching</strong></td>
+<td>Requests enter and leave the batch independently at each decode step</td>
+<td>Maximum GPU utilization. No idle time waiting</td>
+<td>More complex to implement. Requires iteration level scheduling</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Continuous batching</strong> (also called <strong>in flight batching</strong>) is the most impactful serving optimization. In traditional batching, when one request in a batch finishes generating tokens, the GPU slot sits idle until all other requests in the batch complete. With continuous batching, completed requests are immediately replaced with new ones. This can increase throughput by 2x to 20x depending on the variance in output lengths.</p>
+<p>The improvement from continuous batching is most dramatic when output lengths vary significantly across requests. If one request generates 10 tokens and another generates 500 tokens, static batching wastes 490 decode steps of GPU capacity on the short request's slot. Continuous batching fills that slot with a new request as soon as the short one completes. In workloads with high variance in output length (which is typical for most real world applications), continuous batching can increase throughput by 10x or more compared to static batching.</p>
+<p><img alt="Figure 9-15. Dynamic batching keeps latency manageable" src="../../assets/ch09/fig-9-15-dynamic-batching.png" width="700" /></p>
+<p class="figure-caption">Figure 9-15. Dynamic batching keeps latency manageable</p>
+
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Modern inference engines like vLLM, TensorRT-LLM and TGI all implement continuous batching by default. If you are building a production inference service, using one of these engines rather than implementing batching yourself is strongly recommended.</p>
+</div>
+<h3 id="decoupling-prefill-and-decode">Decoupling Prefill and Decode<a class="headerlink" href="#decoupling-prefill-and-decode" title="Permanent link">&para;</a></h3>
+<p>The prefill and decode phases have fundamentally different computational profiles, as discussed earlier. <strong>Prefill is compute bound</strong> and benefits from high arithmetic throughput. <strong>Decode is memory bandwidth bound</strong> and benefits from high memory bandwidth. Running both phases on the same hardware creates a conflict. Optimizing hardware for one phase means suboptimal performance for the other.</p>
+<p><strong>DistServe</strong> and similar systems decouple prefill and decode by running them on separate hardware.</p>
+<ul>
+<li><strong>Prefill servers</strong> are configured with high compute GPUs and optimized for throughput. They process incoming prompts, compute the KV cache and send the KV cache to a decode server.</li>
+<li><strong>Decode servers</strong> are configured for memory bandwidth and handle the autoregressive token generation.</li>
+</ul>
+<p>This separation allows each phase to be independently scaled and optimized. Prefill servers can use larger batch sizes (since prefill is compute bound and benefits from batching), while decode servers can be provisioned based on the number of concurrent generation streams.</p>
+<p>The communication overhead of transferring KV caches between prefill and decode servers is non trivial, especially for large models with long contexts. However, the efficiency gains from specialized hardware utilization typically outweigh this overhead. The DistServe paper reports up to 2x improvement in serving throughput at the same latency target compared to colocated serving.</p>
+<p>This approach also enables <strong>heterogeneous hardware</strong> configurations. Prefill servers might use GPUs with high FLOP/s (like H100s), while decode servers might use hardware optimized for memory bandwidth or use more cost effective GPUs since the decode phase does not need peak compute throughput.</p>
+<h3 id="prompt-caching">Prompt Caching<a class="headerlink" href="#prompt-caching" title="Permanent link">&para;</a></h3>
+<p>When multiple requests share the same system prompt or common prefix, the KV cache for the shared portion can be computed once and reused across requests. This eliminates redundant computation during the prefill phase.</p>
+<blockquote>
+<p>Anthropic offers "up to 90% cost savings and up to 75% latency reduction" through prompt caching.
+Chip Huyen</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>Use Case</th>
+<th>Cache Write Cost</th>
+<th>Cache Read Cost</th>
+<th>Savings vs No Caching</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Book chat</strong> (long system prompt with book content)</td>
+<td>1.25x base price</td>
+<td>0.1x base price</td>
+<td>Up to 90% on cached tokens</td>
+</tr>
+<tr>
+<td><strong>Many shot prompting</strong> (many examples in prompt)</td>
+<td>1.25x base price</td>
+<td>0.1x base price</td>
+<td>Up to 85% on cached tokens</td>
+</tr>
+<tr>
+<td><strong>Multi turn conversation</strong> (growing context)</td>
+<td>1.25x base price</td>
+<td>0.1x base price</td>
+<td>Grows with conversation length</td>
+</tr>
+</tbody>
+</table>
+<p><em>Data based on Anthropic's prompt caching pricing as referenced in the book.</em></p>
+<p>Prompt caching is particularly valuable in three scenarios.</p>
+<ol>
+<li><strong>System prompts.</strong> Most production applications use the same system prompt for every request. Caching the system prompt's KV entries means they are computed once and reused thousands of times.</li>
+<li><strong>Multi turn conversations.</strong> In a conversation with N turns, the first N-1 turns are identical between consecutive requests. Caching means only the latest user message requires new prefill computation.</li>
+<li><strong>Many shot prompting.</strong> When using dozens of examples in the prompt, the examples portion can be cached and reused across all requests.</li>
+</ol>
+<p>The implementation of prompt caching requires careful management of the cache itself. Decisions about cache eviction policies (LRU, frequency based), cache size limits and handling of partial prefix matches all affect the real world performance gain. Some systems hash the prompt prefix to quickly identify cache hits, while others use trie based data structures for efficient prefix matching.</p>
+<p>Google also offers prompt caching (called "context caching") with similar economics, where the cached portion of prompts is charged at a significantly reduced rate.</p>
+<p><img alt="Figure 9-17. Prompt cache for overlapping segments" src="../../assets/ch09/fig-9-17-prompt-cache.png" width="700" /></p>
+<p class="figure-caption">Figure 9-17. Prompt cache for overlapping segments</p>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Prompt caching can be <strong>automatic</strong> (the system detects shared prefixes and caches them transparently) or <strong>explicit</strong> (the developer marks which portions of the prompt should be cached). Anthropic uses an explicit approach where developers mark cache breakpoints. Some inference engines like vLLM implement automatic prefix caching.</p>
+</div>
+<h3 id="parallelism-strategies">Parallelism Strategies<a class="headerlink" href="#parallelism-strategies" title="Permanent link">&para;</a></h3>
+<p>When a model is too large to fit on a single GPU, or when more throughput is needed, parallelism strategies distribute the work across multiple devices.</p>
+<pre class="mermaid"><code>graph TD
+    subgraph RP["Replica Parallelism"]
+        RP1["Full model copy&lt;br/&gt;on GPU 0"]
+        RP2["Full model copy&lt;br/&gt;on GPU 1"]
+        RP3["Full model copy&lt;br/&gt;on GPU 2"]
+        RP_LB["Load Balancer"]
+        RP_LB --&gt; RP1
+        RP_LB --&gt; RP2
+        RP_LB --&gt; RP3
+    end
+
+    subgraph TP["Tensor Parallelism"]
+        TP1["Layer split across GPUs"]
+        TP_G0["GPU 0: Left half&lt;br/&gt;of weight matrix"]
+        TP_G1["GPU 1: Right half&lt;br/&gt;of weight matrix"]
+        TP1 --&gt; TP_G0
+        TP1 --&gt; TP_G1
+        TP_Sync["All reduce sync&lt;br/&gt;after each layer"]
+        TP_G0 --&gt; TP_Sync
+        TP_G1 --&gt; TP_Sync
+    end
+
+    subgraph PP["Pipeline Parallelism"]
+        PP1["GPU 0:&lt;br/&gt;Layers 0 to 19"]
+        PP2["GPU 1:&lt;br/&gt;Layers 20 to 39"]
+        PP3["GPU 2:&lt;br/&gt;Layers 40 to 59"]
+        PP4["GPU 3:&lt;br/&gt;Layers 60 to 79"]
+        PP1 --&gt;|"Activations"| PP2
+        PP2 --&gt;|"Activations"| PP3
+        PP3 --&gt;|"Activations"| PP4
+    end
+
+    style RP fill:#264653,stroke:#2a9d8f,color:#ffffff
+    style TP fill:#2a9d8f,stroke:#264653,color:#ffffff
+    style PP fill:#e76f51,stroke:#264653,color:#ffffff
+    style RP1 fill:#264653,stroke:#ffffff,color:#ffffff
+    style RP2 fill:#264653,stroke:#ffffff,color:#ffffff
+    style RP3 fill:#264653,stroke:#ffffff,color:#ffffff
+    style RP_LB fill:#264653,stroke:#ffffff,color:#ffffff
+    style TP1 fill:#2a9d8f,stroke:#ffffff,color:#ffffff
+    style TP_G0 fill:#2a9d8f,stroke:#ffffff,color:#ffffff
+    style TP_G1 fill:#2a9d8f,stroke:#ffffff,color:#ffffff
+    style TP_Sync fill:#2a9d8f,stroke:#ffffff,color:#ffffff
+    style PP1 fill:#e76f51,stroke:#ffffff,color:#ffffff
+    style PP2 fill:#e76f51,stroke:#ffffff,color:#ffffff
+    style PP3 fill:#e76f51,stroke:#ffffff,color:#ffffff
+    style PP4 fill:#e76f51,stroke:#ffffff,color:#ffffff</code></pre>
+<h4 id="replica-parallelism">Replica Parallelism<a class="headerlink" href="#replica-parallelism" title="Permanent link">&para;</a></h4>
+<p>The simplest form of parallelism. Multiple complete copies of the model run on separate GPUs (or sets of GPUs), and a load balancer distributes incoming requests across replicas. Each replica handles requests independently.</p>
+<ul>
+<li><strong>Pros.</strong> Simple to implement. Linear throughput scaling. No inter GPU communication during inference.</li>
+<li><strong>Cons.</strong> Each replica requires enough memory for the full model. Does not help when a single model does not fit on one GPU.</li>
+</ul>
+<p>Replica parallelism is the most common scaling strategy for models that fit on a single GPU (or a single node with tensor parallelism). Autoscaling frameworks can dynamically adjust the number of replicas based on traffic patterns, scaling up during peak hours and scaling down during quiet periods to optimize cost.</p>
+<h4 id="model-parallelism">Model Parallelism<a class="headerlink" href="#model-parallelism" title="Permanent link">&para;</a></h4>
+<p>When a model is too large to fit on a single GPU, it must be split across multiple GPUs. There are two primary approaches.</p>
+<p><strong>Tensor parallelism.</strong> Individual layers are split across multiple GPUs. For example, a weight matrix of size [4096, 4096] can be split column wise across 4 GPUs, with each GPU holding a [4096, 1024] slice. Each GPU computes a partial result, and an <strong>all reduce</strong> communication step combines the results. Tensor parallelism requires <strong>fast inter GPU communication</strong> (NVLink) because synchronization happens at every layer. The communication volume is proportional to the hidden size and batch size, making it practical only within nodes connected by high bandwidth NVLink (900 GB/s on H100 NVLink) rather than across nodes connected by InfiniBand or Ethernet.</p>
+<p><strong>Pipeline parallelism.</strong> Different layers are assigned to different GPUs. GPU 0 processes layers 0 to 19, GPU 1 processes layers 20 to 39, and so on. Data flows sequentially through the pipeline. Pipeline parallelism requires less communication bandwidth than tensor parallelism (only activations are sent between stages, once per forward pass), but introduces <strong>pipeline bubbles</strong> where some GPUs are idle while waiting for data. Micro batching techniques can reduce bubble overhead by splitting a batch into smaller micro batches that flow through the pipeline in a staggered fashion, keeping more stages busy simultaneously.</p>
+<p><img alt="Figure 9-19. Pipeline parallelism enables model splits to execute in parallel" src="../../assets/ch09/fig-9-19-pipeline-parallelism.png" width="700" /></p>
+<p class="figure-caption">Figure 9-19. Pipeline parallelism enables model splits to execute in parallel</p>
+
+<h4 id="contextsequence-parallelism">Context/Sequence Parallelism<a class="headerlink" href="#contextsequence-parallelism" title="Permanent link">&para;</a></h4>
+<p>For very long sequences, the input can be split across multiple GPUs along the sequence dimension. Each GPU processes a portion of the sequence, with communication needed for the attention mechanism (since each token potentially attends to all other tokens). Techniques like <strong>ring attention</strong> minimize this communication overhead by overlapping computation with communication.</p>
+<p>Context parallelism is particularly important for long context inference (128K+ tokens) where the attention computation and KV cache become bottlenecks even within a single layer. As context windows continue to grow (with some models supporting 1M+ tokens), sequence parallelism will become increasingly essential.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>In practice, production inference systems often combine multiple parallelism strategies. A common configuration for large models is <strong>tensor parallelism within a node</strong> (using fast NVLink connections) combined with <strong>pipeline parallelism across nodes</strong> (using slower inter node links), with <strong>replica parallelism</strong> for additional throughput scaling.</p>
+</div>
+<p>The choice between parallelism strategies depends on several factors. Tensor parallelism reduces per request latency (since each layer completes faster when split across GPUs) but requires high bandwidth interconnects like NVLink. Pipeline parallelism is more bandwidth efficient but introduces pipeline bubbles that reduce utilization. For latency sensitive applications, tensor parallelism is generally preferred. For throughput oriented workloads, pipeline parallelism may be more cost effective. The optimal configuration depends on the specific model, hardware and workload characteristics.</p>
+<h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
+<p>Inference optimization is a multi layered discipline that spans hardware, numerical representation, model architecture, kernel engineering and serving system design. As models grow larger and are deployed to serve more users, the techniques covered in this chapter become not just performance improvements but economic necessities. The difference between an optimized and unoptimized inference setup can easily be 10x or more in cost per token, which at scale translates to millions of dollars.</p>
+<p>The key principles to remember are the following.</p>
+<p><strong>Understand your bottleneck.</strong> The prefill phase is compute bound and benefits from higher FLOP/s. The decode phase is memory bandwidth bound and benefits from reduced memory access. Different optimizations target different bottlenecks.</p>
+<p><strong>Quantization is almost always the first step.</strong> Reducing precision from FP16 to INT8 or INT4 reduces memory footprint, increases throughput and is supported by mature tooling with minimal quality impact.</p>
+<p><strong>KV cache management is critical at scale.</strong> The KV cache grows linearly with sequence length and batch size. Architectural innovations (GQA), system innovations (PagedAttention) and operational techniques (prompt caching) all help manage this challenge.</p>
+<p><strong>Speculative decoding is free quality.</strong> It provides speedup without changing the model's output distribution, making it one of the most appealing optimizations available.</p>
+<p><strong>Continuous batching unlocks throughput.</strong> Moving from static or dynamic batching to continuous batching can increase throughput by an order of magnitude with no quality impact.</p>
+<p><strong>Optimizations compound.</strong> As the PyTorch case study demonstrates, applying torch.compile, quantization and speculative decoding together yields multiplicative improvements. The best inference systems apply techniques from every layer of the stack simultaneously.</p>
+<p>The inference optimization landscape is evolving rapidly. New hardware generations, novel attention mechanisms, advanced compilation techniques and improved serving frameworks are continuously pushing the frontier. Practitioners who invest in understanding the fundamentals covered in this chapter will be well equipped to evaluate and adopt new techniques as they emerge.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Start with the highest impact, lowest effort optimizations first. Use a pre built inference engine (vLLM, TensorRT-LLM, TGI). Apply quantization. Enable prompt caching. Use continuous batching. Only invest in custom kernel development, hardware selection or architectural changes when these baseline optimizations are not sufficient.</p>
+</div>
+<h2 id="practitioner-checklist">Practitioner Checklist<a class="headerlink" href="#practitioner-checklist" title="Permanent link">&para;</a></h2>
+<p>The following decision framework can help prioritize which optimizations to apply first based on your constraints and objectives.</p>
+<pre class="mermaid"><code>graph TD
+    Start["Start: Inference&lt;br/&gt;Too Slow or Expensive"] --&gt; Q1{"Does model fit&lt;br/&gt;on one GPU?"}
+    Q1 --&gt;|No| MP["Apply Model Parallelism&lt;br/&gt;(TP within node, PP across)"]
+    Q1 --&gt;|Yes| Q2{"Is latency&lt;br/&gt;the problem?"}
+    MP --&gt; Q2
+    Q2 --&gt;|Yes| Q3{"Which phase&lt;br/&gt;is slow?"}
+    Q2 --&gt;|No, throughput| Batch["Enable Continuous&lt;br/&gt;Batching"]
+    Q3 --&gt;|Prefill (TTFT)| Cache["Enable Prompt Caching&lt;br/&gt;+ FlashAttention"]
+    Q3 --&gt;|Decode (TPOT)| Quant["Apply Quantization&lt;br/&gt;(INT8 then INT4)"]
+    Quant --&gt; Spec["Add Speculative&lt;br/&gt;Decoding"]
+    Batch --&gt; Replica["Scale with&lt;br/&gt;Replica Parallelism"]
+    Cache --&gt; Quant
+    Spec --&gt; Compile["Apply torch.compile&lt;br/&gt;or TensorRT"]
+
+    style Start fill:#1a1a2e,stroke:#e94560,color:#ffffff
+    style Q1 fill:#264653,stroke:#2a9d8f,color:#ffffff
+    style Q2 fill:#264653,stroke:#2a9d8f,color:#ffffff
+    style Q3 fill:#264653,stroke:#2a9d8f,color:#ffffff
+    style MP fill:#e76f51,stroke:#264653,color:#ffffff
+    style Batch fill:#2a9d8f,stroke:#264653,color:#ffffff
+    style Cache fill:#2a9d8f,stroke:#264653,color:#ffffff
+    style Quant fill:#e9c46a,stroke:#f4a261,color:#1a1a1a
+    style Spec fill:#e9c46a,stroke:#f4a261,color:#1a1a1a
+    style Replica fill:#2a9d8f,stroke:#264653,color:#ffffff
+    style Compile fill:#e9c46a,stroke:#f4a261,color:#1a1a1a</code></pre>
+<ul>
+<li>[ ] <strong>Identify your primary metric.</strong> Is TTFT, TPOT, total latency or throughput most important for your use case?</li>
+<li>[ ] <strong>Profile before optimizing.</strong> Determine whether your workload is compute bound or memory bandwidth bound before selecting optimization strategies.</li>
+<li>[ ] <strong>Apply quantization.</strong> Start with INT8 weight quantization and measure quality impact. Move to INT4 if quality holds.</li>
+<li>[ ] <strong>Use a production inference engine.</strong> vLLM, TensorRT-LLM or TGI provide continuous batching, PagedAttention and other optimizations out of the box.</li>
+<li>[ ] <strong>Enable prompt caching.</strong> If using a hosted API, leverage prompt caching for system prompts and multi turn conversations. If self hosting, use prefix caching in vLLM.</li>
+<li>[ ] <strong>Right size your hardware.</strong> Match accelerator choice to workload characteristics. Consider memory bandwidth for decode heavy workloads.</li>
+<li>[ ] <strong>Consider speculative decoding.</strong> If you have a suitable draft model and latency is critical, speculative decoding provides speedup with no quality tradeoff.</li>
+<li>[ ] <strong>Monitor KV cache memory.</strong> Track KV cache usage as a key metric, especially as sequence lengths and concurrency grow.</li>
+<li>[ ] <strong>Evaluate model parallelism needs.</strong> If the model does not fit on a single GPU, choose between tensor parallelism (lower latency, requires NVLink) and pipeline parallelism (higher throughput, works across nodes).</li>
+<li>[ ] <strong>Layer optimizations progressively.</strong> Apply compiler optimizations (torch.compile), then quantization, then serving optimizations, measuring impact at each step.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../08-dataset-engineering/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 08. Dataset Engineering">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                08. Dataset Engineering
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../10-ai-engineering-architecture-and-user-feedback/" class="md-footer__link md-footer__link--next" aria-label="Next: 10. Architecture and User Feedback">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                10. Architecture and User Feedback
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "navigation.footer", "toc.follow", "toc.integrate", "content.tabs.link", "search.highlight", "search.suggest", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@10/dist/mermaid.min.js"></script>
+      
+        <script src="../../javascripts/mermaid.js"></script>
+      
+    
+  </body>
+</html>

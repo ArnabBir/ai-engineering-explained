@@ -1,0 +1,2141 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A polished field guide to building production AI applications with foundation models.">
+      
+      
+      
+        <link rel="canonical" href="https://arnabbir.github.io/ai-engineering-explained/chapters/07-finetuning/">
+      
+      
+        <link rel="prev" href="../06-rag-and-agents/">
+      
+      
+        <link rel="next" href="../08-dataset-engineering/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/cover/book-cover.jpg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>07. Finetuning - AI Engineering Playbook</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="pink">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#chapter-7-finetuning" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="AI Engineering Playbook" class="md-header__button md-logo" aria-label="AI Engineering Playbook" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m19 2-5 4.5v11l5-4.5zM6.5 5C4.55 5 2.45 5.4 1 6.5v14.66c0 .25.25.5.5.5.1 0 .15-.07.25-.07 1.35-.65 3.3-1.09 4.75-1.09 1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.31 4.75 1.06.1.05.15.03.25.03.25 0 .5-.25.5-.5V6.5c-.6-.45-1.25-.75-2-1V19c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V6.5C10.55 5.4 8.45 5 6.5 5"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            AI Engineering Playbook
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              07. Finetuning
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="pink"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="pink"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/ArnabBir/ai-engineering-explained" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../overview/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Overview
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../01-introduction/" class="md-tabs__link">
+          
+  
+  
+  Chapters
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="AI Engineering Playbook" class="md-nav__button md-logo" aria-label="AI Engineering Playbook" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m19 2-5 4.5v11l5-4.5zM6.5 5C4.55 5 2.45 5.4 1 6.5v14.66c0 .25.25.5.5.5.1 0 .15-.07.25-.07 1.35-.65 3.3-1.09 4.75-1.09 1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.31 4.75 1.06.1.05.15.03.25.03.25 0 .5-.25.5-.5V6.5c-.6-.45-1.25-.75-2-1V19c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V6.5C10.55 5.4 8.45 5 6.5 5"/></svg>
+
+    </a>
+    AI Engineering Playbook
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/ArnabBir/ai-engineering-explained" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapters
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Chapters
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    01. Introduction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-understanding-foundation-models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    02. Understanding Foundation Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-evaluation-methodology/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03. Evaluation Methodology
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-evaluate-ai-systems/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    04. Evaluate AI Systems
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-prompt-engineering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    05. Prompt Engineering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-rag-and-agents/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    06. RAG and Agents
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    07. Finetuning
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    07. Finetuning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table of Contents
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-and-when-to-finetune" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why and When to Finetune
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Why and When to Finetune">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#reasons-to-finetune" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reasons to Finetune
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reasons-not-to-finetune" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reasons Not to Finetune
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#finetuning-vs-rag" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Finetuning vs RAG
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#finetuning-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Finetuning Overview
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Finetuning Overview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#transfer-learning-history" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Transfer Learning History
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#feature-based-vs-finetuning-based-transfer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feature Based vs Finetuning Based Transfer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#full-finetuning-vs-parameter-efficient-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Full Finetuning vs Parameter Efficient Methods
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#memory-requirements-for-finetuning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Memory Requirements for Finetuning
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#finetuning-techniques" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Finetuning Techniques
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Finetuning Techniques">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#full-finetuning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Full Finetuning
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameter-efficient-finetuning-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parameter Efficient Finetuning Overview
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adapter-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adapter Methods
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#soft-prompt-tuning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Soft Prompt Tuning
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lora-deep-dive" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LoRA Deep Dive
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="LoRA Deep Dive">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-lora-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How LoRA Works
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-lora-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why LoRA Works
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lora-configurations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LoRA Configurations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lora-memory-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LoRA Memory Comparison
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#serving-lora-adapters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Serving LoRA Adapters
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#qlora" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        QLoRA
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#model-merging-and-multi-task-finetuning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Model Merging and Multi Task Finetuning
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Model Merging and Multi Task Finetuning">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#summing-approaches" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summing Approaches
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layer-stacking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer Stacking
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#concatenation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Concatenation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ensembling-vs-merging-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ensembling vs Merging Comparison
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#finetuning-tactics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Finetuning Tactics
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Finetuning Tactics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#finetuning-frameworks-and-base-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Finetuning Frameworks and Base Models
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#finetuning-hyperparameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Finetuning Hyperparameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#practitioner-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Practitioner Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-dataset-engineering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    08. Dataset Engineering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-inference-optimization/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    09. Inference Optimization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-ai-engineering-architecture-and-user-feedback/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10. Architecture and User Feedback
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="chapter-7-finetuning">Chapter 7. Finetuning<a class="headerlink" href="#chapter-7-finetuning" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p>"The process of finetuning itself isn't hard. Many finetuning frameworks handle the training process for you."
+Chip Huyen</p>
+</blockquote>
+<p>Finetuning is the practice of taking a pretrained foundation model and adapting it to a specific task or domain by continuing training on a curated dataset. It is one of the most powerful techniques in the AI engineer's toolkit, but also one of the most misunderstood. This chapter explores when finetuning makes sense, how different finetuning methods work and the practical tactics for executing a successful finetuning project. From full finetuning to parameter efficient methods like LoRA and QLoRA, from model merging to multi-task training, this chapter gives you a thorough understanding of the landscape.</p>
+<p><img alt="Figure 7-1. The making of different Code Llama models" src="../../assets/ch07/fig-7-1-code-llama-models.png" width="700" /></p>
+<p class="figure-caption">Figure 7-1. The making of different Code Llama models</p>
+
+<h2 id="table-of-contents">Table of Contents<a class="headerlink" href="#table-of-contents" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="#why-and-when-to-finetune">Why and When to Finetune</a></li>
+<li><a href="#reasons-to-finetune">Reasons to Finetune</a></li>
+<li><a href="#reasons-not-to-finetune">Reasons Not to Finetune</a></li>
+<li><a href="#finetuning-vs-rag">Finetuning vs RAG</a></li>
+<li><a href="#finetuning-overview">Finetuning Overview</a></li>
+<li><a href="#transfer-learning-history">Transfer Learning History</a></li>
+<li><a href="#feature-based-vs-finetuning-based-transfer">Feature Based vs Finetuning Based Transfer</a></li>
+<li><a href="#full-finetuning-vs-parameter-efficient-methods">Full Finetuning vs Parameter Efficient Methods</a></li>
+<li><a href="#memory-requirements-for-finetuning">Memory Requirements for Finetuning</a></li>
+<li><a href="#finetuning-techniques">Finetuning Techniques</a></li>
+<li><a href="#full-finetuning">Full Finetuning</a></li>
+<li><a href="#parameter-efficient-finetuning-overview">Parameter Efficient Finetuning Overview</a></li>
+<li><a href="#adapter-methods">Adapter Methods</a></li>
+<li><a href="#soft-prompt-tuning">Soft Prompt Tuning</a></li>
+<li><a href="#lora-deep-dive">LoRA Deep Dive</a></li>
+<li><a href="#qlora">QLoRA</a></li>
+<li><a href="#model-merging-and-multi-task-finetuning">Model Merging and Multi Task Finetuning</a></li>
+<li><a href="#finetuning-tactics">Finetuning Tactics</a></li>
+<li><a href="#finetuning-frameworks-and-base-models">Finetuning Frameworks and Base Models</a></li>
+<li><a href="#finetuning-hyperparameters">Finetuning Hyperparameters</a></li>
+<li><a href="#summary">Summary</a></li>
+<li><a href="#practitioner-checklist">Practitioner Checklist</a></li>
+</ul>
+<h2 id="why-and-when-to-finetune">Why and When to Finetune<a class="headerlink" href="#why-and-when-to-finetune" title="Permanent link">&para;</a></h2>
+<p>The decision to finetune should not be taken lightly. It requires data, compute and ongoing maintenance. Before jumping into finetuning, it is essential to understand when it delivers genuine value and when simpler approaches will suffice.</p>
+<pre class="mermaid"><code>graph TD
+    A["Task Requirement"] --&gt; B{"Is prompt engineering&lt;br/&gt;sufficient?"}
+    B --&gt;|Yes| C["Use Prompt&lt;br/&gt;Engineering"]
+    B --&gt;|No| D{"Do you need&lt;br/&gt;external knowledge?"}
+    D --&gt;|Yes| E{"Is knowledge&lt;br/&gt;frequently updated?"}
+    E --&gt;|Yes| F["Use RAG"]
+    E --&gt;|No| G{"Do you also need&lt;br/&gt;style/behavior changes?"}
+    G --&gt;|Yes| H["RAG + Finetuning"]
+    G --&gt;|No| F
+    D --&gt;|No| I{"Do you have&lt;br/&gt;sufficient training data?"}
+    I --&gt;|No| J["Collect more data&lt;br/&gt;or use synthetic data"]
+    J --&gt; I
+    I --&gt;|Yes| K{"Budget for&lt;br/&gt;compute and maintenance?"}
+    K --&gt;|No| L["Consider distillation&lt;br/&gt;from larger model"]
+    K --&gt;|Yes| M["Finetune"]
+
+    style A fill:#2D3748,stroke:#E2E8F0,color:#E2E8F0
+    style B fill:#4A5568,stroke:#E2E8F0,color:#E2E8F0
+    style C fill:#2B6CB0,stroke:#E2E8F0,color:#E2E8F0
+    style D fill:#4A5568,stroke:#E2E8F0,color:#E2E8F0
+    style E fill:#4A5568,stroke:#E2E8F0,color:#E2E8F0
+    style F fill:#2B6CB0,stroke:#E2E8F0,color:#E2E8F0
+    style G fill:#4A5568,stroke:#E2E8F0,color:#E2E8F0
+    style H fill:#38A169,stroke:#E2E8F0,color:#E2E8F0
+    style I fill:#4A5568,stroke:#E2E8F0,color:#E2E8F0
+    style J fill:#C53030,stroke:#E2E8F0,color:#E2E8F0
+    style K fill:#4A5568,stroke:#E2E8F0,color:#E2E8F0
+    style L fill:#D69E2E,stroke:#2D3748,color:#2D3748
+    style M fill:#38A169,stroke:#E2E8F0,color:#E2E8F0</code></pre>
+<h3 id="reasons-to-finetune">Reasons to Finetune<a class="headerlink" href="#reasons-to-finetune" title="Permanent link">&para;</a></h3>
+<p>There are several compelling reasons why teams choose to finetune foundation models.</p>
+<p><strong>Better performance on specific tasks.</strong> General purpose models are designed to be good at everything but often fall short on specialized tasks. Finetuning on domain specific data can significantly improve accuracy, relevance and consistency for your particular use case. A model finetuned on legal documents will produce more accurate legal analysis than a general model prompted with the same instructions.</p>
+<p><strong>Data privacy and compliance.</strong> When your data cannot leave your infrastructure, finetuning an open source model on premises becomes the only viable option. This is particularly relevant in healthcare, finance and government sectors where regulatory requirements mandate strict data governance.</p>
+<p><strong>Cost reduction at scale.</strong> A smaller finetuned model can often match or exceed the performance of a much larger general model on specific tasks. If you are making millions of API calls per month, replacing GPT-4 class API calls with a finetuned Llama model can reduce costs by an order of magnitude.</p>
+<p><strong>Latency improvement.</strong> Smaller finetuned models run faster. In latency sensitive applications such as real time recommendations or interactive coding assistants, a small finetuned model deployed on your own infrastructure can deliver sub-100ms responses where a large API model would take seconds.</p>
+<p><strong>Behavioral control.</strong> Finetuning gives you precise control over the model's output style, tone and format. If you need the model to always respond in a specific JSON schema, or to adopt a particular brand voice, finetuning encodes these behaviors directly into the model weights.</p>
+<h3 id="reasons-not-to-finetune">Reasons Not to Finetune<a class="headerlink" href="#reasons-not-to-finetune" title="Permanent link">&para;</a></h3>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Finetuning is not always the right answer. Consider these risks carefully before committing to a finetuning project.</p>
+</div>
+<p><strong>High upfront and ongoing costs.</strong> Finetuning requires GPU compute for training, human effort for data curation and engineering time for pipeline development. Beyond the initial training, you must also maintain the finetuned model as base models improve and your data distribution shifts.</p>
+<p><strong>Data requirements.</strong> You need high quality, representative training data. For supervised finetuning, this typically means hundreds to thousands of carefully curated input/output examples. Collecting, cleaning and labeling this data is often the most expensive part of the process.</p>
+<p><strong>Risk of catastrophic forgetting.</strong> Neural networks are prone to forgetting old tasks when trained on new ones. A model finetuned too aggressively on a narrow task may lose general capabilities that made it useful in the first place. Balancing specialization with generality is a persistent challenge.</p>
+<p><strong>Maintenance burden.</strong> Foundation models are improving rapidly. When a new base model is released that outperforms your finetuned model, you may need to repeat the entire finetuning process. This creates an ongoing operational burden that prompt engineering and RAG approaches do not share.</p>
+<p><strong>Evaluation complexity.</strong> Evaluating a finetuned model is harder than evaluating a prompted model. You need to assess both task specific performance and general capability retention, often requiring multiple evaluation suites.</p>
+<h3 id="finetuning-vs-rag">Finetuning vs RAG<a class="headerlink" href="#finetuning-vs-rag" title="Permanent link">&para;</a></h3>
+<p>Finetuning and Retrieval Augmented Generation (RAG) are often presented as competing approaches, but they are fundamentally complementary. They solve different problems and can be combined effectively.</p>
+<table>
+<thead>
+<tr>
+<th>Dimension</th>
+<th>Finetuning</th>
+<th>RAG</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Primary purpose</strong></td>
+<td>Adapt model behavior, style and capabilities</td>
+<td>Provide model with external or up to date knowledge</td>
+</tr>
+<tr>
+<td><strong>Knowledge update speed</strong></td>
+<td>Requires retraining to update knowledge</td>
+<td>Updates immediately when source documents change</td>
+</tr>
+<tr>
+<td><strong>Data requirements</strong></td>
+<td>Curated training examples (hundreds to thousands)</td>
+<td>Document corpus with retrieval infrastructure</td>
+</tr>
+<tr>
+<td><strong>Compute cost</strong></td>
+<td>High upfront (GPU training), lower inference</td>
+<td>Lower upfront, higher per query (retrieval + generation)</td>
+</tr>
+<tr>
+<td><strong>Hallucination control</strong></td>
+<td>Model may still hallucinate confidently</td>
+<td>Can ground responses in retrieved documents</td>
+</tr>
+<tr>
+<td><strong>Best for</strong></td>
+<td>Style, format, behavior, domain vocabulary</td>
+<td>Factual accuracy, citations, dynamic knowledge</td>
+</tr>
+<tr>
+<td><strong>Maintenance</strong></td>
+<td>Retrain when base model or data changes</td>
+<td>Maintain document index and retrieval pipeline</td>
+</tr>
+<tr>
+<td><strong>Latency</strong></td>
+<td>Single model inference</td>
+<td>Retrieval step adds latency</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>The most effective production systems often combine both approaches. Finetune a model for your domain's vocabulary, style and reasoning patterns, then augment it with RAG for factual grounding and up to date knowledge.</p>
+</div>
+<p><strong>When to use finetuning alone.</strong> Use finetuning when you need to change how the model behaves rather than what it knows. Examples include adapting output format, teaching domain specific reasoning patterns, reducing model size for deployment and encoding stylistic preferences.</p>
+<p><strong>When to use RAG alone.</strong> Use RAG when you need to inject knowledge that changes frequently or when you need to cite sources. Examples include customer support over product documentation, legal research across case law and question answering over internal wikis.</p>
+<p><strong>When to combine both.</strong> Combine finetuning and RAG when you need both behavioral adaptation and knowledge grounding. For example, a medical chatbot might be finetuned to reason in clinical terminology and follow diagnostic protocols, while using RAG to retrieve the latest treatment guidelines.</p>
+<h2 id="finetuning-overview">Finetuning Overview<a class="headerlink" href="#finetuning-overview" title="Permanent link">&para;</a></h2>
+<h3 id="transfer-learning-history">Transfer Learning History<a class="headerlink" href="#transfer-learning-history" title="Permanent link">&para;</a></h3>
+<p>Finetuning is a form of transfer learning, which is the practice of applying knowledge learned in one setting to a different but related setting. The concept has a long history in machine learning, but its modern incarnation traces a clear arc from computer vision through NLP to today's foundation models.</p>
+<pre class="mermaid"><code>graph LR
+    A["Computer Vision&lt;br/&gt;Transfer Learning&lt;br/&gt;(2012-2016)"] --&gt; B["NLP Feature&lt;br/&gt;Extraction&lt;br/&gt;(2017-2018)"]
+    B --&gt; C["Pretrain + Finetune&lt;br/&gt;Paradigm&lt;br/&gt;(2018-2020)"]
+    C --&gt; D["Foundation Model&lt;br/&gt;Adaptation&lt;br/&gt;(2020-Present)"]
+
+    A1["ImageNet pretrained&lt;br/&gt;CNNs (AlexNet, VGG,&lt;br/&gt;ResNet)"] -.-&gt; A
+    B1["Word2Vec, GloVe,&lt;br/&gt;ELMo, ULMFiT"] -.-&gt; B
+    C1["BERT, GPT-2,&lt;br/&gt;T5"] -.-&gt; C
+    D1["GPT-3/4, Llama,&lt;br/&gt;LoRA, QLoRA"] -.-&gt; D
+
+    style A fill:#553C9A,stroke:#E2E8F0,color:#E2E8F0
+    style B fill:#6B46C1,stroke:#E2E8F0,color:#E2E8F0
+    style C fill:#805AD5,stroke:#E2E8F0,color:#E2E8F0
+    style D fill:#9F7AEA,stroke:#E2E8F0,color:#E2E8F0
+    style A1 fill:#2D3748,stroke:#718096,color:#A0AEC0
+    style B1 fill:#2D3748,stroke:#718096,color:#A0AEC0
+    style C1 fill:#2D3748,stroke:#718096,color:#A0AEC0
+    style D1 fill:#2D3748,stroke:#718096,color:#A0AEC0</code></pre>
+<p><strong>Computer vision era (2012 to 2016).</strong> Transfer learning first proved its value in computer vision. Models pretrained on ImageNet, a dataset of over 14 million labeled images, learned general visual features like edges, textures and shapes in early layers and increasingly abstract concepts in deeper layers. Practitioners discovered that freezing the early layers and finetuning only the later layers on a new task produced excellent results even with small datasets. This approach became standard practice and dramatically lowered the barrier to building high performing vision models.</p>
+<p><strong>NLP feature extraction era (2017 to 2018).</strong> NLP lagged behind vision in transfer learning for years because language was considered harder to learn in a generalizable way. The breakthrough came with contextual word embeddings. ELMo (2018) showed that pretrained language representations could capture nuanced word meanings in context. ULMFiT (2018) by Jeremy Howard and Sebastian Ruder demonstrated that discriminative finetuning and gradual unfreezing could make transfer learning practical for NLP tasks.</p>
+<p><strong>Pretrain and finetune paradigm (2018 to 2020).</strong> BERT (2018) and GPT-2 (2019) established the paradigm that dominates today. Pretrain a large model on massive unlabeled text, then finetune it on a smaller labeled dataset for a specific task. BERT showed that a single pretrained model could be finetuned to achieve state of the art results across many NLP benchmarks simultaneously. T5 (2020) unified all NLP tasks into a text to text format, further simplifying the finetuning process.</p>
+<p><strong>Foundation model adaptation (2020 to present).</strong> With models growing to hundreds of billions of parameters, full finetuning became impractical for most organizations. This spawned parameter efficient methods like LoRA, adapter layers and prompt tuning. The focus shifted from finetuning all parameters to adapting the smallest possible subset while maintaining performance.</p>
+<h3 id="feature-based-vs-finetuning-based-transfer">Feature Based vs Finetuning Based Transfer<a class="headerlink" href="#feature-based-vs-finetuning-based-transfer" title="Permanent link">&para;</a></h3>
+<p>There are two fundamental approaches to transfer learning.</p>
+<p><strong>Feature based transfer.</strong> In this approach, the pretrained model is used as a fixed feature extractor. You freeze the pretrained weights entirely and train a new model (typically a small classifier or regressor) on top of the extracted features. Word2Vec and GloVe embeddings were used this way. You would extract word vectors and feed them into a separate model. The pretrained model itself never changes.</p>
+<p><strong>Finetuning based transfer.</strong> In this approach, you update the pretrained model's weights during training on the new task. This allows the model to adapt its internal representations to the specific characteristics of your data. The entire model (or a subset of it) is modified. This approach is more powerful than feature based transfer because the model can reshape its learned representations to better fit the target task.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Modern foundation model adaptation almost exclusively uses finetuning based transfer. The pretrained model's representations are so powerful that even small amounts of finetuning data can steer the model's behavior dramatically.</p>
+</div>
+<h3 id="full-finetuning-vs-parameter-efficient-methods">Full Finetuning vs Parameter Efficient Methods<a class="headerlink" href="#full-finetuning-vs-parameter-efficient-methods" title="Permanent link">&para;</a></h3>
+<p>The core tension in modern finetuning is between full finetuning (updating all model parameters) and parameter efficient finetuning (updating only a small subset).</p>
+<table>
+<thead>
+<tr>
+<th>Dimension</th>
+<th>Full Finetuning</th>
+<th>Parameter Efficient (PEFT)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Parameters updated</strong></td>
+<td>All model parameters</td>
+<td>Typically 0.1% to 10% of parameters</td>
+</tr>
+<tr>
+<td><strong>Memory requirements</strong></td>
+<td>Very high (model + optimizer + gradients)</td>
+<td>Significantly lower</td>
+</tr>
+<tr>
+<td><strong>Training speed</strong></td>
+<td>Slower per step</td>
+<td>Faster per step</td>
+</tr>
+<tr>
+<td><strong>Performance ceiling</strong></td>
+<td>Highest potential</td>
+<td>Slightly lower but often comparable</td>
+</tr>
+<tr>
+<td><strong>Risk of catastrophic forgetting</strong></td>
+<td>Higher</td>
+<td>Lower (original weights preserved)</td>
+</tr>
+<tr>
+<td><strong>Multi-task deployment</strong></td>
+<td>Requires separate model copies</td>
+<td>Can share base model, swap adapters</td>
+</tr>
+<tr>
+<td><strong>Hardware requirements</strong></td>
+<td>Multiple high end GPUs</td>
+<td>Often single GPU</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>"Many finetuning techniques have been developed with the same motivation: to achieve strong performance on a minimal memory footprint."
+Chip Huyen</p>
+</blockquote>
+<h3 id="memory-requirements-for-finetuning">Memory Requirements for Finetuning<a class="headerlink" href="#memory-requirements-for-finetuning" title="Permanent link">&para;</a></h3>
+<p>Understanding memory requirements is critical for planning your finetuning infrastructure. GPU memory during training is consumed by four major components.</p>
+<pre class="mermaid"><code>graph TB
+    subgraph Memory["GPU Memory During Training"]
+        direction TB
+        W["Model Weights&lt;br/&gt;Parameters in FP16/BF16&lt;br/&gt;2 bytes per parameter"]
+        O["Optimizer States&lt;br/&gt;Adam: 2 states per parameter&lt;br/&gt;8 bytes per parameter (FP32)"]
+        G["Gradients&lt;br/&gt;Same shape as parameters&lt;br/&gt;2-4 bytes per parameter"]
+        A["Activations&lt;br/&gt;Intermediate computations&lt;br/&gt;Varies with batch size and sequence length"]
+    end
+
+    subgraph Example["Example: 7B Parameter Model"]
+        direction TB
+        E1["Weights: 7B x 2B = 14 GB"]
+        E2["Optimizer (Adam): 7B x 8B = 56 GB"]
+        E3["Gradients: 7B x 4B = 28 GB"]
+        E4["Activations: ~10-30 GB"]
+        E5["Total: ~108-128 GB"]
+    end
+
+    W --&gt; E1
+    O --&gt; E2
+    G --&gt; E3
+    A --&gt; E4
+
+    style Memory fill:#1A365D,stroke:#63B3ED,color:#E2E8F0
+    style Example fill:#2D3748,stroke:#A0AEC0,color:#E2E8F0
+    style W fill:#2B6CB0,stroke:#E2E8F0,color:#E2E8F0
+    style O fill:#C53030,stroke:#E2E8F0,color:#E2E8F0
+    style G fill:#D69E2E,stroke:#2D3748,color:#2D3748
+    style A fill:#38A169,stroke:#E2E8F0,color:#E2E8F0
+    style E1 fill:#2B6CB0,stroke:#E2E8F0,color:#E2E8F0
+    style E2 fill:#C53030,stroke:#E2E8F0,color:#E2E8F0
+    style E3 fill:#D69E2E,stroke:#2D3748,color:#2D3748
+    style E4 fill:#38A169,stroke:#E2E8F0,color:#E2E8F0
+    style E5 fill:#553C9A,stroke:#E2E8F0,color:#E2E8F0</code></pre>
+<p><strong>Model weights.</strong> The parameters of the model itself. In FP16 or BF16 precision, each parameter requires 2 bytes. A 7B parameter model needs approximately 14 GB just for its weights.</p>
+<p><strong>Optimizer states.</strong> The Adam optimizer, which is the standard for training transformers, maintains two additional states per parameter (first moment and second moment estimates). These are stored in FP32, requiring 8 bytes per parameter. For a 7B model, this adds approximately 56 GB.</p>
+<p><strong>Gradients.</strong> During backpropagation, gradients must be stored for every trainable parameter. In FP32, this requires 4 bytes per parameter. In mixed precision training, gradients may use 2 bytes per parameter during the backward pass.</p>
+<p><strong>Activations.</strong> The intermediate outputs of each layer must be stored for use during backpropagation. The memory for activations scales with batch size, sequence length and model depth. Activation checkpointing (recomputing activations during the backward pass instead of storing them) can significantly reduce this cost at the expense of extra computation.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>The optimizer states are typically the largest consumer of GPU memory during training. This is why parameter efficient methods that only train a small subset of parameters achieve such dramatic memory savings. If you only train 1% of parameters, you only need optimizer states for that 1%.</p>
+</div>
+<h2 id="finetuning-techniques">Finetuning Techniques<a class="headerlink" href="#finetuning-techniques" title="Permanent link">&para;</a></h2>
+<h3 id="full-finetuning">Full Finetuning<a class="headerlink" href="#full-finetuning" title="Permanent link">&para;</a></h3>
+<p>Full finetuning updates every parameter in the model during training. You start with a pretrained model, load your training data and run standard gradient descent optimization across all layers.</p>
+<p><strong>Advantages of full finetuning.</strong> Full finetuning offers the highest potential performance because the model can reshape all of its internal representations. Every layer, from the embedding layer through the attention heads to the output projection, can adapt to the target task. This flexibility is especially valuable when the target domain differs significantly from the pretraining data.</p>
+<p><strong>Disadvantages of full finetuning.</strong> The costs are substantial. You need enough GPU memory to hold the model weights, optimizer states, gradients and activations simultaneously. For a 70B parameter model, this can require a cluster of 8 or more A100 80GB GPUs. You also need to store a complete copy of the model for each finetuned variant, which makes multi-task deployment expensive.</p>
+<p><strong>When to use full finetuning.</strong> Full finetuning is most appropriate when you have significant compute resources, when maximum performance is critical and when the target task is substantially different from the pretraining distribution. If you are a large organization finetuning a model that will serve millions of users, the investment in full finetuning may be justified by even marginal performance gains.</p>
+<h3 id="parameter-efficient-finetuning-overview">Parameter Efficient Finetuning Overview<a class="headerlink" href="#parameter-efficient-finetuning-overview" title="Permanent link">&para;</a></h3>
+<p>Parameter Efficient Finetuning (PEFT) encompasses a family of techniques designed to adapt large models while training only a tiny fraction of the total parameters. The core insight is that the pretrained model already contains most of the knowledge needed for downstream tasks. Only a small perturbation to the weights is necessary for adaptation.</p>
+<p><img alt="Figure 7-7. Partial finetuning requires many trainable parameters" src="../../assets/ch07/fig-7-7-partial-finetuning.png" width="700" /></p>
+<p class="figure-caption">Figure 7-7. Partial finetuning requires many trainable parameters</p>
+
+<pre class="mermaid"><code>graph TD
+    PEFT["Parameter Efficient&lt;br/&gt;Finetuning (PEFT)"] --&gt; Additive["Additive Methods"]
+    PEFT --&gt; Reparameterization["Reparameterization&lt;br/&gt;Methods"]
+    PEFT --&gt; Selective["Selective Methods"]
+
+    Additive --&gt; Adapters["Adapter Layers&lt;br/&gt;(Houlsby et al. 2019)"]
+    Additive --&gt; SoftPrompt["Soft Prompt Methods"]
+
+    SoftPrompt --&gt; PrefixTuning["Prefix Tuning&lt;br/&gt;(Li &amp; Liang 2021)"]
+    SoftPrompt --&gt; PTuning["P-Tuning&lt;br/&gt;(Liu et al. 2021)"]
+    SoftPrompt --&gt; PromptTuning["Prompt Tuning&lt;br/&gt;(Lester et al. 2021)"]
+
+    Reparameterization --&gt; LoRA["LoRA&lt;br/&gt;(Hu et al. 2021)"]
+    Reparameterization --&gt; QLoRA_node["QLoRA&lt;br/&gt;(Dettmers et al. 2023)"]
+    LoRA --&gt; LoRAVariants["LoRA Variants&lt;br/&gt;(DoRA, AdaLoRA,&lt;br/&gt;LoRA+)"]
+
+    Selective --&gt; LayerFreeze["Layer Freezing"]
+    Selective --&gt; BitFit["BitFit&lt;br/&gt;(bias terms only)"]
+
+    style PEFT fill:#553C9A,stroke:#E2E8F0,color:#E2E8F0
+    style Additive fill:#2B6CB0,stroke:#E2E8F0,color:#E2E8F0
+    style Reparameterization fill:#38A169,stroke:#E2E8F0,color:#E2E8F0
+    style Selective fill:#D69E2E,stroke:#2D3748,color:#2D3748
+    style Adapters fill:#2C5282,stroke:#E2E8F0,color:#E2E8F0
+    style SoftPrompt fill:#2C5282,stroke:#E2E8F0,color:#E2E8F0
+    style PrefixTuning fill:#1A365D,stroke:#63B3ED,color:#E2E8F0
+    style PTuning fill:#1A365D,stroke:#63B3ED,color:#E2E8F0
+    style PromptTuning fill:#1A365D,stroke:#63B3ED,color:#E2E8F0
+    style LoRA fill:#276749,stroke:#E2E8F0,color:#E2E8F0
+    style QLoRA_node fill:#276749,stroke:#E2E8F0,color:#E2E8F0
+    style LoRAVariants fill:#22543D,stroke:#68D391,color:#E2E8F0
+    style LayerFreeze fill:#975A16,stroke:#ECC94B,color:#2D3748
+    style BitFit fill:#975A16,stroke:#ECC94B,color:#2D3748</code></pre>
+<blockquote>
+<p>"The better trained an LLM is, the easier it is to finetune the model using a small number of trainable parameters and a small amount of data."
+Chip Huyen</p>
+</blockquote>
+<h3 id="adapter-methods">Adapter Methods<a class="headerlink" href="#adapter-methods" title="Permanent link">&para;</a></h3>
+<p>Adapter methods insert small trainable modules into each transformer layer while keeping the original pretrained weights frozen. The original adapter architecture was proposed by Houlsby et al. (2019).</p>
+<p><strong>How adapters work.</strong> An adapter module is a small bottleneck neural network inserted between the layers of a transformer. It typically consists of a down projection that reduces the hidden dimension, a nonlinearity (such as ReLU) and an up projection that restores the original dimension. A residual connection is added so that the adapter can learn the identity function and have zero impact on the pretrained model at initialization.</p>
+<p><strong>Architecture details.</strong> In the original design, two adapter modules are inserted per transformer layer. One after the multi-head attention sublayer and one after the feed forward sublayer. Each adapter might have a bottleneck dimension of 64 compared to a model hidden dimension of 4096, making the adapters very small relative to the full model.</p>
+<p><strong>Performance.</strong> Houlsby et al. showed that adapters could match full finetuning performance on GLUE benchmarks while adding only 3.6% additional parameters. This was a breakthrough result that inspired much subsequent work.</p>
+<p><strong>Limitations.</strong> Adapter modules add sequential computation to each layer, which increases inference latency. Unlike LoRA (discussed below), adapters cannot be merged into the base model weights to eliminate this overhead.</p>
+<h3 id="soft-prompt-tuning">Soft Prompt Tuning<a class="headerlink" href="#soft-prompt-tuning" title="Permanent link">&para;</a></h3>
+<p>Soft prompt methods add learnable embeddings to the input or to the internal representations of the model, while keeping all model parameters frozen. The key insight is that the model's behavior can be steered by prepending carefully optimized "virtual tokens" to the input.</p>
+<p><strong>Prefix tuning (Li and Liang, 2021).</strong> Prefix tuning prepends learnable vectors to the key and value matrices at every transformer layer. Unlike hard prompts (which are constrained to real words in the vocabulary), these prefix vectors can take any value in the continuous embedding space. This gives them much greater expressive power. Prefix tuning typically adds a few hundred to a few thousand parameters and can achieve competitive performance on specific tasks.</p>
+<p><img alt="Figure 7-9. Hard and soft prompts combined to change model behavior" src="../../assets/ch07/fig-7-9-hard-soft-prompts.png" width="700" /></p>
+<p class="figure-caption">Figure 7-9. Hard and soft prompts combined to change model behavior</p>
+
+<p><strong>P-Tuning (Liu et al., 2021).</strong> P-Tuning inserts trainable continuous embeddings into the input sequence, but uses an LSTM encoder to model dependencies between the trainable tokens. This stabilizes training and improves performance, particularly on smaller models.</p>
+<p><strong>Prompt tuning (Lester et al., 2021).</strong> Prompt tuning is the simplest soft prompt method. It prepends a small number of learnable tokens (typically 20 to 100) to the input embeddings at only the first layer. Despite its simplicity, Lester et al. showed that prompt tuning scales remarkably well. With a sufficiently large model (T5 11B), prompt tuning matches the performance of full finetuning.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Soft prompt methods are extremely parameter efficient, often requiring fewer than 0.1% additional parameters. However, they can be sensitive to initialization and may underperform on smaller models. They also make debugging harder because the learned prompts have no human interpretable meaning.</p>
+</div>
+<h3 id="lora-deep-dive">LoRA Deep Dive<a class="headerlink" href="#lora-deep-dive" title="Permanent link">&para;</a></h3>
+<p>LoRA (Low Rank Adaptation) has become the dominant finetuning method for large language models. From the analysis of 1,000+ GitHub issues on huggingface/peft, "it's clear that LoRA dominates." Its combination of simplicity, effectiveness and inference efficiency has made it the default choice for most practitioners.</p>
+<h4 id="how-lora-works">How LoRA Works<a class="headerlink" href="#how-lora-works" title="Permanent link">&para;</a></h4>
+<p>LoRA is based on the hypothesis that the weight updates during finetuning have a low intrinsic rank. Instead of updating a full weight matrix W of dimension d x d, LoRA decomposes the update into two much smaller matrices.</p>
+<pre class="mermaid"><code>graph LR
+    subgraph Original["Original Weight Update"]
+        W["W (d x d)&lt;br/&gt;Full weight matrix"]
+        DW["ΔW (d x d)&lt;br/&gt;Full update matrix&lt;br/&gt;d² parameters"]
+    end
+
+    subgraph LoRA_Decomp["LoRA Decomposition"]
+        A_mat["A (d x r)&lt;br/&gt;Down projection"]
+        B_mat["B (r x d)&lt;br/&gt;Up projection"]
+        Product["ΔW = B × A&lt;br/&gt;r × (2d) parameters&lt;br/&gt;r &lt;&lt; d"]
+    end
+
+    subgraph Result["During Inference"]
+        WNew["W' = W + αBA&lt;br/&gt;Merged weight&lt;br/&gt;No added latency"]
+    end
+
+    W --&gt; DW
+    DW -.-&gt;|"LoRA replaces&lt;br/&gt;full ΔW"| Product
+    A_mat --&gt; Product
+    B_mat --&gt; Product
+    Product --&gt; WNew
+
+    style Original fill:#C53030,stroke:#E2E8F0,color:#E2E8F0
+    style LoRA_Decomp fill:#38A169,stroke:#E2E8F0,color:#E2E8F0
+    style Result fill:#2B6CB0,stroke:#E2E8F0,color:#E2E8F0
+    style W fill:#9B2C2C,stroke:#E2E8F0,color:#E2E8F0
+    style DW fill:#9B2C2C,stroke:#E2E8F0,color:#E2E8F0
+    style A_mat fill:#276749,stroke:#E2E8F0,color:#E2E8F0
+    style B_mat fill:#276749,stroke:#E2E8F0,color:#E2E8F0
+    style Product fill:#22543D,stroke:#E2E8F0,color:#E2E8F0
+    style WNew fill:#2C5282,stroke:#E2E8F0,color:#E2E8F0</code></pre>
+<p>The original weight matrix W remains frozen. The update is parameterized as the product of two low rank matrices: <strong>A</strong> (dimension d x r) and <strong>B</strong> (dimension r x d), where r is the rank and is typically much smaller than d (common values are 4, 8, 16, 32 or 64). Matrix A is initialized with a random Gaussian distribution and B is initialized to zero, so the initial value of the product BA is zero. This means the model starts exactly where the pretrained model left off.</p>
+<p>During training, the forward pass computes h = Wx + (alpha/r) * BAx, where alpha is a scaling hyperparameter. Only A and B receive gradient updates. During inference, the LoRA weights can be merged directly into W by computing W' = W + (alpha/r) * BA, adding zero latency overhead.</p>
+<p><img alt="Figure 7-11. LoRA decomposes weight matrix W into product of two smaller matrices" src="../../assets/ch07/fig-7-11-lora-decomposition.png" width="700" /></p>
+<p class="figure-caption">Figure 7-11. LoRA decomposes weight matrix W into product of two smaller matrices</p>
+
+<h4 id="why-lora-works">Why LoRA Works<a class="headerlink" href="#why-lora-works" title="Permanent link">&para;</a></h4>
+<p>The theoretical justification for LoRA rests on the concept of intrinsic dimensionality. Research by Aghajanyan et al. (2021) showed that pretrained language models have a low intrinsic dimensionality. This means that the effective number of parameters needed to describe a finetuning solution is much smaller than the total number of parameters in the model.</p>
+<p>Intuitively, a well pretrained model has already learned rich representations of language. Finetuning for a specific task only requires small adjustments to these representations, and these adjustments lie in a low dimensional subspace. LoRA exploits this by restricting the update to a low rank subspace, which is a natural fit for the structure of the problem.</p>
+<h4 id="lora-configurations">LoRA Configurations<a class="headerlink" href="#lora-configurations" title="Permanent link">&para;</a></h4>
+<p><strong>Which weight matrices to adapt.</strong> In a transformer, the attention mechanism has four weight matrices: query (Wq), key (Wk), value (Wv) and output (Wo). The feed forward network has two additional matrices. The original LoRA paper found that adapting the query and value matrices yielded the best results for a given parameter budget.</p>
+<table>
+<thead>
+<tr>
+<th>Weight Matrices Adapted</th>
+<th>WikiSQL Accuracy</th>
+<th>MultiNLI Accuracy</th>
+<th>Trainable Parameters</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Wq only</td>
+<td>70.4</td>
+<td>91.0</td>
+<td>4.7M</td>
+</tr>
+<tr>
+<td>Wk only</td>
+<td>70.0</td>
+<td>90.8</td>
+<td>4.7M</td>
+</tr>
+<tr>
+<td>Wv only</td>
+<td>73.0</td>
+<td>91.0</td>
+<td>4.7M</td>
+</tr>
+<tr>
+<td>Wq + Wv</td>
+<td>73.4</td>
+<td>91.3</td>
+<td>9.4M</td>
+</tr>
+<tr>
+<td>Wq + Wk + Wv + Wo</td>
+<td>73.7</td>
+<td>91.7</td>
+<td>18.8M</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>In practice, many practitioners now apply LoRA to all linear layers in the transformer (query, key, value, output and both feed forward matrices). While the original paper focused on attention matrices, subsequent work has shown that broader application with a lower rank can be more effective for the same parameter budget.</p>
+</div>
+<p><strong>Rank selection.</strong> Higher ranks allow more expressive updates but increase the number of trainable parameters. The original paper found that ranks as low as 1 or 2 could be surprisingly effective, and that increasing beyond rank 8 provided diminishing returns for many tasks. Common practice is to start with rank 8 or 16 and adjust based on performance.</p>
+<p><strong>Alpha scaling.</strong> The alpha parameter controls the magnitude of the LoRA update relative to the original weights. A common heuristic is to set alpha equal to twice the rank (e.g. alpha=16 for rank=8). Higher alpha values produce larger updates and can speed convergence but may also cause instability.</p>
+<h4 id="lora-memory-comparison">LoRA Memory Comparison<a class="headerlink" href="#lora-memory-comparison" title="Permanent link">&para;</a></h4>
+<p>The memory savings from LoRA are dramatic, especially for large models.</p>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Full Model Size</th>
+<th>LoRA Adapter Size (r=16)</th>
+<th>Reduction Factor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Llama 2 7B</td>
+<td>14 GB (FP16)</td>
+<td>~33 MB</td>
+<td>~430x</td>
+</tr>
+<tr>
+<td>Llama 2 13B</td>
+<td>26 GB (FP16)</td>
+<td>~51 MB</td>
+<td>~510x</td>
+</tr>
+<tr>
+<td>Llama 2 70B</td>
+<td>140 GB (FP16)</td>
+<td>~160 MB</td>
+<td>~875x</td>
+</tr>
+<tr>
+<td>GPT-3 175B</td>
+<td>350 GB (FP16)</td>
+<td>~350 MB</td>
+<td>~1000x</td>
+</tr>
+</tbody>
+</table>
+<h4 id="serving-lora-adapters">Serving LoRA Adapters<a class="headerlink" href="#serving-lora-adapters" title="Permanent link">&para;</a></h4>
+<p>One of LoRA's most compelling advantages is its deployment flexibility. There are two primary approaches to serving LoRA adapters.</p>
+<p><strong>Merge and deploy.</strong> Before deployment, merge the LoRA weights into the base model by computing W' = W + (alpha/r) * BA. This produces a standard model with no additional inference overhead. This approach is simple and efficient but requires a separate model copy for each LoRA variant.</p>
+<p><strong>Separate serving.</strong> Keep the base model and LoRA adapters separate at inference time. This allows multiple LoRA adapters to share a single base model, dramatically reducing memory requirements for multi-task or multi-tenant deployments.</p>
+<p><img alt="Figure 7-12. Keeping LoRA adapters separate allows reuse of the same full-rank matrix" src="../../assets/ch07/fig-7-12-lora-adapters-reuse.png" width="700" /></p>
+<p class="figure-caption">Figure 7-12. Keeping LoRA adapters separate allows reuse of the same full-rank matrix</p>
+
+<pre class="mermaid"><code>graph TB
+    subgraph MultiLoRA["Multi-LoRA Serving Architecture"]
+        direction TB
+        Base["Base Model&lt;br/&gt;(Shared, Frozen)"]
+
+        Base --&gt; L1["LoRA Adapter A&lt;br/&gt;Customer Support&lt;br/&gt;(~50 MB)"]
+        Base --&gt; L2["LoRA Adapter B&lt;br/&gt;Code Generation&lt;br/&gt;(~50 MB)"]
+        Base --&gt; L3["LoRA Adapter C&lt;br/&gt;Legal Analysis&lt;br/&gt;(~50 MB)"]
+        Base --&gt; L4["LoRA Adapter D&lt;br/&gt;Medical QA&lt;br/&gt;(~50 MB)"]
+    end
+
+    subgraph Requests["Incoming Requests"]
+        R1["Support ticket"] --&gt; L1
+        R2["Code review"] --&gt; L2
+        R3["Contract analysis"] --&gt; L3
+        R4["Diagnosis query"] --&gt; L4
+    end
+
+    style MultiLoRA fill:#1A365D,stroke:#63B3ED,color:#E2E8F0
+    style Base fill:#553C9A,stroke:#E2E8F0,color:#E2E8F0
+    style L1 fill:#2B6CB0,stroke:#E2E8F0,color:#E2E8F0
+    style L2 fill:#38A169,stroke:#E2E8F0,color:#E2E8F0
+    style L3 fill:#D69E2E,stroke:#2D3748,color:#2D3748
+    style L4 fill:#C53030,stroke:#E2E8F0,color:#E2E8F0
+    style Requests fill:#2D3748,stroke:#A0AEC0,color:#E2E8F0
+    style R1 fill:#2C5282,stroke:#E2E8F0,color:#E2E8F0
+    style R2 fill:#276749,stroke:#E2E8F0,color:#E2E8F0
+    style R3 fill:#975A16,stroke:#ECC94B,color:#2D3748
+    style R4 fill:#9B2C2C,stroke:#E2E8F0,color:#E2E8F0</code></pre>
+<p><strong>Apple's multi-LoRA example.</strong> Apple demonstrated the power of multi-LoRA serving in their on-device AI strategy. They use a single base language model on the device and dynamically load small LoRA adapters for different tasks such as summarization, proofreading, reply suggestions and creative writing. Each adapter is only a few tens of megabytes, allowing dozens of specialized capabilities to be stored on a single device without duplicating the base model. This approach enables efficient use of constrained device memory while offering highly specialized model behavior per task.</p>
+<h3 id="qlora">QLoRA<a class="headerlink" href="#qlora" title="Permanent link">&para;</a></h3>
+<p>QLoRA (Quantized LoRA) extends LoRA by quantizing the base model to 4-bit precision before applying LoRA adapters. Proposed by Dettmers et al. (2023), QLoRA makes it possible to finetune a 65B parameter model on a single 48GB GPU, a feat that would otherwise require a multi-GPU cluster.</p>
+<pre class="mermaid"><code>graph LR
+    subgraph QLoRA_Pipeline["QLoRA Pipeline"]
+        direction LR
+        P["Pretrained Model&lt;br/&gt;(FP16/BF16)"]
+        Q["Quantize to NF4&lt;br/&gt;(4-bit NormalFloat)"]
+        F["Frozen 4-bit&lt;br/&gt;Base Model"]
+        L["LoRA Adapters&lt;br/&gt;(BF16)"]
+        T["Train LoRA&lt;br/&gt;with BF16 gradients"]
+        D["Deploy: Dequantize&lt;br/&gt;+ Merge or Serve"]
+    end
+
+    P --&gt; Q --&gt; F --&gt; T
+    L --&gt; T --&gt; D
+
+    style QLoRA_Pipeline fill:#1A365D,stroke:#63B3ED,color:#E2E8F0
+    style P fill:#553C9A,stroke:#E2E8F0,color:#E2E8F0
+    style Q fill:#C53030,stroke:#E2E8F0,color:#E2E8F0
+    style F fill:#9B2C2C,stroke:#E2E8F0,color:#E2E8F0
+    style L fill:#38A169,stroke:#E2E8F0,color:#E2E8F0
+    style T fill:#2B6CB0,stroke:#E2E8F0,color:#E2E8F0
+    style D fill:#D69E2E,stroke:#2D3748,color:#2D3748</code></pre>
+<p><strong>Key innovations in QLoRA.</strong></p>
+<p><strong>NF4 (4-bit NormalFloat) quantization.</strong> QLoRA introduces the NF4 data type, which is information theoretically optimal for normally distributed data. Neural network weights tend to follow a normal distribution, making NF4 a better fit than standard 4-bit integer quantization. NF4 divides the quantization range into 16 bins that are evenly spaced in terms of probability under a standard normal distribution, giving more precision where the data is densest.</p>
+<p><strong>Double quantization.</strong> QLoRA applies quantization to the quantization constants themselves. The first quantization converts FP16 weights to NF4. The second quantization reduces the memory needed to store the quantization scaling factors. This saves an additional 0.37 bits per parameter on average.</p>
+<p><img alt="Figure 7-6. Different floating point formats with range and precision" src="../../assets/ch07/fig-7-6-floating-point-formats.png" width="700" /></p>
+<p class="figure-caption">Figure 7-6. Different floating point formats with range and precision</p>
+
+<p><strong>Paged optimizers.</strong> QLoRA uses NVIDIA unified memory to handle memory spikes during training. When GPU memory runs out during gradient checkpointing, optimizer states are automatically offloaded to CPU memory and paged back when needed. This prevents out of memory errors without requiring manual memory management.</p>
+<p><strong>Guanaco models.</strong> The authors demonstrated QLoRA by training the Guanaco family of models, which achieved remarkable results.</p>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Elo Rating</th>
+<th>vs ChatGPT Win Rate</th>
+<th>vs GPT-4 Win Rate</th>
+<th>Training Time</th>
+<th>GPU</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Guanaco 65B</td>
+<td>1477</td>
+<td>~50%</td>
+<td>~25%</td>
+<td>24 hours</td>
+<td>Single 48GB</td>
+</tr>
+<tr>
+<td>Guanaco 33B</td>
+<td>1455</td>
+<td>~45%</td>
+<td>~22%</td>
+<td>12 hours</td>
+<td>Single 24GB</td>
+</tr>
+<tr>
+<td>GPT-4</td>
+<td>1517</td>
+<td>~75%</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>ChatGPT (GPT-3.5)</td>
+<td>1439</td>
+<td>N/A</td>
+<td>~20%</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+</tbody>
+</table>
+<p>The Guanaco 65B model achieved 99.3% of the ChatGPT performance level on the Vicuna benchmark while being trainable on a single GPU. This demonstrated that high quality finetuning was accessible to researchers and organizations without large compute budgets.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>QLoRA's combination of NF4 quantization and LoRA adapters reduces the memory requirements for finetuning a 65B model from approximately 780 GB (full finetuning with Adam) to under 48 GB. This is a reduction of more than 16x, bringing large model finetuning within reach of consumer hardware.</p>
+</div>
+<h3 id="model-merging-and-multi-task-finetuning">Model Merging and Multi Task Finetuning<a class="headerlink" href="#model-merging-and-multi-task-finetuning" title="Permanent link">&para;</a></h3>
+<p>Model merging is a technique for combining multiple finetuned models into a single model without additional training. It has become an important tool in the open source model community.</p>
+<blockquote>
+<p>"Without finetuning, model merging can be done without GPUs, making merging particularly attractive to indie model developers."
+Chip Huyen</p>
+</blockquote>
+<p>Model merging exploits the fact that models finetuned from the same base share a common weight space. Because they start from the same initialization, their weight differences (called task vectors) tend to be compatible and can be combined meaningfully.</p>
+<pre class="mermaid"><code>graph TD
+    subgraph Summing["Summing Approaches"]
+        S1["Linear Combination&lt;br/&gt;(Task Arithmetic)"]
+        S2["SLERP&lt;br/&gt;(Spherical Linear&lt;br/&gt;Interpolation)"]
+        S3["Pruning Methods&lt;br/&gt;(TIES, DARE)"]
+    end
+
+    subgraph Stacking["Layer Stacking"]
+        ST1["Frankenmerging&lt;br/&gt;(Mix layers from&lt;br/&gt;different models)"]
+        ST2["MoE Creation&lt;br/&gt;(Multiple models as&lt;br/&gt;experts)"]
+        ST3["Model Upscaling&lt;br/&gt;(SOLAR approach)"]
+    end
+
+    subgraph Concat["Concatenation"]
+        C1["Concatenate weights&lt;br/&gt;along specific&lt;br/&gt;dimensions"]
+    end
+
+    Base["Base Model"] --&gt; FT1["Finetuned Model A&lt;br/&gt;(Task 1)"]
+    Base --&gt; FT2["Finetuned Model B&lt;br/&gt;(Task 2)"]
+    Base --&gt; FT3["Finetuned Model C&lt;br/&gt;(Task 3)"]
+
+    FT1 --&gt; Summing
+    FT2 --&gt; Summing
+    FT3 --&gt; Summing
+
+    FT1 --&gt; Stacking
+    FT2 --&gt; Stacking
+
+    FT1 --&gt; Concat
+    FT2 --&gt; Concat
+
+    Summing --&gt; Merged["Merged Model&lt;br/&gt;(Multi-task capable)"]
+    Stacking --&gt; Merged
+    Concat --&gt; Merged
+
+    style Base fill:#553C9A,stroke:#E2E8F0,color:#E2E8F0
+    style FT1 fill:#2B6CB0,stroke:#E2E8F0,color:#E2E8F0
+    style FT2 fill:#38A169,stroke:#E2E8F0,color:#E2E8F0
+    style FT3 fill:#D69E2E,stroke:#2D3748,color:#2D3748
+    style Summing fill:#1A365D,stroke:#63B3ED,color:#E2E8F0
+    style Stacking fill:#22543D,stroke:#68D391,color:#E2E8F0
+    style Concat fill:#744210,stroke:#ECC94B,color:#E2E8F0
+    style S1 fill:#2C5282,stroke:#E2E8F0,color:#E2E8F0
+    style S2 fill:#2C5282,stroke:#E2E8F0,color:#E2E8F0
+    style S3 fill:#2C5282,stroke:#E2E8F0,color:#E2E8F0
+    style ST1 fill:#276749,stroke:#E2E8F0,color:#E2E8F0
+    style ST2 fill:#276749,stroke:#E2E8F0,color:#E2E8F0
+    style ST3 fill:#276749,stroke:#E2E8F0,color:#E2E8F0
+    style C1 fill:#975A16,stroke:#ECC94B,color:#2D3748
+    style Merged fill:#C53030,stroke:#E2E8F0,color:#E2E8F0</code></pre>
+<h4 id="summing-approaches">Summing Approaches<a class="headerlink" href="#summing-approaches" title="Permanent link">&para;</a></h4>
+<p><strong>Linear combination (Task Arithmetic).</strong> The simplest merging approach computes a weighted average of model weights. Given a base model with weights W_base and two finetuned models with weights W_A and W_B, the merged model is computed as W_merged = W_base + lambda_A * (W_A - W_base) + lambda_B * (W_B - W_base). The terms (W_A - W_base) and (W_B - W_base) are called task vectors. By adjusting the scaling coefficients lambda_A and lambda_B, you control how much each task's specialization contributes to the merged model.</p>
+<p><img alt="Figure 7-15. How to linearly combine two layers" src="../../assets/ch07/fig-7-15-linear-layer-combination.png" width="700" /></p>
+<p class="figure-caption">Figure 7-15. How to linearly combine two layers</p>
+
+<p><strong>SLERP (Spherical Linear Interpolation).</strong> SLERP treats weight vectors as points on a high dimensional sphere and interpolates along the geodesic (shortest path on the sphere) between them. This preserves the magnitude of weight vectors better than linear interpolation, which tends to shrink weights toward the origin. SLERP can only merge two models at a time, so merging three or more models requires sequential pairwise merging.</p>
+<p><strong>Pruning redundant parameters (TIES, DARE).</strong> When merging multiple task vectors, parameter conflicts can arise. Two models might adjust the same parameter in opposite directions, leading to cancellation. TIES (Yadav et al., 2023) addresses this by pruning small magnitude changes, resolving sign conflicts through majority voting and then merging. DARE (Yu et al., 2023) takes a different approach by randomly dropping a large fraction of task vector elements (90% or more) and rescaling the remaining elements. Both methods reduce interference between task vectors and produce cleaner merges.</p>
+<p><img alt="Figure 7-17. Keeping top 20 percent of task vector achieves best results" src="../../assets/ch07/fig-7-17-task-vector-pruning.png" width="700" /></p>
+<p class="figure-caption">Figure 7-17. Keeping top 20 percent of task vector achieves best results</p>
+
+<h4 id="layer-stacking">Layer Stacking<a class="headerlink" href="#layer-stacking" title="Permanent link">&para;</a></h4>
+<p><strong>Frankenmerging.</strong> Rather than combining weights within each layer, frankenmerging constructs a new model by selecting entire layers from different finetuned models. For example, you might take layers 0 through 15 from Model A and layers 16 through 31 from Model B. This approach can produce surprisingly effective models, especially when the source models have complementary strengths in different parts of the network.</p>
+<p><strong>MoE creation.</strong> Multiple finetuned models can be combined into a Mixture of Experts (MoE) architecture. Each finetuned model becomes an "expert" and a router network is added to direct inputs to the appropriate expert. This approach preserves each model's full capabilities but increases the total parameter count.</p>
+<p><strong>Model upscaling (SOLAR approach).</strong> The SOLAR method by Kim et al. (2023) takes a different approach to layer stacking. It duplicates the layers of a model (for example, copying a 32 layer model to create a 48 layer model), removes some redundant middle layers and then continues pretraining. This creates a larger model that inherits the knowledge of the smaller model while having greater capacity for learning.</p>
+<h4 id="concatenation">Concatenation<a class="headerlink" href="#concatenation" title="Permanent link">&para;</a></h4>
+<p>Concatenation methods join weight matrices along specific dimensions rather than averaging them. This increases model capacity but also increases model size. Concatenation is less commonly used than summing or stacking approaches.</p>
+<p><img alt="Figure 7-20. Merging two LoRA adapters using concatenation" src="../../assets/ch07/fig-7-20-lora-adapter-concatenation.png" width="700" /></p>
+<p class="figure-caption">Figure 7-20. Merging two LoRA adapters using concatenation</p>
+
+<h4 id="ensembling-vs-merging-comparison">Ensembling vs Merging Comparison<a class="headerlink" href="#ensembling-vs-merging-comparison" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Dimension</th>
+<th>Ensembling</th>
+<th>Model Merging</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Inference cost</strong></td>
+<td>Runs all models, highest cost</td>
+<td>Single model, same as base</td>
+</tr>
+<tr>
+<td><strong>Memory</strong></td>
+<td>Must load all models</td>
+<td>Single model footprint</td>
+</tr>
+<tr>
+<td><strong>Quality</strong></td>
+<td>Generally highest quality</td>
+<td>Variable, sometimes surprising quality</td>
+</tr>
+<tr>
+<td><strong>GPU requirement</strong></td>
+<td>Required for inference</td>
+<td>Not required for merging itself</td>
+</tr>
+<tr>
+<td><strong>Flexibility</strong></td>
+<td>Easy to add/remove models</td>
+<td>Must recompute merge</td>
+</tr>
+<tr>
+<td><strong>Best for</strong></td>
+<td>Maximum quality when cost is secondary</td>
+<td>Resource constrained multi-task deployment</td>
+</tr>
+</tbody>
+</table>
+<p><img alt="Figure 7-13. How ensembling and model merging work" src="../../assets/ch07/fig-7-13-ensembling-vs-merging.png" width="700" /></p>
+<p class="figure-caption">Figure 7-13. How ensembling and model merging work</p>
+
+<h2 id="finetuning-tactics">Finetuning Tactics<a class="headerlink" href="#finetuning-tactics" title="Permanent link">&para;</a></h2>
+<h3 id="finetuning-frameworks-and-base-models">Finetuning Frameworks and Base Models<a class="headerlink" href="#finetuning-frameworks-and-base-models" title="Permanent link">&para;</a></h3>
+<p>Choosing the right base model and finetuning framework is a critical first step. There are two primary paths to arriving at a finetuned model.</p>
+<pre class="mermaid"><code>graph TD
+    subgraph Paths["Two Paths to a Finetuned Model"]
+        direction TB
+
+        subgraph Progression["Progression Path"]
+            P1["Small Model"] --&gt; P2["Evaluate Performance"]
+            P2 --&gt; P3{"Good enough?"}
+            P3 --&gt;|No| P4["Try larger model&lt;br/&gt;or more data"]
+            P4 --&gt; P2
+            P3 --&gt;|Yes| P5["Deploy finetuned&lt;br/&gt;model"]
+        end
+
+        subgraph Distillation["Distillation Path"]
+            D1["Large Teacher Model&lt;br/&gt;(e.g. GPT-4)"] --&gt; D2["Generate training&lt;br/&gt;data from teacher"]
+            D2 --&gt; D3["Finetune smaller&lt;br/&gt;student model"]
+            D3 --&gt; D4["Evaluate student&lt;br/&gt;vs teacher"]
+            D4 --&gt; D5{"Acceptable&lt;br/&gt;quality gap?"}
+            D5 --&gt;|No| D6["More/better&lt;br/&gt;teacher data"]
+            D6 --&gt; D3
+            D5 --&gt;|Yes| D7["Deploy student&lt;br/&gt;model"]
+        end
+    end
+
+    style Paths fill:#1A365D,stroke:#63B3ED,color:#E2E8F0
+    style Progression fill:#2D3748,stroke:#A0AEC0,color:#E2E8F0
+    style Distillation fill:#2D3748,stroke:#A0AEC0,color:#E2E8F0
+    style P1 fill:#2B6CB0,stroke:#E2E8F0,color:#E2E8F0
+    style P2 fill:#2B6CB0,stroke:#E2E8F0,color:#E2E8F0
+    style P3 fill:#4A5568,stroke:#E2E8F0,color:#E2E8F0
+    style P4 fill:#C53030,stroke:#E2E8F0,color:#E2E8F0
+    style P5 fill:#38A169,stroke:#E2E8F0,color:#E2E8F0
+    style D1 fill:#553C9A,stroke:#E2E8F0,color:#E2E8F0
+    style D2 fill:#553C9A,stroke:#E2E8F0,color:#E2E8F0
+    style D3 fill:#553C9A,stroke:#E2E8F0,color:#E2E8F0
+    style D4 fill:#553C9A,stroke:#E2E8F0,color:#E2E8F0
+    style D5 fill:#4A5568,stroke:#E2E8F0,color:#E2E8F0
+    style D6 fill:#C53030,stroke:#E2E8F0,color:#E2E8F0
+    style D7 fill:#38A169,stroke:#E2E8F0,color:#E2E8F0</code></pre>
+<p><strong>Progression path.</strong> Start with a small model, finetune it, evaluate and scale up if the performance is insufficient. This is the more traditional path and works well when you have a clear evaluation framework. You might start with a 7B model and only move to a 13B or 70B model if the smaller model cannot meet your quality bar.</p>
+<p><strong>Distillation path.</strong> Use a large, capable model (such as GPT-4) to generate training data, then finetune a smaller model on that data. This path leverages the quality of the larger model while producing a smaller, faster and cheaper model for deployment. Many of the most popular open source chat models (such as Alpaca and Vicuna) were created using this distillation approach.</p>
+<p><img alt="Figure 7-3. Example application development flows" src="../../assets/ch07/fig-7-3-development-flows.png" width="700" /></p>
+<p class="figure-caption">Figure 7-3. Example application development flows</p>
+
+<p><strong>Framework selection.</strong> Finetuning frameworks range from managed API services to fully open source libraries.</p>
+<p><em>API based finetuning</em> is offered by providers like OpenAI, Google and Mistral. You upload your data and the provider handles training infrastructure, hyperparameter tuning and model serving. This is the simplest option but gives you the least control and ties you to the provider's model ecosystem.</p>
+<p><em>Open source frameworks</em> like Hugging Face Transformers, Axolotl, LLaMA-Factory and Unsloth give you full control over the training process. You choose the base model, set hyperparameters, manage your own compute and own the resulting model weights. This path requires more engineering effort but provides maximum flexibility.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>If you are new to finetuning, start with an API based service to validate that finetuning improves your use case. Once you have confirmed the value, consider moving to an open source framework for greater control and potentially lower costs at scale.</p>
+</div>
+<h3 id="finetuning-hyperparameters">Finetuning Hyperparameters<a class="headerlink" href="#finetuning-hyperparameters" title="Permanent link">&para;</a></h3>
+<p>Hyperparameter selection can have a dramatic impact on finetuning outcomes. The key hyperparameters to tune are learning rate, batch size, number of epochs and prompt loss weight.</p>
+<table>
+<thead>
+<tr>
+<th>Hyperparameter</th>
+<th>Typical Range</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Learning rate</strong></td>
+<td>1e-5 to 5e-5 (full), 1e-4 to 3e-4 (LoRA)</td>
+<td>Most critical hyperparameter. Too high causes instability. Too low wastes compute.</td>
+</tr>
+<tr>
+<td><strong>Batch size</strong></td>
+<td>4 to 64 (effective, with gradient accumulation)</td>
+<td>Larger batches give smoother gradients but may reduce generalization.</td>
+</tr>
+<tr>
+<td><strong>Number of epochs</strong></td>
+<td>1 to 5 for instruction tuning</td>
+<td>More epochs risk overfitting, especially with small datasets. Monitor validation loss.</td>
+</tr>
+<tr>
+<td><strong>LoRA rank (r)</strong></td>
+<td>4 to 64</td>
+<td>Higher rank increases capacity but also parameter count. Start with 8 or 16.</td>
+</tr>
+<tr>
+<td><strong>LoRA alpha</strong></td>
+<td>2x rank is common heuristic</td>
+<td>Controls magnitude of LoRA update. Higher alpha means larger updates.</td>
+</tr>
+<tr>
+<td><strong>Weight decay</strong></td>
+<td>0.0 to 0.1</td>
+<td>Regularization to prevent overfitting. Often set to 0 for short finetuning runs.</td>
+</tr>
+<tr>
+<td><strong>Warmup ratio</strong></td>
+<td>0.03 to 0.1</td>
+<td>Gradually ramps up learning rate at the start of training.</td>
+</tr>
+<tr>
+<td><strong>Prompt loss weight</strong></td>
+<td>0.0 to 1.0</td>
+<td>Weight of the loss on prompt tokens vs completion tokens.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Learning rate.</strong> The learning rate is the single most important hyperparameter. For full finetuning, learning rates are typically in the range of 1e-5 to 5e-5, much lower than pretraining learning rates, because you want to make small adjustments to already well learned representations. For LoRA, learning rates can be higher (1e-4 to 3e-4) because you are only updating the small adapter weights. A cosine learning rate schedule with warmup is the most common choice.</p>
+<p><strong>Batch size and gradient accumulation.</strong> Larger batch sizes produce more stable gradient estimates but require more GPU memory. When you cannot fit a large batch in memory, gradient accumulation lets you simulate a larger batch by accumulating gradients over multiple forward/backward passes before updating weights. For example, if your GPU can handle a batch size of 4, you can set gradient accumulation steps to 8 to simulate an effective batch size of 32.</p>
+<p><strong>Number of epochs.</strong> For instruction finetuning, 1 to 3 epochs is usually sufficient. More epochs risk overfitting, especially when the training dataset is small. A common sign of overfitting is when training loss continues to decrease but validation loss starts increasing. Monitor validation metrics closely and consider early stopping.</p>
+<p><strong>Prompt loss weight.</strong> In instruction finetuning, the training data typically consists of a prompt (the instruction) followed by a completion (the desired response). The prompt loss weight controls how much the loss on the prompt tokens contributes to the total loss. Setting it to 0 means the model is only trained to predict the completion tokens and the prompt tokens are essentially masked. This focuses the model's learning on generating good responses rather than memorizing instructions. Many practitioners set prompt loss weight to 0, though including some prompt loss (0.1 to 0.5) can help with format following.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Hyperparameter tuning for finetuning is less extensive than for pretraining because the model is already well initialized. In practice, a reasonable set of defaults (learning rate 2e-5, batch size 16, 3 epochs, cosine schedule) will get you most of the way there. Focus your experimentation budget on data quality and selection, which typically has a larger impact than hyperparameter tuning.</p>
+</div>
+<h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
+<p>Finetuning is a powerful technique for adapting pretrained models to specific tasks and domains. The decision to finetune should be based on a clear analysis of whether the performance gains justify the costs of data curation, compute and ongoing maintenance.</p>
+<p>The landscape of finetuning methods has evolved from full finetuning toward parameter efficient approaches. LoRA has emerged as the dominant method due to its simplicity, effectiveness and deployment flexibility. QLoRA extends this further by quantizing the base model, making large model finetuning accessible on consumer hardware.</p>
+<p>Model merging offers an intriguing approach for combining specialized capabilities without additional training. Techniques like task arithmetic, SLERP and TIES allow indie developers to create multi-task models using only CPU compute.</p>
+<p>The practical execution of finetuning involves careful choices about base models, frameworks and hyperparameters. Starting with an API service for validation and moving to open source frameworks for production is a sensible path for most teams.</p>
+<p>Key takeaways from this chapter.</p>
+<ol>
+<li><strong>Start simple.</strong> Try prompt engineering and RAG before finetuning. Only finetune when these simpler approaches fall short.</li>
+<li><strong>PEFT is the default.</strong> Full finetuning is rarely necessary. LoRA and QLoRA provide comparable performance at a fraction of the cost.</li>
+<li><strong>Data quality dominates.</strong> The quality of your training data matters far more than most hyperparameter choices.</li>
+<li><strong>Plan for maintenance.</strong> Finetuned models require ongoing attention as base models improve and data distributions shift.</li>
+<li><strong>Consider multi-LoRA serving.</strong> If you need multiple specialized models, share a single base model with task specific LoRA adapters.</li>
+<li><strong>Model merging is underrated.</strong> For combining capabilities from multiple models, merging techniques can be surprisingly effective and require no GPU compute.</li>
+</ol>
+<h2 id="practitioner-checklist">Practitioner Checklist<a class="headerlink" href="#practitioner-checklist" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[ ] Confirm that prompt engineering and RAG are insufficient before starting a finetuning project</li>
+<li>[ ] Define clear evaluation metrics tied to your business objective before finetuning</li>
+<li>[ ] Curate high quality training data with diverse, representative examples</li>
+<li>[ ] Start with a small model and scale up only if needed (progression path)</li>
+<li>[ ] Use LoRA or QLoRA as your default finetuning method unless full finetuning is justified</li>
+<li>[ ] Monitor validation loss during training to detect overfitting early</li>
+<li>[ ] Evaluate both task specific performance and general capability retention</li>
+<li>[ ] Consider multi-LoRA serving if you need multiple specialized model behaviors</li>
+<li>[ ] Plan for model versioning, rollback and ongoing maintenance</li>
+<li>[ ] Document your finetuning configuration, data sources and evaluation results for reproducibility</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../06-rag-and-agents/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 06. RAG and Agents">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                06. RAG and Agents
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../08-dataset-engineering/" class="md-footer__link md-footer__link--next" aria-label="Next: 08. Dataset Engineering">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                08. Dataset Engineering
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "navigation.footer", "toc.follow", "toc.integrate", "content.tabs.link", "search.highlight", "search.suggest", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@10/dist/mermaid.min.js"></script>
+      
+        <script src="../../javascripts/mermaid.js"></script>
+      
+    
+  </body>
+</html>

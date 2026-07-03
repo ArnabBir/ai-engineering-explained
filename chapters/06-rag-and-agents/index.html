@@ -1,0 +1,2252 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A polished field guide to building production AI applications with foundation models.">
+      
+      
+      
+        <link rel="canonical" href="https://arnabbir.github.io/ai-engineering-explained/chapters/06-rag-and-agents/">
+      
+      
+        <link rel="prev" href="../05-prompt-engineering/">
+      
+      
+        <link rel="next" href="../07-finetuning/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/cover/book-cover.jpg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>06. RAG and Agents - AI Engineering Playbook</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="pink">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#chapter-6-rag-and-agents" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="AI Engineering Playbook" class="md-header__button md-logo" aria-label="AI Engineering Playbook" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m19 2-5 4.5v11l5-4.5zM6.5 5C4.55 5 2.45 5.4 1 6.5v14.66c0 .25.25.5.5.5.1 0 .15-.07.25-.07 1.35-.65 3.3-1.09 4.75-1.09 1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.31 4.75 1.06.1.05.15.03.25.03.25 0 .5-.25.5-.5V6.5c-.6-.45-1.25-.75-2-1V19c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V6.5C10.55 5.4 8.45 5 6.5 5"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            AI Engineering Playbook
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              06. RAG and Agents
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="pink"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="pink"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/ArnabBir/ai-engineering-explained" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../overview/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Overview
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../01-introduction/" class="md-tabs__link">
+          
+  
+  
+  Chapters
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="AI Engineering Playbook" class="md-nav__button md-logo" aria-label="AI Engineering Playbook" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m19 2-5 4.5v11l5-4.5zM6.5 5C4.55 5 2.45 5.4 1 6.5v14.66c0 .25.25.5.5.5.1 0 .15-.07.25-.07 1.35-.65 3.3-1.09 4.75-1.09 1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.31 4.75 1.06.1.05.15.03.25.03.25 0 .5-.25.5-.5V6.5c-.6-.45-1.25-.75-2-1V19c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V6.5C10.55 5.4 8.45 5 6.5 5"/></svg>
+
+    </a>
+    AI Engineering Playbook
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/ArnabBir/ai-engineering-explained" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapters
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Chapters
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    01. Introduction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-understanding-foundation-models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    02. Understanding Foundation Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-evaluation-methodology/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03. Evaluation Methodology
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-evaluate-ai-systems/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    04. Evaluate AI Systems
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-prompt-engineering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    05. Prompt Engineering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    06. RAG and Agents
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    06. RAG and Agents
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table of Contents
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rag-retrieval-augmented-generation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RAG (Retrieval-Augmented Generation)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="RAG (Retrieval-Augmented Generation)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-rag" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why RAG
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rag-architecture-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RAG Architecture Overview
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#retrieval-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Retrieval Methods
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Retrieval Methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#term-based-retrieval" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Term-based Retrieval
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#embedding-based-retrieval" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Embedding-based Retrieval
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hybrid-retrieval" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hybrid Retrieval
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vector-search" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vector Search
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Vector Search">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ann-algorithms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ANN Algorithms
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vector-databases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vector Databases
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chunking-strategies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Chunking Strategies
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reranking-retrieved-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reranking Retrieved Results
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#query-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Query Optimization
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Query Optimization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#query-rewriting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Query Rewriting
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#query-expansion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Query Expansion
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hyde-hypothetical-document-embeddings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HyDE (Hypothetical Document Embeddings)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#agents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agents
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Agents">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-is-an-agent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Is an Agent
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What Is an Agent">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#read-actions-vs-write-actions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Read Actions vs Write Actions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tools-and-function-calling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tools and Function Calling
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tools and Function Calling">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tool-inventories" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tool Inventories
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#function-calling-api-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Function Calling API Patterns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tool-selection-and-evaluation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tool Selection and Evaluation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tool-transition-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tool Transition Patterns
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#planning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Planning
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Planning">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#foundation-models-as-planners" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Foundation Models as Planners
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fm-vs-rl-planners" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FM vs RL Planners
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plan-generation-with-prompts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Plan Generation with Prompts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#planning-granularity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Planning Granularity
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#complex-plans-and-control-flows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Complex Plans and Control Flows
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reflection-and-error-correction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reflection and Error Correction
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Reflection and Error Correction">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#react-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ReAct Framework
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reflexion-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reflexion Framework
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#self-critique-mechanisms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Self-Critique Mechanisms
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agent-failure-modes-and-evaluation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent Failure Modes and Evaluation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#memory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Memory
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Memory">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#three-memory-mechanisms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Three Memory Mechanisms
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#memory-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Memory Management
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Memory Management">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fifo-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FIFO Strategy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#summarization-based-memory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summarization-based Memory
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reflection-based-memory-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reflection-based Memory Management
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#benefits-of-memory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Benefits of Memory
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#practitioner-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Practitioner Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-finetuning/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    07. Finetuning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-dataset-engineering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    08. Dataset Engineering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-inference-optimization/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    09. Inference Optimization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-ai-engineering-architecture-and-user-feedback/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10. Architecture and User Feedback
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="chapter-6-rag-and-agents">Chapter 6. RAG and Agents<a class="headerlink" href="#chapter-6-rag-and-agents" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p>"From the early days of foundation models, it was clear that the RAG pattern would be immensely valuable."
+Chip Huyen</p>
+</blockquote>
+<p>Foundation models are powerful, but they are not omniscient. They have knowledge cutoffs, they hallucinate and they cannot act on the world without external tools. This chapter covers two of the most important architectural patterns in AI engineering. <strong>Retrieval-Augmented Generation (RAG)</strong> grounds model outputs in real, retrievable data. <strong>Agents</strong> give models the ability to plan, use tools and take actions in their environment. Together, they transform a static language model into a dynamic, context-aware, action-capable system.</p>
+<h2 id="table-of-contents">Table of Contents<a class="headerlink" href="#table-of-contents" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="#rag-retrieval-augmented-generation">RAG (Retrieval-Augmented Generation)</a></li>
+<li><a href="#why-rag">Why RAG</a></li>
+<li><a href="#rag-architecture-overview">RAG Architecture Overview</a></li>
+<li><a href="#retrieval-methods">Retrieval Methods</a></li>
+<li><a href="#vector-search">Vector Search</a></li>
+<li><a href="#chunking-strategies">Chunking Strategies</a></li>
+<li><a href="#reranking-retrieved-results">Reranking Retrieved Results</a></li>
+<li><a href="#query-optimization">Query Optimization</a></li>
+<li><a href="#agents">Agents</a></li>
+<li><a href="#what-is-an-agent">What Is an Agent</a></li>
+<li><a href="#tools-and-function-calling">Tools and Function Calling</a></li>
+<li><a href="#planning">Planning</a></li>
+<li><a href="#reflection-and-error-correction">Reflection and Error Correction</a></li>
+<li><a href="#agent-failure-modes-and-evaluation">Agent Failure Modes and Evaluation</a></li>
+<li><a href="#memory">Memory</a></li>
+<li><a href="#three-memory-mechanisms">Three Memory Mechanisms</a></li>
+<li><a href="#memory-management">Memory Management</a></li>
+<li><a href="#benefits-of-memory">Benefits of Memory</a></li>
+<li><a href="#summary">Summary</a></li>
+<li><a href="#practitioner-checklist">Practitioner Checklist</a></li>
+</ul>
+<h2 id="rag-retrieval-augmented-generation">RAG (Retrieval-Augmented Generation)<a class="headerlink" href="#rag-retrieval-augmented-generation" title="Permanent link">&para;</a></h2>
+<h3 id="why-rag">Why RAG<a class="headerlink" href="#why-rag" title="Permanent link">&para;</a></h3>
+<p>Foundation models are trained on massive corpora, but they have fundamental limitations that RAG directly addresses.</p>
+<p><strong>Knowledge cutoff.</strong> A model trained in January 2024 knows nothing about events in March 2024. RAG lets you inject up-to-date information at inference time without retraining the model.</p>
+<p><strong>Hallucination reduction.</strong> When a model generates from memory alone, it can confidently fabricate facts. When grounded in retrieved documents, the model has real source material to draw from. This does not eliminate hallucination entirely, but it dramatically reduces it.</p>
+<p><strong>Domain specificity.</strong> Your company's internal documentation, proprietary data and specialized knowledge bases are not in the model's training data. RAG makes this information accessible without finetuning.</p>
+<p><strong>Verifiability.</strong> RAG systems can return citations alongside their answers. Users can verify claims by inspecting the source documents, which builds trust and enables auditing.</p>
+<p><strong>Cost efficiency.</strong> Updating a retrieval index is orders of magnitude cheaper than retraining or finetuning a foundation model. You can keep your system current by simply updating the document store.</p>
+<p><img alt="Figure 6-1. The retrieve-then-generate pattern" src="../../assets/ch06/fig-6-1-retrieve-then-generate.png" width="700" /></p>
+<p class="figure-caption">Figure 6-1. The retrieve-then-generate pattern</p>
+
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>RAG is not a silver bullet. If the retrieval step returns irrelevant or incorrect documents, the generator will produce low-quality or misleading outputs. The quality of a RAG system is bounded by the quality of its retrieval.</p>
+</div>
+<h3 id="rag-architecture-overview">RAG Architecture Overview<a class="headerlink" href="#rag-architecture-overview" title="Permanent link">&para;</a></h3>
+<p>The core RAG pattern is straightforward. Given a user query, retrieve relevant documents from an external knowledge base, augment the prompt with those documents and generate a response conditioned on both the query and the retrieved context.</p>
+<pre class="mermaid"><code>graph LR
+    A["User Query"] --&gt; B["Retriever"]
+    B --&gt; C["Retrieved\nDocuments"]
+    C --&gt; D["Context\nAugmentation"]
+    A --&gt; D
+    D --&gt; E["Generator\n(Foundation Model)"]
+    E --&gt; F["Response"]
+
+    subgraph "Knowledge Base"
+        G["Document\nStore"]
+        H["Vector\nIndex"]
+        I["Term\nIndex"]
+    end
+
+    G --&gt; B
+    H --&gt; B
+    I --&gt; B
+
+    style A fill:#3B82F6,stroke:#1E40AF,color:#FFFFFF
+    style B fill:#8B5CF6,stroke:#5B21B6,color:#FFFFFF
+    style C fill:#6366F1,stroke:#4338CA,color:#FFFFFF
+    style D fill:#EC4899,stroke:#BE185D,color:#FFFFFF
+    style E fill:#F59E0B,stroke:#D97706,color:#FFFFFF
+    style F fill:#10B981,stroke:#047857,color:#FFFFFF
+    style G fill:#374151,stroke:#9CA3AF,color:#E5E7EB
+    style H fill:#374151,stroke:#9CA3AF,color:#E5E7EB
+    style I fill:#374151,stroke:#9CA3AF,color:#E5E7EB</code></pre>
+<p>The pipeline has two main phases.</p>
+<ol>
+<li><strong>Indexing phase (offline).</strong> Documents are preprocessed, chunked, embedded and stored in a retrieval index. This happens before any user query arrives.</li>
+<li><strong>Query phase (online).</strong> A user query triggers retrieval, context augmentation and generation. This must be fast enough for interactive use.</li>
+</ol>
+<p><img alt="Figure 6-2. A basic RAG architecture" src="../../assets/ch06/fig-6-2-basic-rag-architecture.png" width="700" /></p>
+<p class="figure-caption">Figure 6-2. A basic RAG architecture</p>
+
+<h3 id="retrieval-methods">Retrieval Methods<a class="headerlink" href="#retrieval-methods" title="Permanent link">&para;</a></h3>
+<p>There are three broad families of retrieval methods, each with distinct strengths.</p>
+<h4 id="term-based-retrieval">Term-based Retrieval<a class="headerlink" href="#term-based-retrieval" title="Permanent link">&para;</a></h4>
+<p>Term-based methods match queries to documents using lexical overlap. They count how often query terms appear in documents and score relevance accordingly.</p>
+<p><strong>TF-IDF (Term Frequency, Inverse Document Frequency)</strong> scores a term higher if it appears frequently in a document but rarely across the corpus. Common words like "the" get low scores. Rare, informative words get high scores.</p>
+<p><strong>BM25</strong> is the modern standard for term-based retrieval. It improves on TF-IDF by adding document length normalization and a saturation function that prevents very high term frequencies from dominating the score. BM25 is the default ranking function in Elasticsearch and Apache Lucene.</p>
+<p><strong>Strengths of term-based retrieval.</strong> Exact keyword matching is reliable. If a user searches for "CUDA error 803," a term-based system will find documents containing that exact string. Term-based methods are also fast, well understood and require no GPU infrastructure.</p>
+<p><strong>Weaknesses of term-based retrieval.</strong> These methods fail on semantic similarity. A query about "how to terminate a process" will not match a document about "how to kill a running program" unless the exact terms overlap.</p>
+<h4 id="embedding-based-retrieval">Embedding-based Retrieval<a class="headerlink" href="#embedding-based-retrieval" title="Permanent link">&para;</a></h4>
+<p>Embedding-based retrieval encodes both queries and documents into dense vector representations in a shared semantic space. Similarity is computed using distance metrics like cosine similarity or dot product.</p>
+<p>The key advantage is <strong>semantic matching.</strong> "Terminate a process" and "kill a running program" will have similar embeddings even though they share no terms. This captures meaning rather than surface form.</p>
+<p><img alt="Figure 6-3. How an embedding-based semantic retriever works" src="../../assets/ch06/fig-6-3-embedding-retriever.png" width="700" /></p>
+<p class="figure-caption">Figure 6-3. How an embedding-based semantic retriever works</p>
+
+<p>Embedding models are typically trained using contrastive learning on large datasets of query-document pairs. Popular models include OpenAI's text-embedding-ada-002, Cohere's Embed and open-source models like E5, BGE and GTE.</p>
+<p><strong>Weaknesses of embedding-based retrieval.</strong> Embeddings can miss exact matches that term-based methods catch trivially. They also require GPU infrastructure for encoding and specialized vector databases for search.</p>
+<h4 id="hybrid-retrieval">Hybrid Retrieval<a class="headerlink" href="#hybrid-retrieval" title="Permanent link">&para;</a></h4>
+<p>Hybrid retrieval combines term-based and embedding-based methods to get the best of both worlds. A common approach is to run both retrievers in parallel, then fuse their results using <strong>Reciprocal Rank Fusion (RRF)</strong> or a learned score combination.</p>
+<table>
+<thead>
+<tr>
+<th>Dimension</th>
+<th>Term-based (BM25)</th>
+<th>Embedding-based</th>
+<th>Hybrid</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Matching type</strong></td>
+<td>Lexical (exact terms)</td>
+<td>Semantic (meaning)</td>
+<td>Both</td>
+</tr>
+<tr>
+<td><strong>Handles synonyms</strong></td>
+<td>No</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><strong>Handles exact strings</strong></td>
+<td>Yes</td>
+<td>Poorly</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><strong>Infrastructure</strong></td>
+<td>Standard search index</td>
+<td>Vector database + GPU</td>
+<td>Both</td>
+</tr>
+<tr>
+<td><strong>Latency</strong></td>
+<td>Very low</td>
+<td>Low to moderate</td>
+<td>Moderate</td>
+</tr>
+<tr>
+<td><strong>Cold start</strong></td>
+<td>Works immediately</td>
+<td>Needs embedding model</td>
+<td>Needs both</td>
+</tr>
+<tr>
+<td><strong>Best for</strong></td>
+<td>Keyword heavy queries, codes, IDs</td>
+<td>Natural language queries</td>
+<td>Production systems needing broad coverage</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>In production, hybrid retrieval is almost always the right default. It handles the widest range of query types and degrades gracefully. Start with BM25 plus a good embedding model, fuse with RRF and iterate from there.</p>
+</div>
+<h3 id="vector-search">Vector Search<a class="headerlink" href="#vector-search" title="Permanent link">&para;</a></h3>
+<p>When using embedding-based retrieval, you need an efficient way to find the nearest neighbors of a query vector among potentially millions of document vectors. Exact nearest neighbor search is too slow at scale. <strong>Approximate Nearest Neighbor (ANN)</strong> algorithms trade a small amount of accuracy for dramatic speedups.</p>
+<pre class="mermaid"><code>graph LR
+    A["Raw Text"] --&gt; B["Chunking"]
+    B --&gt; C["Embedding\nModel"]
+    C --&gt; D["Dense\nVectors"]
+    D --&gt; E["ANN Index"]
+
+    F["User Query"] --&gt; G["Query\nEmbedding"]
+    G --&gt; H["ANN\nSearch"]
+    E --&gt; H
+    H --&gt; I["Top-k\nResults"]
+
+    style A fill:#3B82F6,stroke:#1E40AF,color:#FFFFFF
+    style B fill:#6366F1,stroke:#4338CA,color:#FFFFFF
+    style C fill:#8B5CF6,stroke:#5B21B6,color:#FFFFFF
+    style D fill:#A78BFA,stroke:#7C3AED,color:#FFFFFF
+    style E fill:#EC4899,stroke:#BE185D,color:#FFFFFF
+    style F fill:#3B82F6,stroke:#1E40AF,color:#FFFFFF
+    style G fill:#8B5CF6,stroke:#5B21B6,color:#FFFFFF
+    style H fill:#F59E0B,stroke:#D97706,color:#FFFFFF
+    style I fill:#10B981,stroke:#047857,color:#FFFFFF</code></pre>
+<h4 id="ann-algorithms">ANN Algorithms<a class="headerlink" href="#ann-algorithms" title="Permanent link">&para;</a></h4>
+<p><strong>IVF (Inverted File Index).</strong> The vector space is partitioned into clusters using k-means. At query time, only the nearest clusters are searched. This reduces the search space dramatically. The tradeoff is controlled by the <code>nprobe</code> parameter, which determines how many clusters to search.</p>
+<p><strong>HNSW (Hierarchical Navigable Small World).</strong> Builds a multi-layer graph where each node is connected to its approximate nearest neighbors. Search starts at the top layer (sparse, long-range connections) and progressively moves to lower layers (dense, short-range connections). HNSW offers excellent recall and speed but requires more memory than IVF.</p>
+<p><strong>Product Quantization (PQ).</strong> Compresses vectors by splitting them into subvectors and quantizing each independently. This reduces memory usage significantly at the cost of some accuracy. PQ is often combined with IVF (IVF-PQ) for large-scale deployments.</p>
+<p><strong>ScaNN (Scalable Nearest Neighbors).</strong> Google's library that uses anisotropic vector quantization. It optimizes for the inner product metric and achieves state-of-the-art recall/speed tradeoffs.</p>
+<h4 id="vector-databases">Vector Databases<a class="headerlink" href="#vector-databases" title="Permanent link">&para;</a></h4>
+<p>Several purpose-built databases have emerged to manage vector search at scale.</p>
+<p><strong>Pinecone</strong> is a fully managed vector database. It handles indexing, replication and scaling automatically. Good for teams that want minimal operational overhead.</p>
+<p><strong>Weaviate</strong> is open-source and supports hybrid search (vector plus keyword) natively. It also supports multimodal data.</p>
+<p><strong>Milvus</strong> is an open-source vector database designed for billion-scale vector search. It supports multiple index types including IVF, HNSW and DiskANN.</p>
+<p><strong>Chroma</strong> is lightweight and developer-friendly. It is popular for prototyping and smaller-scale applications.</p>
+<p><strong>pgvector</strong> adds vector search capabilities to PostgreSQL. If you already use Postgres, this avoids introducing a new database into your stack.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You do not always need a dedicated vector database. For smaller datasets (under a few hundred thousand documents), libraries like FAISS or Annoy running in-memory can be simpler and faster than a full database deployment.</p>
+</div>
+<h3 id="chunking-strategies">Chunking Strategies<a class="headerlink" href="#chunking-strategies" title="Permanent link">&para;</a></h3>
+<p>Before documents can be embedded and indexed, they must be split into chunks. The chunking strategy significantly affects retrieval quality. Chunks that are too large dilute the relevant signal with noise. Chunks that are too small lose important context.</p>
+<table>
+<thead>
+<tr>
+<th>Strategy</th>
+<th>Description</th>
+<th>Pros</th>
+<th>Cons</th>
+<th>Best For</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Fixed-size</strong></td>
+<td>Split every N tokens/characters with optional overlap</td>
+<td>Simple, predictable, easy to implement</td>
+<td>Splits mid-sentence, ignores document structure</td>
+<td>Uniform documents, quick prototyping</td>
+</tr>
+<tr>
+<td><strong>Semantic</strong></td>
+<td>Split at natural boundaries (paragraphs, sections, topics)</td>
+<td>Preserves meaning, respects document structure</td>
+<td>More complex, variable chunk sizes</td>
+<td>Well-structured documents with clear sections</td>
+</tr>
+<tr>
+<td><strong>Recursive</strong></td>
+<td>Try splitting by paragraphs first, then sentences, then characters</td>
+<td>Adapts to document structure, good defaults</td>
+<td>Slightly more complex than fixed-size</td>
+<td>General purpose, LangChain's default</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Fixed-size chunking</strong> is the simplest approach. You pick a chunk size (e.g., 512 tokens) and optionally overlap adjacent chunks by some number of tokens (e.g., 50 tokens). The overlap ensures that information at chunk boundaries is not lost.</p>
+<p><strong>Semantic chunking</strong> uses the document's natural structure. Split at paragraph breaks, section headers or topic shifts. Some implementations use embedding similarity between consecutive sentences to detect topic boundaries. When consecutive sentences have low similarity, that is a natural split point.</p>
+<p><img alt="Figure 6-5. Anthropic augments chunks with context for situational retrieval" src="../../assets/ch06/fig-6-5-contextual-retrieval.png" width="700" /></p>
+<p class="figure-caption">Figure 6-5. Anthropic augments chunks with context for situational retrieval</p>
+
+<p><strong>Recursive chunking</strong> tries a hierarchy of separators. First try to split by double newlines (paragraphs). If the resulting chunks are still too large, split by single newlines. Then by sentences. Then by words. This produces chunks that respect document structure while staying within size limits.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Chunk size interacts with your embedding model. Most embedding models perform best on text lengths similar to their training data. For many models, 256 to 512 tokens is a sweet spot. Always benchmark different chunk sizes on your specific data and queries.</p>
+</div>
+<h3 id="reranking-retrieved-results">Reranking Retrieved Results<a class="headerlink" href="#reranking-retrieved-results" title="Permanent link">&para;</a></h3>
+<p>Initial retrieval (whether term-based, embedding-based or hybrid) returns a set of candidate documents. <strong>Reranking</strong> applies a more expensive but more accurate model to rescore these candidates and reorder them.</p>
+<p>The retriever prioritizes recall. It casts a wide net. The reranker prioritizes precision. It sorts the catch.</p>
+<p><strong>Cross-encoder rerankers</strong> take a (query, document) pair as input and output a relevance score. Unlike bi-encoders used in retrieval (which encode query and document independently), cross-encoders attend to both simultaneously. This captures fine-grained interactions but is too slow to apply to the entire corpus. That is why reranking is applied only to the top-k retrieved results.</p>
+<p>Popular rerankers include Cohere Rerank, models from the cross-encoder family on Hugging Face and ColBERT-style late-interaction models that offer a middle ground between speed and accuracy.</p>
+<p><strong>The typical pipeline.</strong> Retrieve 50 to 100 candidates with a fast retriever, then rerank to select the top 5 to 10 for the generator.</p>
+<h3 id="query-optimization">Query Optimization<a class="headerlink" href="#query-optimization" title="Permanent link">&para;</a></h3>
+<p>The user's raw query is often not the best query for retrieval. Query optimization techniques transform the query to improve retrieval results.</p>
+<h4 id="query-rewriting">Query Rewriting<a class="headerlink" href="#query-rewriting" title="Permanent link">&para;</a></h4>
+<p>Rewrite the user's query into a form that is more likely to match relevant documents. This can be done with a lightweight LLM call. For example, a conversational query like "What about the pricing?" can be rewritten to "What is the pricing for the enterprise plan?" by incorporating context from the conversation history.</p>
+<p><img alt="Figure 6-4. Using generative models to rewrite queries" src="../../assets/ch06/fig-6-4-query-rewriting.png" width="700" /></p>
+<p class="figure-caption">Figure 6-4. Using generative models to rewrite queries</p>
+
+<h4 id="query-expansion">Query Expansion<a class="headerlink" href="#query-expansion" title="Permanent link">&para;</a></h4>
+<p>Generate multiple reformulations of the query and retrieve documents for each. Then merge and deduplicate the results. This increases recall by covering different phrasings of the same intent.</p>
+<h4 id="hyde-hypothetical-document-embeddings">HyDE (Hypothetical Document Embeddings)<a class="headerlink" href="#hyde-hypothetical-document-embeddings" title="Permanent link">&para;</a></h4>
+<p>Instead of embedding the query directly, generate a <strong>hypothetical answer</strong> to the query using the LLM, then embed that hypothetical answer and use it for retrieval. The intuition is that a hypothetical answer is more likely to be semantically similar to the actual answer document than the short query is.</p>
+<p>For example, the query "What causes aurora borealis?" might be expanded into a paragraph explaining the phenomenon. That paragraph's embedding will be closer to actual documents about auroras than the embedding of the short question.</p>
+<p><img alt="Figure 6-6. Multimodal RAG augments query with text and images" src="../../assets/ch06/fig-6-6-multimodal-rag.png" width="700" /></p>
+<p class="figure-caption">Figure 6-6. Multimodal RAG augments query with text and images</p>
+
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>HyDE can backfire if the LLM generates a confidently wrong hypothetical answer. The retrieval will then find documents similar to the wrong answer, compounding the error. Use HyDE judiciously and monitor its impact on retrieval quality.</p>
+</div>
+<h2 id="agents">Agents<a class="headerlink" href="#agents" title="Permanent link">&para;</a></h2>
+<h3 id="what-is-an-agent">What Is an Agent<a class="headerlink" href="#what-is-an-agent" title="Permanent link">&para;</a></h3>
+<p>An agent is a system that uses a foundation model to decide what actions to take in an environment to accomplish a goal. Unlike a simple prompt-response system, an agent can observe its environment, plan a sequence of steps, use tools and adapt based on feedback.</p>
+<blockquote>
+<p>"Just as the right tools can help humans be vastly more productive, tools enable models to accomplish many more tasks."
+Chip Huyen</p>
+</blockquote>
+<pre class="mermaid"><code>graph TD
+    A["User Goal"] --&gt; B["Agent"]
+
+    subgraph Agent["Agent Core"]
+        C["Planner"]
+        D["Executor"]
+        E["Memory"]
+        C --&gt; D
+        D --&gt; C
+        E --&gt; C
+    end
+
+    B --&gt; F["Environment"]
+
+    subgraph Tools["Tool Inventory"]
+        G["Search API"]
+        H["Calculator"]
+        I["Code Executor"]
+        J["Database"]
+        K["Web Browser"]
+    end
+
+    D --&gt; Tools
+    Tools --&gt; D
+    F --&gt; B
+
+    style A fill:#3B82F6,stroke:#1E40AF,color:#FFFFFF
+    style C fill:#8B5CF6,stroke:#5B21B6,color:#FFFFFF
+    style D fill:#EC4899,stroke:#BE185D,color:#FFFFFF
+    style E fill:#F59E0B,stroke:#D97706,color:#FFFFFF
+    style G fill:#374151,stroke:#9CA3AF,color:#E5E7EB
+    style H fill:#374151,stroke:#9CA3AF,color:#E5E7EB
+    style I fill:#374151,stroke:#9CA3AF,color:#E5E7EB
+    style J fill:#374151,stroke:#9CA3AF,color:#E5E7EB
+    style K fill:#374151,stroke:#9CA3AF,color:#E5E7EB</code></pre>
+<p>An agent has three core components.</p>
+<p><strong>Environment.</strong> The world the agent operates in. This could be a codebase, a web browser, a set of APIs, a database or a physical robot's surroundings. The environment defines what the agent can observe and what actions are available.</p>
+<p><strong>Tools.</strong> The actions the agent can take. Tools range from simple (a calculator, a search API) to complex (executing code, making HTTP requests, modifying a database). Tools are the agent's hands.</p>
+<p><strong>Planning.</strong> The agent's ability to decompose a goal into a sequence of actions, anticipate outcomes and adjust when things go wrong. Planning is the agent's brain.</p>
+<p><img alt="Figure 6-8. SWE-agent coding agent visualization" src="../../assets/ch06/fig-6-8-swe-agent.png" width="700" /></p>
+<p class="figure-caption">Figure 6-8. SWE-agent coding agent visualization</p>
+
+<h4 id="read-actions-vs-write-actions">Read Actions vs Write Actions<a class="headerlink" href="#read-actions-vs-write-actions" title="Permanent link">&para;</a></h4>
+<p>A critical distinction in agent design is between <strong>read actions</strong> and <strong>write actions</strong>.</p>
+<p><strong>Read actions</strong> observe the environment without modifying it. Examples include searching a database, reading a file or fetching a web page. Read actions are low risk. If the agent makes a mistake, nothing is damaged.</p>
+<p><strong>Write actions</strong> modify the environment. Examples include sending an email, executing a database write, making a purchase or deleting a file. Write actions are high risk and often irreversible.</p>
+<blockquote>
+<p>"Just as you shouldn't give an intern the authority to delete your production database, you shouldn't allow an unreliable AI to initiate bank transfers."
+Chip Huyen</p>
+</blockquote>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Always implement human-in-the-loop approval for high-stakes write actions. The more consequential the action, the more oversight is required. Start with read-only agents and gradually expand to write actions as you build confidence in the system's reliability.</p>
+</div>
+<h3 id="tools-and-function-calling">Tools and Function Calling<a class="headerlink" href="#tools-and-function-calling" title="Permanent link">&para;</a></h3>
+<h4 id="tool-inventories">Tool Inventories<a class="headerlink" href="#tool-inventories" title="Permanent link">&para;</a></h4>
+<p>An agent's capabilities are defined by its tool inventory. The tools available determine what the agent can and cannot do.</p>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Examples</th>
+<th>Risk Level</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Information retrieval</strong></td>
+<td>Web search, document lookup, database query</td>
+<td>Low</td>
+<td>Read-only, safe to automate</td>
+</tr>
+<tr>
+<td><strong>Computation</strong></td>
+<td>Calculator, code execution, data analysis</td>
+<td>Low to Medium</td>
+<td>Sandboxed execution recommended</td>
+</tr>
+<tr>
+<td><strong>Communication</strong></td>
+<td>Send email, post message, create ticket</td>
+<td>Medium to High</td>
+<td>Human approval recommended</td>
+</tr>
+<tr>
+<td><strong>Data modification</strong></td>
+<td>Database write, file edit, API mutation</td>
+<td>High</td>
+<td>Human approval required</td>
+</tr>
+<tr>
+<td><strong>Financial</strong></td>
+<td>Payment processing, transfers, purchases</td>
+<td>Very High</td>
+<td>Strict human oversight required</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Start with a small, well-tested tool inventory. It is tempting to give agents access to everything, but each additional tool increases the chance of misuse and makes planning harder. Add tools incrementally as needs arise.</p>
+</div>
+<h4 id="function-calling-api-patterns">Function Calling API Patterns<a class="headerlink" href="#function-calling-api-patterns" title="Permanent link">&para;</a></h4>
+<p>Modern LLM APIs (OpenAI, Anthropic, Google) support <strong>function calling</strong> natively. The model does not execute the function itself. Instead, it outputs a structured JSON object specifying which function to call and with what arguments. Your application code then executes the function and returns the result to the model.</p>
+<pre class="mermaid"><code>sequenceDiagram
+    participant U as User
+    participant A as Application
+    participant M as Model
+    participant T as Tool/API
+
+    U-&gt;&gt;A: "What's the weather in Tokyo?"
+    A-&gt;&gt;M: User query + tool definitions
+    M-&gt;&gt;A: function_call: get_weather(location="Tokyo")
+    A-&gt;&gt;T: Execute get_weather("Tokyo")
+    T-&gt;&gt;A: {"temp": 22, "condition": "sunny"}
+    A-&gt;&gt;M: Tool result: {"temp": 22, "condition": "sunny"}
+    M-&gt;&gt;A: "The weather in Tokyo is 22C and sunny."
+    A-&gt;&gt;U: Display response
+
+    Note over A,M: The model never executes&lt;br/&gt;functions directly</code></pre>
+<p>The function calling workflow has distinct phases.</p>
+<ol>
+<li><strong>Definition.</strong> You provide the model with a schema of available functions, including names, descriptions and parameter specifications.</li>
+<li><strong>Selection.</strong> The model decides whether to call a function and which one, based on the user's query and the function descriptions.</li>
+<li><strong>Invocation.</strong> The model outputs the function name and arguments as structured JSON.</li>
+<li><strong>Execution.</strong> Your application code executes the function.</li>
+<li><strong>Integration.</strong> The function result is fed back to the model, which incorporates it into its response.</li>
+</ol>
+<blockquote>
+<p>"Always ask the system to report what parameter values it uses for each function call. Inspect these values to make sure they are correct."
+Chip Huyen</p>
+</blockquote>
+<h4 id="tool-selection-and-evaluation">Tool Selection and Evaluation<a class="headerlink" href="#tool-selection-and-evaluation" title="Permanent link">&para;</a></h4>
+<p>When an agent has many tools available, selecting the right tool for a given subtask becomes a non-trivial problem. Several strategies exist.</p>
+<p><strong>Description-based selection.</strong> The model reads tool descriptions and picks the most relevant one. This works well when descriptions are clear and tools have distinct purposes.</p>
+<p><strong>Few-shot selection.</strong> Provide examples of queries mapped to correct tools. This helps the model learn the mapping.</p>
+<p><strong>Two-stage selection.</strong> First narrow down to a category of tools, then select within that category. This scales better to large tool inventories.</p>
+<p><img alt="Figure 6-14. Different models express different tool use patterns" src="../../assets/ch06/fig-6-14-tool-use-models.png" width="700" /></p>
+<p class="figure-caption">Figure 6-14. Different models express different tool use patterns</p>
+
+<h4 id="tool-transition-patterns">Tool Transition Patterns<a class="headerlink" href="#tool-transition-patterns" title="Permanent link">&para;</a></h4>
+<p>Agents often need to use multiple tools in sequence, where the output of one tool becomes the input to another. Common patterns include chaining (output of tool A feeds into tool B), branching (choose between tools based on intermediate results) and aggregation (combine results from multiple tools).</p>
+<p><img alt="Figure 6-15. Tool transition tree" src="../../assets/ch06/fig-6-15-tool-transition-tree.png" width="700" /></p>
+<p class="figure-caption">Figure 6-15. Tool transition tree</p>
+
+<h3 id="planning">Planning<a class="headerlink" href="#planning" title="Permanent link">&para;</a></h3>
+<p>Planning is the most intellectually ambitious component of an agent. It involves decomposing a high-level goal into a sequence of concrete actions, anticipating potential obstacles and adapting when execution diverges from expectations.</p>
+<pre class="mermaid"><code>graph TD
+    A["User Goal"] --&gt; B["Plan\nGeneration"]
+    B --&gt; C["Plan\nValidation"]
+    C --&gt;|Valid| D["Step-by-step\nExecution"]
+    C --&gt;|Invalid| B
+    D --&gt; E{"Step\nSucceeded?"}
+    E --&gt;|Yes| F{"More\nSteps?"}
+    F --&gt;|Yes| D
+    F --&gt;|No| G["Return\nResult"]
+    E --&gt;|No| H["Error\nAnalysis"]
+    H --&gt; I{"Recoverable?"}
+    I --&gt;|Yes| B
+    I --&gt;|No| J["Report\nFailure"]
+
+    style A fill:#3B82F6,stroke:#1E40AF,color:#FFFFFF
+    style B fill:#8B5CF6,stroke:#5B21B6,color:#FFFFFF
+    style C fill:#6366F1,stroke:#4338CA,color:#FFFFFF
+    style D fill:#EC4899,stroke:#BE185D,color:#FFFFFF
+    style E fill:#F59E0B,stroke:#D97706,color:#FFFFFF
+    style F fill:#F59E0B,stroke:#D97706,color:#FFFFFF
+    style G fill:#10B981,stroke:#047857,color:#FFFFFF
+    style H fill:#EF4444,stroke:#B91C1C,color:#FFFFFF
+    style I fill:#EF4444,stroke:#B91C1C,color:#FFFFFF
+    style J fill:#991B1B,stroke:#7F1D1D,color:#FFFFFF</code></pre>
+<h4 id="foundation-models-as-planners">Foundation Models as Planners<a class="headerlink" href="#foundation-models-as-planners" title="Permanent link">&para;</a></h4>
+<p>There is active debate about whether LLMs can truly plan. Subbarao Kambhampati and others have argued that LLMs are better described as "approximate retrieval engines" for plans seen during training, rather than genuine planners that can reason about novel situations.</p>
+<blockquote>
+<p>"The plans that come out of LLMs may look reasonable to the lay user, and yet lead to execution time interactions and errors."
+Subbarao Kambhampati</p>
+</blockquote>
+<p>The practical implication is that <strong>LLM-generated plans should always be validated before execution.</strong> The model may produce plans that look plausible but contain subtle errors, such as incorrect parameter values, missing dependencies or steps in the wrong order.</p>
+<p><img alt="Figure 6-9. Decoupling planning and execution" src="../../assets/ch06/fig-6-9-planning-execution.png" width="700" /></p>
+<p class="figure-caption">Figure 6-9. Decoupling planning and execution</p>
+
+<h4 id="fm-vs-rl-planners">FM vs RL Planners<a class="headerlink" href="#fm-vs-rl-planners" title="Permanent link">&para;</a></h4>
+<p><strong>Foundation model planners</strong> generate plans using natural language reasoning. They are flexible and can handle open-ended tasks, but they struggle with precise multi-step reasoning and may hallucinate invalid plans.</p>
+<p><strong>Reinforcement learning planners</strong> learn planning policies through trial and error in a defined environment. They excel in well-defined domains (game playing, robotics) but struggle to generalize to new environments.</p>
+<p>In practice, the most robust approach is a <strong>hybrid.</strong> Use the foundation model for high-level plan generation and decomposition, but validate and constrain execution using deterministic logic.</p>
+<h4 id="plan-generation-with-prompts">Plan Generation with Prompts<a class="headerlink" href="#plan-generation-with-prompts" title="Permanent link">&para;</a></h4>
+<p>You can elicit plans from foundation models using structured prompting techniques.</p>
+<p><strong>Chain-of-thought prompting</strong> asks the model to think step by step. This improves plan quality for moderately complex tasks.</p>
+<p><strong>Plan-and-solve prompting</strong> explicitly asks the model to first devise a plan, then execute it. For example. "First, create a step-by-step plan to answer the question. Then, execute each step."</p>
+<p><strong>Tree-of-thought prompting</strong> explores multiple plan branches and evaluates them before committing. This is more expensive but produces higher-quality plans for complex tasks.</p>
+<h4 id="planning-granularity">Planning Granularity<a class="headerlink" href="#planning-granularity" title="Permanent link">&para;</a></h4>
+<p>Plans can be specified at different levels of granularity, from exact function calls to high-level natural language descriptions.</p>
+<table>
+<thead>
+<tr>
+<th>Granularity</th>
+<th>Example</th>
+<th>Pros</th>
+<th>Cons</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Exact function names</strong></td>
+<td><code>search_db(query="revenue Q3", table="financials")</code></td>
+<td>Precise, directly executable</td>
+<td>Rigid, requires exact tool knowledge</td>
+</tr>
+<tr>
+<td><strong>Natural language steps</strong></td>
+<td>"Search the financial database for Q3 revenue"</td>
+<td>Flexible, easier for model to generate</td>
+<td>Requires interpretation layer to execute</td>
+</tr>
+<tr>
+<td><strong>Mixed</strong></td>
+<td>"Step 1: Use search_db to find Q3 revenue data"</td>
+<td>Balances precision and flexibility</td>
+<td>More complex parsing</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Finer granularity gives more control but requires the model to know exact function signatures. Coarser granularity is more flexible but introduces an interpretation layer that can introduce errors. The right level depends on the reliability of your model and the complexity of your tool inventory.</p>
+</div>
+<h4 id="complex-plans-and-control-flows">Complex Plans and Control Flows<a class="headerlink" href="#complex-plans-and-control-flows" title="Permanent link">&para;</a></h4>
+<p>Real-world tasks often require plans with complex control flows beyond simple sequential execution.</p>
+<pre class="mermaid"><code>graph LR
+    subgraph Sequential
+        S1["Step 1"] --&gt; S2["Step 2"] --&gt; S3["Step 3"]
+    end
+
+    subgraph Parallel
+        P1["Step A"] --&gt; P3["Merge"]
+        P2["Step B"] --&gt; P3
+    end
+
+    subgraph Conditional["If Statement"]
+        C1["Check\nCondition"] --&gt;|True| C2["Branch A"]
+        C1 --&gt;|False| C3["Branch B"]
+    end
+
+    subgraph Loop["For Loop"]
+        L1["For each\nitem"] --&gt; L2["Process\nitem"]
+        L2 --&gt; L3{"More\nitems?"}
+        L3 --&gt;|Yes| L1
+        L3 --&gt;|No| L4["Done"]
+    end
+
+    style S1 fill:#3B82F6,stroke:#1E40AF,color:#FFFFFF
+    style S2 fill:#3B82F6,stroke:#1E40AF,color:#FFFFFF
+    style S3 fill:#3B82F6,stroke:#1E40AF,color:#FFFFFF
+    style P1 fill:#8B5CF6,stroke:#5B21B6,color:#FFFFFF
+    style P2 fill:#8B5CF6,stroke:#5B21B6,color:#FFFFFF
+    style P3 fill:#8B5CF6,stroke:#5B21B6,color:#FFFFFF
+    style C1 fill:#F59E0B,stroke:#D97706,color:#FFFFFF
+    style C2 fill:#F59E0B,stroke:#D97706,color:#FFFFFF
+    style C3 fill:#F59E0B,stroke:#D97706,color:#FFFFFF
+    style L1 fill:#10B981,stroke:#047857,color:#FFFFFF
+    style L2 fill:#10B981,stroke:#047857,color:#FFFFFF
+    style L3 fill:#10B981,stroke:#047857,color:#FFFFFF
+    style L4 fill:#10B981,stroke:#047857,color:#FFFFFF</code></pre>
+<p><strong>Sequential.</strong> Steps execute one after another. The output of each step is available to subsequent steps. This is the simplest and most common pattern.</p>
+<p><strong>Parallel.</strong> Independent steps execute simultaneously. Results are merged afterward. For example, searching multiple databases in parallel and combining the results.</p>
+<p><strong>Conditional (If Statement).</strong> The next step depends on the outcome of a previous step. For example, if a search returns no results, try a different query. If it returns results, proceed to summarization.</p>
+<p><strong>Iterative (For Loop).</strong> Repeat a step for each item in a collection. For example, for each document in the retrieved set, extract key facts and compile them.</p>
+<p>These control flows can be nested. A parallel step might contain sequential sub-steps. A loop body might contain conditionals. The complexity of the plan should match the complexity of the task.</p>
+<h3 id="reflection-and-error-correction">Reflection and Error Correction<a class="headerlink" href="#reflection-and-error-correction" title="Permanent link">&para;</a></h3>
+<p>Agents inevitably make mistakes. The ability to detect errors, reflect on what went wrong and correct course is what separates robust agents from brittle ones.</p>
+<h4 id="react-framework">ReAct Framework<a class="headerlink" href="#react-framework" title="Permanent link">&para;</a></h4>
+<p>The <strong>ReAct (Reasoning + Acting)</strong> framework interleaves reasoning and action in a loop. At each step, the agent generates a thought (reasoning about what to do next), takes an action (using a tool) and observes the result. This cycle repeats until the task is complete.</p>
+<pre class="mermaid"><code>graph TD
+    A["Query /\nGoal"] --&gt; B["Thought"]
+    B --&gt; C["Action"]
+    C --&gt; D["Observation"]
+    D --&gt; E{"Task\nComplete?"}
+    E --&gt;|No| B
+    E --&gt;|Yes| F["Final\nAnswer"]
+
+    style A fill:#3B82F6,stroke:#1E40AF,color:#FFFFFF
+    style B fill:#8B5CF6,stroke:#5B21B6,color:#FFFFFF
+    style C fill:#EC4899,stroke:#BE185D,color:#FFFFFF
+    style D fill:#F59E0B,stroke:#D97706,color:#FFFFFF
+    style E fill:#6366F1,stroke:#4338CA,color:#FFFFFF
+    style F fill:#10B981,stroke:#047857,color:#FFFFFF</code></pre>
+<p><strong>Thought.</strong> "I need to find the current stock price of AAPL. I should use the stock_price tool."</p>
+<p><strong>Action.</strong> <code>stock_price(symbol="AAPL")</code></p>
+<p><strong>Observation.</strong> <code>{"price": 187.42, "currency": "USD", "timestamp": "2024-03-15T14:30:00Z"}</code></p>
+<p><strong>Thought.</strong> "I now have the stock price. The user also asked for the P/E ratio. I should use the financial_metrics tool."</p>
+<p>The key insight of ReAct is that making reasoning explicit (in the "Thought" step) improves action quality. The model is not just blindly calling tools. It is articulating why it is taking each action, which helps it stay on track.</p>
+<p><img alt="Figure 6-12. Agent following the ReAct framework" src="../../assets/ch06/fig-6-12-react-framework.png" width="700" /></p>
+<p class="figure-caption">Figure 6-12. Agent following the ReAct framework</p>
+
+<h4 id="reflexion-framework">Reflexion Framework<a class="headerlink" href="#reflexion-framework" title="Permanent link">&para;</a></h4>
+<p><strong>Reflexion</strong> extends ReAct by adding an explicit self-evaluation step after task completion. The agent reviews its trajectory (the sequence of thoughts, actions and observations), identifies what went well and what went wrong, and stores these reflections in memory for future tasks.</p>
+<p>This creates a learning loop. An agent that fails to solve a coding problem might reflect. "I forgot to handle the edge case where the input list is empty. Next time, I should check for empty inputs before processing." This reflection is stored and retrieved for similar future tasks.</p>
+<h4 id="self-critique-mechanisms">Self-Critique Mechanisms<a class="headerlink" href="#self-critique-mechanisms" title="Permanent link">&para;</a></h4>
+<p>Several techniques enable agents to catch and correct their own errors.</p>
+<p><strong>Output verification.</strong> After generating a response, the agent checks whether the response actually answers the question. If not, it tries again.</p>
+<p><strong>Consistency checks.</strong> The agent generates multiple responses and checks for consistency. Inconsistent responses suggest uncertainty or errors.</p>
+<p><strong>Constraint validation.</strong> Before executing an action, the agent verifies that the planned action satisfies known constraints (e.g., parameter types, value ranges, permissions).</p>
+<h3 id="agent-failure-modes-and-evaluation">Agent Failure Modes and Evaluation<a class="headerlink" href="#agent-failure-modes-and-evaluation" title="Permanent link">&para;</a></h3>
+<p>Understanding how agents fail is essential for building reliable systems.</p>
+<pre class="mermaid"><code>graph TD
+    A["Agent Failure\nModes"] --&gt; B["Planning\nFailures"]
+    A --&gt; C["Tool\nFailures"]
+    A --&gt; D["Efficiency\nFailures"]
+
+    B --&gt; B1["Invalid tool\nselection"]
+    B --&gt; B2["Wrong\nparameters"]
+    B --&gt; B3["Goal\nfailure"]
+    B --&gt; B4["Infinite\nloops"]
+
+    C --&gt; C1["API errors /\ntimeouts"]
+    C --&gt; C2["Unexpected\ntool output"]
+    C --&gt; C3["Permission\ndenied"]
+
+    D --&gt; D1["Excessive\ntool calls"]
+    D --&gt; D2["Redundant\nsteps"]
+    D --&gt; D3["High latency\npath chosen"]
+
+    style A fill:#EF4444,stroke:#B91C1C,color:#FFFFFF
+    style B fill:#F59E0B,stroke:#D97706,color:#FFFFFF
+    style C fill:#8B5CF6,stroke:#5B21B6,color:#FFFFFF
+    style D fill:#3B82F6,stroke:#1E40AF,color:#FFFFFF
+    style B1 fill:#FCD34D,stroke:#D97706,color:#1F2937
+    style B2 fill:#FCD34D,stroke:#D97706,color:#1F2937
+    style B3 fill:#FCD34D,stroke:#D97706,color:#1F2937
+    style B4 fill:#FCD34D,stroke:#D97706,color:#1F2937
+    style C1 fill:#C4B5FD,stroke:#7C3AED,color:#1F2937
+    style C2 fill:#C4B5FD,stroke:#7C3AED,color:#1F2937
+    style C3 fill:#C4B5FD,stroke:#7C3AED,color:#1F2937
+    style D1 fill:#93C5FD,stroke:#2563EB,color:#1F2937
+    style D2 fill:#93C5FD,stroke:#2563EB,color:#1F2937
+    style D3 fill:#93C5FD,stroke:#2563EB,color:#1F2937</code></pre>
+<table>
+<thead>
+<tr>
+<th>Failure Mode</th>
+<th>Description</th>
+<th>Example</th>
+<th>Mitigation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Invalid tool selection</strong></td>
+<td>Agent picks a tool that cannot accomplish the subtask</td>
+<td>Using a calculator to search the web</td>
+<td>Better tool descriptions, few-shot examples</td>
+</tr>
+<tr>
+<td><strong>Wrong parameters</strong></td>
+<td>Correct tool but incorrect arguments</td>
+<td><code>search(query="")</code> with empty query</td>
+<td>Parameter validation, type checking</td>
+</tr>
+<tr>
+<td><strong>Goal failure</strong></td>
+<td>Agent completes all steps but does not achieve the goal</td>
+<td>Answering a different question than asked</td>
+<td>Output verification, goal-checking prompts</td>
+</tr>
+<tr>
+<td><strong>Infinite loops</strong></td>
+<td>Agent repeats the same action without progress</td>
+<td>Retrying a failed API call indefinitely</td>
+<td>Step limits, loop detection</td>
+</tr>
+<tr>
+<td><strong>API errors</strong></td>
+<td>External tool fails or times out</td>
+<td>Third-party API returns 500 error</td>
+<td>Retry logic, fallback tools, graceful degradation</td>
+</tr>
+<tr>
+<td><strong>Excessive tool calls</strong></td>
+<td>Agent uses far more steps than necessary</td>
+<td>Making 20 API calls when 3 would suffice</td>
+<td>Step budgets, efficiency metrics</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Key metrics for agent evaluation.</strong></p>
+<p><strong>Task completion rate.</strong> What fraction of tasks does the agent successfully complete? This is the most important metric.</p>
+<p><strong>Step efficiency.</strong> How many steps does the agent take compared to an optimal trajectory? Fewer steps means faster execution and lower cost.</p>
+<p><strong>Error recovery rate.</strong> When the agent encounters an error, how often does it successfully recover?</p>
+<p><strong>Cost per task.</strong> Total API calls, tokens consumed and wall-clock time per completed task.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Always set a maximum step limit for agents. Without one, a confused agent can enter an infinite loop, consuming tokens and API calls indefinitely. A reasonable default is 10 to 20 steps for most tasks.</p>
+</div>
+<h2 id="memory">Memory<a class="headerlink" href="#memory" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p>"An AI coach is practically useless if every time you want the coach's advice, you have to explain your whole life story."
+Chip Huyen</p>
+</blockquote>
+<p>Memory enables agents to retain and recall information across interactions. Without memory, every conversation starts from scratch. The agent has no context about the user, no memory of past interactions and no way to build on previous work.</p>
+<h3 id="three-memory-mechanisms">Three Memory Mechanisms<a class="headerlink" href="#three-memory-mechanisms" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>graph TD
+    A["Agent Memory"] --&gt; B["Internal Knowledge\n(Parametric)"]
+    A --&gt; C["Short-term Memory\n(Context Window)"]
+    A --&gt; D["Long-term Memory\n(External Storage)"]
+
+    B --&gt; B1["Training data\nbaked into weights"]
+    B --&gt; B2["Cannot be updated\nwithout retraining"]
+
+    C --&gt; C1["Current conversation\nhistory"]
+    C --&gt; C2["Limited by context\nwindow size"]
+
+    D --&gt; D1["Database or\nvector store"]
+    D --&gt; D2["Persistent across\nsessions"]
+    D --&gt; D3["Unlimited capacity"]
+
+    style A fill:#3B82F6,stroke:#1E40AF,color:#FFFFFF
+    style B fill:#8B5CF6,stroke:#5B21B6,color:#FFFFFF
+    style C fill:#EC4899,stroke:#BE185D,color:#FFFFFF
+    style D fill:#10B981,stroke:#047857,color:#FFFFFF
+    style B1 fill:#374151,stroke:#9CA3AF,color:#E5E7EB
+    style B2 fill:#374151,stroke:#9CA3AF,color:#E5E7EB
+    style C1 fill:#374151,stroke:#9CA3AF,color:#E5E7EB
+    style C2 fill:#374151,stroke:#9CA3AF,color:#E5E7EB
+    style D1 fill:#374151,stroke:#9CA3AF,color:#E5E7EB
+    style D2 fill:#374151,stroke:#9CA3AF,color:#E5E7EB
+    style D3 fill:#374151,stroke:#9CA3AF,color:#E5E7EB</code></pre>
+<table>
+<thead>
+<tr>
+<th>Mechanism</th>
+<th>Storage</th>
+<th>Capacity</th>
+<th>Persistence</th>
+<th>Update Method</th>
+<th>Analogy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Internal knowledge</strong></td>
+<td>Model weights</td>
+<td>Vast but fixed</td>
+<td>Permanent until retrained</td>
+<td>Finetuning or retraining</td>
+<td>Long-term human memory</td>
+</tr>
+<tr>
+<td><strong>Short-term memory</strong></td>
+<td>Context window</td>
+<td>Limited (4K to 128K tokens)</td>
+<td>Current session only</td>
+<td>Append to conversation</td>
+<td>Working memory</td>
+</tr>
+<tr>
+<td><strong>Long-term memory</strong></td>
+<td>External database</td>
+<td>Unlimited</td>
+<td>Across sessions</td>
+<td>Read/write API</td>
+<td>Notes and journals</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Internal knowledge</strong> is what the model learned during training. It is encoded in the model's parameters. It is vast but static. You cannot update it without retraining or finetuning the model.</p>
+<p><strong>Short-term memory</strong> is the conversation history within the current context window. Every message in the conversation is visible to the model. This is limited by the context window size. Once the conversation exceeds the window, earlier messages must be dropped or summarized.</p>
+<p><strong>Long-term memory</strong> is stored externally in a database, vector store or file system. The agent explicitly reads from and writes to this store. It persists across sessions and has no inherent capacity limit.</p>
+<h3 id="memory-management">Memory Management<a class="headerlink" href="#memory-management" title="Permanent link">&para;</a></h3>
+<p>As conversations grow, they eventually exceed the context window. Memory management strategies determine what information to keep, what to discard and how to condense.</p>
+<h4 id="fifo-strategy">FIFO Strategy<a class="headerlink" href="#fifo-strategy" title="Permanent link">&para;</a></h4>
+<p>The simplest approach is <strong>First In, First Out.</strong> When the context window fills up, drop the oldest messages. This is easy to implement but crude. Important early context (like the user's name, preferences or the initial task specification) may be lost.</p>
+<h4 id="summarization-based-memory">Summarization-based Memory<a class="headerlink" href="#summarization-based-memory" title="Permanent link">&para;</a></h4>
+<p>Instead of dropping old messages, <strong>summarize</strong> them. Periodically compress the conversation history into a shorter summary and replace the full history with the summary. This preserves key information while freeing up context window space.</p>
+<p>A common implementation. After every N turns, call the LLM to summarize the conversation so far. Prepend the summary to the context and discard the raw messages.</p>
+<p>The tradeoff is that summarization loses detail. Specific numbers, exact quotes and nuanced points may be lost in the summary.</p>
+<h4 id="reflection-based-memory-management">Reflection-based Memory Management<a class="headerlink" href="#reflection-based-memory-management" title="Permanent link">&para;</a></h4>
+<p>A more sophisticated approach uses the model to <strong>decide what is important</strong> before storing or discarding information. The model reflects on the conversation and extracts key facts, preferences and action items. These are stored as structured memory entries that can be efficiently retrieved later.</p>
+<p>For example, after a coaching session, the model might extract.
+- "User's goal is to run a marathon by December."
+- "User currently runs 3 times per week."
+- "User has a knee injury history."</p>
+<p>These structured entries are stored in long-term memory and retrieved in future sessions to provide continuity.</p>
+<h3 id="benefits-of-memory">Benefits of Memory<a class="headerlink" href="#benefits-of-memory" title="Permanent link">&para;</a></h3>
+<p><strong>Context window overflow management.</strong> Without memory management, long conversations simply break. Memory strategies keep the system functional as conversations grow.</p>
+<p><strong>Persistence across sessions.</strong> Long-term memory allows the agent to remember users across sessions, building a relationship over time.</p>
+<p><strong>Consistency.</strong> Memory prevents the agent from contradicting earlier statements or asking questions it has already asked.</p>
+<p><strong>Data integrity.</strong> By explicitly managing what is stored and what is discarded, you can ensure sensitive information is handled appropriately.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Implement memory as a separate service with clear read/write APIs. This makes it reusable across different agents and applications. Store memories with metadata (timestamp, source, confidence) to enable intelligent retrieval and expiration.</p>
+</div>
+<h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
+<p>This chapter covered two foundational architectural patterns for AI engineering.</p>
+<p><strong>RAG</strong> extends foundation models with external knowledge. The core pipeline is retrieve, augment, generate. Key decisions include choosing retrieval methods (term-based, embedding-based or hybrid), chunking strategies, vector search algorithms and whether to add reranking and query optimization.</p>
+<p><strong>Agents</strong> extend foundation models with tools and planning capabilities. The core loop is observe, plan, act, reflect. Key decisions include tool inventory design, planning granularity, control flow complexity and failure handling. The distinction between read and write actions is critical for safety.</p>
+<p><strong>Memory</strong> enables agents to maintain state across interactions. The three layers of memory (internal knowledge, short-term context, long-term external storage) work together to give agents continuity and personalization.</p>
+<p>These patterns are composable. A RAG system can serve as a tool within an agent. An agent can use memory to improve its RAG queries over time. The most capable AI systems combine all three.</p>
+<h2 id="practitioner-checklist">Practitioner Checklist<a class="headerlink" href="#practitioner-checklist" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[ ] Start RAG with hybrid retrieval (BM25 plus embeddings) as the default</li>
+<li>[ ] Benchmark multiple chunking strategies on your specific data</li>
+<li>[ ] Add a reranker if retrieval precision is insufficient</li>
+<li>[ ] Implement query optimization (rewriting, expansion) before adding model complexity</li>
+<li>[ ] Begin with read-only agents before enabling write actions</li>
+<li>[ ] Implement human-in-the-loop approval for high-stakes actions</li>
+<li>[ ] Set maximum step limits for all agents</li>
+<li>[ ] Log every tool call with parameters for debugging and evaluation</li>
+<li>[ ] Validate function call parameters before execution</li>
+<li>[ ] Implement memory management before context windows become a bottleneck</li>
+<li>[ ] Store memories with metadata for intelligent retrieval and expiration</li>
+<li>[ ] Measure task completion rate, step efficiency and cost per task</li>
+<li>[ ] Monitor for infinite loops and excessive tool calls in production</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../05-prompt-engineering/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 05. Prompt Engineering">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                05. Prompt Engineering
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../07-finetuning/" class="md-footer__link md-footer__link--next" aria-label="Next: 07. Finetuning">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                07. Finetuning
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "navigation.footer", "toc.follow", "toc.integrate", "content.tabs.link", "search.highlight", "search.suggest", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@10/dist/mermaid.min.js"></script>
+      
+        <script src="../../javascripts/mermaid.js"></script>
+      
+    
+  </body>
+</html>

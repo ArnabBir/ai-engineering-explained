@@ -1,0 +1,2031 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A polished field guide to building production AI applications with foundation models.">
+      
+      
+      
+        <link rel="canonical" href="https://arnabbir.github.io/ai-engineering-explained/chapters/04-evaluate-ai-systems/">
+      
+      
+        <link rel="prev" href="../03-evaluation-methodology/">
+      
+      
+        <link rel="next" href="../05-prompt-engineering/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/cover/book-cover.jpg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>04. Evaluate AI Systems - AI Engineering Playbook</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="pink">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#chapter-4-evaluate-ai-systems" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="AI Engineering Playbook" class="md-header__button md-logo" aria-label="AI Engineering Playbook" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m19 2-5 4.5v11l5-4.5zM6.5 5C4.55 5 2.45 5.4 1 6.5v14.66c0 .25.25.5.5.5.1 0 .15-.07.25-.07 1.35-.65 3.3-1.09 4.75-1.09 1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.31 4.75 1.06.1.05.15.03.25.03.25 0 .5-.25.5-.5V6.5c-.6-.45-1.25-.75-2-1V19c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V6.5C10.55 5.4 8.45 5 6.5 5"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            AI Engineering Playbook
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              04. Evaluate AI Systems
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="pink"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="pink"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/ArnabBir/ai-engineering-explained" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../overview/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Overview
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../01-introduction/" class="md-tabs__link">
+          
+  
+  
+  Chapters
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="AI Engineering Playbook" class="md-nav__button md-logo" aria-label="AI Engineering Playbook" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m19 2-5 4.5v11l5-4.5zM6.5 5C4.55 5 2.45 5.4 1 6.5v14.66c0 .25.25.5.5.5.1 0 .15-.07.25-.07 1.35-.65 3.3-1.09 4.75-1.09 1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.31 4.75 1.06.1.05.15.03.25.03.25 0 .5-.25.5-.5V6.5c-.6-.45-1.25-.75-2-1V19c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V6.5C10.55 5.4 8.45 5 6.5 5"/></svg>
+
+    </a>
+    AI Engineering Playbook
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/ArnabBir/ai-engineering-explained" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapters
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Chapters
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    01. Introduction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-understanding-foundation-models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    02. Understanding Foundation Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-evaluation-methodology/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03. Evaluation Methodology
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    04. Evaluate AI Systems
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    04. Evaluate AI Systems
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table of Contents
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#model-selection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Model Selection
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Model Selection">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#when-to-use-ai" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Use AI
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#criteria-for-model-selection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Criteria for Model Selection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#domain-specific-capabilities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Domain Specific Capabilities
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#generation-capabilities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Generation Capabilities
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#latency-and-cost" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Latency and Cost
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#model-size-and-hardware-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Model Size and Hardware Requirements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#privacy-and-legal-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Privacy and Legal Considerations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#open-source-vs-proprietary-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Open Source vs Proprietary Models
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#navigate-public-benchmarks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Navigate Public Benchmarks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Navigate Public Benchmarks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#benchmark-selection-and-aggregation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Benchmark Selection and Aggregation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#public-leaderboards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Public Leaderboards
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#custom-leaderboards-with-public-benchmarks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Custom Leaderboards with Public Benchmarks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#are-openai-models-getting-worse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Are OpenAI Models Getting Worse
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-contamination-with-public-benchmarks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Contamination with Public Benchmarks
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#design-your-evaluation-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Your Evaluation Pipeline
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Design Your Evaluation Pipeline">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-evaluate-all-components-in-a-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1. Evaluate All Components in a System
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-create-an-evaluation-guideline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2. Create an Evaluation Guideline
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-define-evaluation-methods-and-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3. Define Evaluation Methods and Data
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-evaluate-your-evaluation-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4. Evaluate Your Evaluation Pipeline
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-iterate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5. Iterate
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#practitioner-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Practitioner Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-prompt-engineering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    05. Prompt Engineering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-rag-and-agents/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    06. RAG and Agents
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-finetuning/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    07. Finetuning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-dataset-engineering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    08. Dataset Engineering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-inference-optimization/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    09. Inference Optimization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-ai-engineering-architecture-and-user-feedback/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10. Architecture and User Feedback
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="chapter-4-evaluate-ai-systems">Chapter 4. Evaluate AI Systems<a class="headerlink" href="#chapter-4-evaluate-ai-systems" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p>"Not having a reliable evaluation pipeline is one of the biggest blocks to AI adoption."
+Chip Huyen</p>
+</blockquote>
+<p>Evaluation is the backbone of every successful AI application. Without it, you are flying blind. This chapter covers the full arc of evaluating AI systems, from selecting the right model for your use case, to navigating the minefield of public benchmarks, to designing a rigorous evaluation pipeline that ties model performance to business outcomes. If Chapter 3 gave you the conceptual vocabulary of evaluation, this chapter gives you the operational playbook.</p>
+<h2 id="table-of-contents">Table of Contents<a class="headerlink" href="#table-of-contents" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="#model-selection">Model Selection</a></li>
+<li><a href="#when-to-use-ai">When to Use AI</a></li>
+<li><a href="#criteria-for-model-selection">Criteria for Model Selection</a></li>
+<li><a href="#domain-specific-capabilities">Domain Specific Capabilities</a></li>
+<li><a href="#generation-capabilities">Generation Capabilities</a></li>
+<li><a href="#latency-and-cost">Latency and Cost</a></li>
+<li><a href="#model-size-and-hardware-requirements">Model Size and Hardware Requirements</a></li>
+<li><a href="#privacy-and-legal-considerations">Privacy and Legal Considerations</a></li>
+<li><a href="#open-source-vs-proprietary-models">Open Source vs Proprietary Models</a></li>
+<li><a href="#navigate-public-benchmarks">Navigate Public Benchmarks</a></li>
+<li><a href="#benchmark-selection-and-aggregation">Benchmark Selection and Aggregation</a></li>
+<li><a href="#public-leaderboards">Public Leaderboards</a></li>
+<li><a href="#custom-leaderboards-with-public-benchmarks">Custom Leaderboards with Public Benchmarks</a></li>
+<li><a href="#are-openai-models-getting-worse">Are OpenAI Models Getting Worse</a></li>
+<li><a href="#data-contamination-with-public-benchmarks">Data Contamination with Public Benchmarks</a></li>
+<li><a href="#design-your-evaluation-pipeline">Design Your Evaluation Pipeline</a></li>
+<li><a href="#step-1-evaluate-all-components-in-a-system">Step 1. Evaluate All Components in a System</a></li>
+<li><a href="#step-2-create-an-evaluation-guideline">Step 2. Create an Evaluation Guideline</a></li>
+<li><a href="#step-3-define-evaluation-methods-and-data">Step 3. Define Evaluation Methods and Data</a></li>
+<li><a href="#step-4-evaluate-your-evaluation-pipeline">Step 4. Evaluate Your Evaluation Pipeline</a></li>
+<li><a href="#step-5-iterate">Step 5. Iterate</a></li>
+<li><a href="#summary">Summary</a></li>
+<li><a href="#practitioner-checklist">Practitioner Checklist</a></li>
+</ul>
+<h2 id="model-selection">Model Selection<a class="headerlink" href="#model-selection" title="Permanent link">&para;</a></h2>
+<p>Choosing the right model is one of the most consequential decisions in an AI project. It determines your cost structure, your latency profile, your deployment options and ultimately the quality of the experience you deliver to users. There is no universally best model. The best model is the one that satisfies your constraints while maximizing your objectives.</p>
+<h3 id="when-to-use-ai">When to Use AI<a class="headerlink" href="#when-to-use-ai" title="Permanent link">&para;</a></h3>
+<p>Before selecting a model, you should ask whether AI is the right tool for the problem at all. AI is not a universal hammer. It is a powerful tool with specific strengths and weaknesses.</p>
+<p><strong>AI is a strong fit when the task involves.</strong></p>
+<ul>
+<li>Natural language understanding or generation</li>
+<li>Pattern recognition across unstructured data</li>
+<li>Tasks that are difficult to encode with deterministic rules</li>
+<li>Situations where approximate answers provide significant value</li>
+<li>Processes that currently require expensive human judgment at scale</li>
+</ul>
+<p><strong>AI may be a poor fit when.</strong></p>
+<ul>
+<li>Exact, deterministic outputs are required (e.g. financial calculations)</li>
+<li>The cost of errors is catastrophic and unrecoverable</li>
+<li>The data is too scarce or too sensitive to use</li>
+<li>A simple heuristic or rule-based system achieves acceptable performance</li>
+<li>Regulatory constraints make AI adoption impractical</li>
+</ul>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>The decision to use AI should always start with a cost-benefit analysis. What is the cost of building, deploying and maintaining an AI solution compared to the value it delivers? What is the cost of errors, and how will you mitigate them?</p>
+</div>
+<pre class="mermaid"><code>graph TD
+    A["Define the Task"] --&gt; B{"Is the task&lt;br/&gt;well-defined?"}
+    B --&gt;|No| C["Refine task&lt;br/&gt;requirements"]
+    C --&gt; A
+    B --&gt;|Yes| D{"Can rules or&lt;br/&gt;heuristics solve it?"}
+    D --&gt;|Yes| E["Use rule-based&lt;br/&gt;system"]
+    D --&gt;|No| F{"Is AI cost-&lt;br/&gt;justified?"}
+    F --&gt;|No| G["Revisit scope&lt;br/&gt;or budget"]
+    F --&gt;|Yes| H{"Data sensitivity&lt;br/&gt;constraints?"}
+    H --&gt;|High| I["On-premise /&lt;br/&gt;open source models"]
+    H --&gt;|Low| J{"Latency&lt;br/&gt;requirements?"}
+    J --&gt;|Strict &lt; 100ms| K["Smaller / distilled&lt;br/&gt;models"]
+    J --&gt;|Flexible| L{"Budget&lt;br/&gt;constraints?"}
+    L --&gt;|Tight| M["Open source&lt;br/&gt;models"]
+    L --&gt;|Flexible| N["Proprietary&lt;br/&gt;API models"]
+
+    style A fill:#2D3748,stroke:#E2E8F0,color:#E2E8F0
+    style B fill:#4A5568,stroke:#E2E8F0,color:#E2E8F0
+    style C fill:#718096,stroke:#E2E8F0,color:#E2E8F0
+    style D fill:#4A5568,stroke:#E2E8F0,color:#E2E8F0
+    style E fill:#276749,stroke:#E2E8F0,color:#E2E8F0
+    style F fill:#4A5568,stroke:#E2E8F0,color:#E2E8F0
+    style G fill:#9B2C2C,stroke:#E2E8F0,color:#E2E8F0
+    style H fill:#4A5568,stroke:#E2E8F0,color:#E2E8F0
+    style I fill:#2B6CB0,stroke:#E2E8F0,color:#E2E8F0
+    style J fill:#4A5568,stroke:#E2E8F0,color:#E2E8F0
+    style K fill:#2B6CB0,stroke:#E2E8F0,color:#E2E8F0
+    style L fill:#4A5568,stroke:#E2E8F0,color:#E2E8F0
+    style M fill:#2B6CB0,stroke:#E2E8F0,color:#E2E8F0
+    style N fill:#2B6CB0,stroke:#E2E8F0,color:#E2E8F0</code></pre>
+<h3 id="criteria-for-model-selection">Criteria for Model Selection<a class="headerlink" href="#criteria-for-model-selection" title="Permanent link">&para;</a></h3>
+<p>Model selection is a multi-dimensional optimization problem. You are not just optimizing for quality. You are simultaneously balancing quality, cost, latency, privacy and operational complexity. The table below summarizes the key criteria.</p>
+<table>
+<thead>
+<tr>
+<th><strong>Criterion</strong></th>
+<th><strong>What It Measures</strong></th>
+<th><strong>Why It Matters</strong></th>
+<th><strong>Key Tradeoffs</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Model Quality</strong></td>
+<td>Accuracy, relevance and correctness of outputs</td>
+<td>Directly impacts user experience and trust</td>
+<td>Higher quality often means larger, slower, costlier models</td>
+</tr>
+<tr>
+<td><strong>Latency</strong></td>
+<td>Time from request to response</td>
+<td>User experience degrades rapidly with latency above 2 seconds</td>
+<td>Lower latency requires smaller models or specialized hardware</td>
+</tr>
+<tr>
+<td><strong>Cost</strong></td>
+<td>Per-token or per-request pricing</td>
+<td>Determines unit economics and scalability</td>
+<td>Cheaper models may sacrifice quality or capability</td>
+</tr>
+<tr>
+<td><strong>Model Size</strong></td>
+<td>Number of parameters, memory footprint</td>
+<td>Determines hardware requirements and deployment options</td>
+<td>Larger models are more capable but harder to deploy</td>
+</tr>
+<tr>
+<td><strong>Privacy</strong></td>
+<td>Data handling, residency and compliance</td>
+<td>Regulatory requirements and user trust</td>
+<td>Privacy constraints may limit model choices</td>
+</tr>
+<tr>
+<td><strong>Legal</strong></td>
+<td>Licensing, IP, liability</td>
+<td>Determines commercial viability</td>
+<td>Open source licensing varies widely in restrictions</td>
+</tr>
+<tr>
+<td><strong>Functionality</strong></td>
+<td>API features like logprobs, finetuning, streaming</td>
+<td>Enables or blocks specific use cases</td>
+<td>Proprietary APIs may offer features unavailable in open source</td>
+</tr>
+</tbody>
+</table>
+<h3 id="domain-specific-capabilities">Domain Specific Capabilities<a class="headerlink" href="#domain-specific-capabilities" title="Permanent link">&para;</a></h3>
+<p>Not all models are created equal across domains. A model that excels at general knowledge may struggle with medical terminology, legal reasoning or code generation. When evaluating domain specific capabilities, consider.</p>
+<p><strong>Specialized knowledge depth.</strong> Does the model have sufficient knowledge of your domain? A model trained primarily on web text may lack depth in specialized fields like chemistry, law or clinical medicine. You can test this by prompting the model with domain specific questions that require expert-level reasoning.</p>
+<p><strong>Technical vocabulary.</strong> Can the model correctly use and understand the jargon of your domain? Misuse of technical terms is a clear signal that the model lacks domain depth.</p>
+<p><strong>Reasoning patterns.</strong> Different domains require different reasoning patterns. Legal reasoning involves precedent analysis and statutory interpretation. Medical reasoning involves differential diagnosis. Mathematical reasoning involves symbolic manipulation. Test whether the model can follow the reasoning patterns specific to your domain.</p>
+<p><strong>Cultural and contextual awareness.</strong> For applications serving specific regions or communities, the model must understand cultural context. This includes language variations, local conventions and domain-specific norms.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>When evaluating domain specific capabilities, create a small test set of 50 to 100 examples that represent the hardest cases in your domain. These are the cases that differentiate good models from great ones. Easy cases rarely help you make a selection decision.</p>
+</div>
+<h3 id="generation-capabilities">Generation Capabilities<a class="headerlink" href="#generation-capabilities" title="Permanent link">&para;</a></h3>
+<p>Beyond domain knowledge, you need to evaluate the model's generation capabilities across several dimensions.</p>
+<p><strong>Factual consistency.</strong> Does the model generate outputs that are consistent with known facts? Factual inconsistency, often called hallucination, is one of the most dangerous failure modes in production systems. A model that confidently states incorrect facts can erode user trust and cause real harm.</p>
+<p><strong>Toxicity.</strong> Does the model generate harmful, offensive or inappropriate content? Even if your application does not deal with sensitive topics, adversarial users may try to elicit toxic outputs. You need to evaluate the model's robustness against such attacks.</p>
+<p><strong>Fairness.</strong> Does the model exhibit systematic biases across demographic groups? Bias in AI outputs can have legal consequences and reputational damage. Evaluate the model's outputs across different demographic dimensions relevant to your application.</p>
+<p><img alt="Figure 4-3. Political and economic leanings of different foundation models" src="../../assets/ch04/fig-4-3-political-economic-leanings.png" width="700" /></p>
+<p class="figure-caption">Figure 4-3. Political and economic leanings of different foundation models</p>
+
+<p><strong>Instruction following.</strong> Can the model reliably follow complex, multi-step instructions? Many production applications require the model to follow specific output formats, adhere to constraints or execute multi-step workflows. Poor instruction following leads to brittle systems.</p>
+<p><img alt="Figure 4-4. Top 10 most common instruction types in LMSYS conversations" src="../../assets/ch04/fig-4-4-common-instruction-types.png" width="700" /></p>
+<p class="figure-caption">Figure 4-4. Top 10 most common instruction types in LMSYS conversations</p>
+
+<p><strong>Length and format control.</strong> Can the model generate outputs of the requested length and in the requested format? If your application requires JSON output, does the model reliably produce valid JSON? If you need concise answers, does the model avoid unnecessary verbosity?</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Generation capabilities are not fixed properties of a model. They can be significantly improved through prompt engineering, finetuning and system design. A model that struggles with instruction following out of the box may perform well with a carefully crafted system prompt.</p>
+</div>
+<h3 id="latency-and-cost">Latency and Cost<a class="headerlink" href="#latency-and-cost" title="Permanent link">&para;</a></h3>
+<p>Latency and cost are often the binding constraints in production systems. The most capable model is useless if it is too slow or too expensive for your use case.</p>
+<p><strong>Latency considerations.</strong></p>
+<ul>
+<li><strong>Time to first token (TTFT).</strong> How quickly does the model start generating output? This is critical for streaming applications where perceived responsiveness matters.</li>
+<li><strong>Tokens per second (TPS).</strong> How fast does the model generate output once it starts? This determines how long users wait for complete responses.</li>
+<li><strong>End-to-end latency.</strong> The total time from request to complete response, including network overhead, preprocessing and postprocessing.</li>
+</ul>
+<p><img alt="Figure 4-6. An inference service provides an interface for users to query models" src="../../assets/ch04/fig-4-6-inference-service-overview.png" width="700" /></p>
+<p class="figure-caption">Figure 4-6. An inference service provides an interface for users to query models</p>
+
+<p><strong>Cost considerations.</strong></p>
+<ul>
+<li><strong>Per-token pricing.</strong> Most API providers charge per input and output token. Output tokens are typically 3 to 4 times more expensive than input tokens.</li>
+<li><strong>Fixed infrastructure costs.</strong> Self-hosted models require GPU infrastructure. The cost is fixed regardless of usage, making it more economical at high volumes.</li>
+<li><strong>Engineering cost.</strong> Open source models require engineering effort for deployment, optimization and maintenance. This cost is often underestimated.</li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Do not optimize for latency or cost prematurely. Start with the most capable model, validate that it meets your quality requirements, and then explore cheaper or faster alternatives. Optimizing for cost before validating quality often leads to wasted effort.</p>
+</div>
+<h3 id="model-size-and-hardware-requirements">Model Size and Hardware Requirements<a class="headerlink" href="#model-size-and-hardware-requirements" title="Permanent link">&para;</a></h3>
+<p>Model size directly determines your deployment options. A 70 billion parameter model requires significant GPU infrastructure, while a 7 billion parameter model can run on a single consumer GPU with quantization.</p>
+<p><strong>Key relationships to understand.</strong></p>
+<ul>
+<li>A model with <em>N</em> billion parameters requires approximately <em>2N</em> GB of memory in full precision (FP16). A 70B model needs roughly 140 GB of GPU memory.</li>
+<li>Quantization can reduce memory requirements by 2x to 4x with minimal quality degradation. A 70B model quantized to 4-bit precision needs roughly 35 GB.</li>
+<li>Batch size and context length also affect memory requirements. Longer contexts require more memory for the key-value cache.</li>
+</ul>
+<h3 id="privacy-and-legal-considerations">Privacy and Legal Considerations<a class="headerlink" href="#privacy-and-legal-considerations" title="Permanent link">&para;</a></h3>
+<p>Privacy is not just a compliance checkbox. It is a fundamental design constraint that can determine which models you can use and how you can use them.</p>
+<p><strong>Data residency.</strong> Some industries and regions require data to remain within specific geographic boundaries. If your data cannot leave your infrastructure, you need self-hosted models.</p>
+<p><strong>Data retention.</strong> API providers may retain your data for model improvement or safety monitoring. Review the provider's data retention policies and opt out if necessary.</p>
+<p><strong>Licensing.</strong> Open source models come with various licenses. Some are truly permissive (Apache 2.0, MIT). Others have restrictions on commercial use, model size or redistribution. Read the license carefully before building on any model.</p>
+<p><strong>Liability.</strong> Who is responsible when the model produces harmful or incorrect output? API providers typically disclaim liability for model outputs. When self-hosting, the liability falls entirely on you.</p>
+<h3 id="open-source-vs-proprietary-models">Open Source vs Proprietary Models<a class="headerlink" href="#open-source-vs-proprietary-models" title="Permanent link">&para;</a></h3>
+<p>One of the most consequential decisions is whether to use open source or proprietary models. This is not a binary choice. Many organizations use a mix of both, routing different tasks to different models based on their requirements.</p>
+<pre class="mermaid"><code>graph TD
+    A["Model Selection&lt;br/&gt;Decision"] --&gt; B{"Data Privacy&lt;br/&gt;Requirements?"}
+    B --&gt;|"Strict / Regulated"| C["Open Source&lt;br/&gt;Self-Hosted"]
+    B --&gt;|"Standard"| D{"Performance&lt;br/&gt;Requirements?"}
+    D --&gt;|"State of the art"| E{"Budget&lt;br/&gt;Available?"}
+    D --&gt;|"Good enough"| F["Open Source&lt;br/&gt;with Finetuning"]
+    E --&gt;|"High"| G["Proprietary API&lt;br/&gt;(GPT-4, Claude)"]
+    E --&gt;|"Limited"| H{"Engineering&lt;br/&gt;Capacity?"}
+    H --&gt;|"Strong"| I["Open Source&lt;br/&gt;Optimized"]
+    H --&gt;|"Limited"| J["Proprietary API&lt;br/&gt;Smaller Model"]
+
+    C --&gt; K["Deploy on&lt;br/&gt;Own Infrastructure"]
+    F --&gt; K
+    I --&gt; K
+    G --&gt; L["Use via API"]
+    J --&gt; L
+
+    style A fill:#2D3748,stroke:#E2E8F0,color:#E2E8F0
+    style B fill:#4A5568,stroke:#E2E8F0,color:#E2E8F0
+    style C fill:#276749,stroke:#E2E8F0,color:#E2E8F0
+    style D fill:#4A5568,stroke:#E2E8F0,color:#E2E8F0
+    style E fill:#4A5568,stroke:#E2E8F0,color:#E2E8F0
+    style F fill:#276749,stroke:#E2E8F0,color:#E2E8F0
+    style G fill:#9B2C2C,stroke:#E2E8F0,color:#E2E8F0
+    style H fill:#4A5568,stroke:#E2E8F0,color:#E2E8F0
+    style I fill:#276749,stroke:#E2E8F0,color:#E2E8F0
+    style J fill:#9B2C2C,stroke:#E2E8F0,color:#E2E8F0
+    style K fill:#2B6CB0,stroke:#E2E8F0,color:#E2E8F0
+    style L fill:#2B6CB0,stroke:#E2E8F0,color:#E2E8F0</code></pre>
+<p><strong>Data privacy.</strong> With open source models, your data never leaves your infrastructure. With proprietary APIs, your data is sent to a third party. For regulated industries like healthcare and finance, this can be a dealbreaker. Even in less regulated industries, many organizations prefer to keep sensitive data in-house.</p>
+<p><strong>Performance.</strong> Proprietary models from frontier labs (OpenAI, Anthropic, Google) tend to lead on the hardest benchmarks. However, the gap between open source and proprietary models has been narrowing rapidly. For many practical tasks, open source models achieve competitive or even superior performance, especially after domain-specific finetuning.</p>
+<p><strong>Functionality.</strong> Proprietary APIs often provide features that are harder to replicate with open source models, such as logprobs, function calling, structured output guarantees and built-in safety filters. On the other hand, open source models give you full access to model weights, enabling finetuning, distillation and architectural modifications that are impossible with closed APIs.</p>
+<p><strong>Cost structure.</strong> Proprietary models charge per token. This is simple and requires no infrastructure management, but costs scale linearly with usage. Open source models require upfront investment in infrastructure and engineering, but marginal costs are much lower at high volumes. The crossover point depends on your usage volume and engineering capacity.</p>
+<p><strong>Control and transparency.</strong> With open source models, you can inspect the weights, understand the training data (sometimes) and modify the model to suit your needs. With proprietary models, the model is a black box. You cannot see what data it was trained on, how it handles edge cases or why it produces specific outputs.</p>
+<p><strong>On-device deployment.</strong> If your application needs to run on user devices (phones, laptops, edge devices), open source models are your only option. Proprietary models require an internet connection and API access.</p>
+<p><img alt="Figure 4-8. Why enterprises care about open source models" src="../../assets/ch04/fig-4-8-open-source-models.png" width="700" /></p>
+<p class="figure-caption">Figure 4-8. Why enterprises care about open source models</p>
+
+<table>
+<thead>
+<tr>
+<th><strong>Dimension</strong></th>
+<th><strong>Open Source</strong></th>
+<th><strong>Proprietary</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Data Privacy</strong></td>
+<td>Data stays on your infrastructure</td>
+<td>Data sent to third party</td>
+</tr>
+<tr>
+<td><strong>Performance</strong></td>
+<td>Competitive, improving rapidly</td>
+<td>Leading on hardest benchmarks</td>
+</tr>
+<tr>
+<td><strong>Finetuning</strong></td>
+<td>Full control over weights</td>
+<td>Limited or no finetuning options</td>
+</tr>
+<tr>
+<td><strong>Logprobs</strong></td>
+<td>Available with full access</td>
+<td>Available via some APIs</td>
+</tr>
+<tr>
+<td><strong>Cost at Low Volume</strong></td>
+<td>Higher (infrastructure + engineering)</td>
+<td>Lower (pay per token)</td>
+</tr>
+<tr>
+<td><strong>Cost at High Volume</strong></td>
+<td>Lower (fixed infrastructure)</td>
+<td>Higher (linear scaling)</td>
+</tr>
+<tr>
+<td><strong>Latency Control</strong></td>
+<td>Full control over optimization</td>
+<td>Limited to provider's infrastructure</td>
+</tr>
+<tr>
+<td><strong>Transparency</strong></td>
+<td>Weights and often training data visible</td>
+<td>Black box</td>
+</tr>
+<tr>
+<td><strong>On-device</strong></td>
+<td>Possible with quantization</td>
+<td>Not possible</td>
+</tr>
+<tr>
+<td><strong>Maintenance</strong></td>
+<td>Your responsibility</td>
+<td>Provider's responsibility</td>
+</tr>
+<tr>
+<td><strong>Time to Production</strong></td>
+<td>Longer (deployment, optimization)</td>
+<td>Shorter (API integration)</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>A common production pattern is to use a proprietary model during prototyping and early development for speed, then migrate to an open source model once you have established quality baselines and accumulated enough data for finetuning. This gives you the best of both worlds.</p>
+</div>
+<h2 id="navigate-public-benchmarks">Navigate Public Benchmarks<a class="headerlink" href="#navigate-public-benchmarks" title="Permanent link">&para;</a></h2>
+<p>Public benchmarks are the most common way to compare models. They provide standardized tasks and metrics that allow apples-to-apples comparisons. However, they are also deeply flawed. Understanding both their value and their limitations is essential for making good model selection decisions.</p>
+<p><img alt="Figure 4-1. Benchmark overview" src="../../assets/ch04/fig-4-1-benchmark-overview.png" width="700" /></p>
+<p class="figure-caption">Figure 4-1. Benchmark overview</p>
+
+<h3 id="benchmark-selection-and-aggregation">Benchmark Selection and Aggregation<a class="headerlink" href="#benchmark-selection-and-aggregation" title="Permanent link">&para;</a></h3>
+<p>No single benchmark captures everything you care about. A model that scores highest on MMLU (Massive Multitask Language Understanding) might underperform on code generation or instruction following. The challenge is selecting the right set of benchmarks and aggregating them meaningfully.</p>
+<pre class="mermaid"><code>graph LR
+    subgraph "Public Benchmark Landscape"
+        direction TB
+        A["Leaderboards"] --&gt; A1["Hugging Face&lt;br/&gt;Open LLM"]
+        A --&gt; A2["HELM&lt;br/&gt;(Stanford)"]
+        A --&gt; A3["Chatbot Arena&lt;br/&gt;(LMSYS)"]
+
+        B["Benchmarks"] --&gt; B1["Knowledge&lt;br/&gt;MMLU, ARC"]
+        B --&gt; B2["Reasoning&lt;br/&gt;HellaSwag, WinoGrande"]
+        B --&gt; B3["Math&lt;br/&gt;GSM-8K, MATH"]
+        B --&gt; B4["Truthfulness&lt;br/&gt;TruthfulQA"]
+        B --&gt; B5["Code&lt;br/&gt;HumanEval, MBPP"]
+
+        C["Evaluation&lt;br/&gt;Harnesses"] --&gt; C1["lm-evaluation-harness&lt;br/&gt;(EleutherAI)"]
+        C --&gt; C2["HELM&lt;br/&gt;(Stanford)"]
+        C --&gt; C3["bigcode-evaluation&lt;br/&gt;(BigCode)"]
+    end
+
+    style A fill:#2D3748,stroke:#E2E8F0,color:#E2E8F0
+    style B fill:#2D3748,stroke:#E2E8F0,color:#E2E8F0
+    style C fill:#2D3748,stroke:#E2E8F0,color:#E2E8F0
+    style A1 fill:#4A5568,stroke:#E2E8F0,color:#E2E8F0
+    style A2 fill:#4A5568,stroke:#E2E8F0,color:#E2E8F0
+    style A3 fill:#4A5568,stroke:#E2E8F0,color:#E2E8F0
+    style B1 fill:#276749,stroke:#E2E8F0,color:#E2E8F0
+    style B2 fill:#276749,stroke:#E2E8F0,color:#E2E8F0
+    style B3 fill:#276749,stroke:#E2E8F0,color:#E2E8F0
+    style B4 fill:#276749,stroke:#E2E8F0,color:#E2E8F0
+    style B5 fill:#276749,stroke:#E2E8F0,color:#E2E8F0
+    style C1 fill:#2B6CB0,stroke:#E2E8F0,color:#E2E8F0
+    style C2 fill:#2B6CB0,stroke:#E2E8F0,color:#E2E8F0
+    style C3 fill:#2B6CB0,stroke:#E2E8F0,color:#E2E8F0</code></pre>
+<h3 id="public-leaderboards">Public Leaderboards<a class="headerlink" href="#public-leaderboards" title="Permanent link">&para;</a></h3>
+<p>The most widely referenced leaderboard is the <strong>Hugging Face Open LLM Leaderboard</strong>, which evaluates models across six benchmarks using EleutherAI's lm-evaluation-harness.</p>
+<table>
+<thead>
+<tr>
+<th><strong>Benchmark</strong></th>
+<th><strong>What It Measures</strong></th>
+<th><strong>Format</strong></th>
+<th><strong>Size</strong></th>
+<th><strong>Key Notes</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>ARC-C</strong> (AI2 Reasoning Challenge, Challenge Set)</td>
+<td>Science knowledge and reasoning</td>
+<td>Multiple choice</td>
+<td>1,172 questions</td>
+<td>Grade-school level science questions</td>
+</tr>
+<tr>
+<td><strong>MMLU</strong> (Massive Multitask Language Understanding)</td>
+<td>Knowledge across 57 subjects</td>
+<td>Multiple choice</td>
+<td>14,042 questions</td>
+<td>Covers STEM, humanities, social sciences</td>
+</tr>
+<tr>
+<td><strong>HellaSwag</strong></td>
+<td>Commonsense reasoning about situations</td>
+<td>Sentence completion</td>
+<td>10,042 questions</td>
+<td>Tests understanding of everyday scenarios</td>
+</tr>
+<tr>
+<td><strong>TruthfulQA</strong></td>
+<td>Tendency to generate truthful answers</td>
+<td>Multiple choice / generation</td>
+<td>817 questions</td>
+<td>Tests resistance to common misconceptions</td>
+</tr>
+<tr>
+<td><strong>WinoGrande</strong></td>
+<td>Commonsense reasoning (coreference)</td>
+<td>Fill in the blank</td>
+<td>1,267 questions</td>
+<td>Pronoun resolution requiring world knowledge</td>
+</tr>
+<tr>
+<td><strong>GSM-8K</strong></td>
+<td>Mathematical reasoning</td>
+<td>Open ended</td>
+<td>8,500 questions</td>
+<td>Grade-school math word problems</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Benchmark correlation.</strong> An important insight from the leaderboard is that some benchmarks are highly correlated while others are not. This means that scoring high on one benchmark may or may not predict performance on another.</p>
+<p><img alt="Figure 4-2. Performance of several models on benchmarks" src="../../assets/ch04/fig-4-2-model-benchmark-performance.png" width="700" /></p>
+<p class="figure-caption">Figure 4-2. Performance of several models on benchmarks</p>
+
+<table>
+<thead>
+<tr>
+<th></th>
+<th><strong>ARC-C</strong></th>
+<th><strong>MMLU</strong></th>
+<th><strong>HellaSwag</strong></th>
+<th><strong>TruthfulQA</strong></th>
+<th><strong>WinoGrande</strong></th>
+<th><strong>GSM-8K</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>ARC-C</strong></td>
+<td>1.00</td>
+<td>0.89</td>
+<td>0.91</td>
+<td>0.42</td>
+<td>0.85</td>
+<td>0.71</td>
+</tr>
+<tr>
+<td><strong>MMLU</strong></td>
+<td>0.89</td>
+<td>1.00</td>
+<td>0.88</td>
+<td>0.38</td>
+<td>0.83</td>
+<td>0.78</td>
+</tr>
+<tr>
+<td><strong>HellaSwag</strong></td>
+<td>0.91</td>
+<td>0.88</td>
+<td>1.00</td>
+<td>0.35</td>
+<td>0.87</td>
+<td>0.68</td>
+</tr>
+<tr>
+<td><strong>TruthfulQA</strong></td>
+<td>0.42</td>
+<td>0.38</td>
+<td>0.35</td>
+<td>1.00</td>
+<td>0.40</td>
+<td>0.33</td>
+</tr>
+<tr>
+<td><strong>WinoGrande</strong></td>
+<td>0.85</td>
+<td>0.83</td>
+<td>0.87</td>
+<td>0.40</td>
+<td>1.00</td>
+<td>0.65</td>
+</tr>
+<tr>
+<td><strong>GSM-8K</strong></td>
+<td>0.71</td>
+<td>0.78</td>
+<td>0.68</td>
+<td>0.33</td>
+<td>0.65</td>
+<td>1.00</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>TruthfulQA has notably low correlation with other benchmarks. This means that models that excel on knowledge and reasoning tasks are not necessarily more truthful. This is an important insight for applications where factual accuracy is critical.</p>
+</div>
+<p><strong>Aggregation methods.</strong> Leaderboards typically aggregate benchmark scores into a single number. The two most common methods are.</p>
+<ol>
+<li><strong>Simple averaging.</strong> Take the mean of all benchmark scores. This is easy to understand but gives equal weight to all benchmarks regardless of their difficulty or relevance.</li>
+<li><strong>Mean win rate.</strong> For each pair of models, determine which wins on each benchmark, then compute the average win rate across all pairs. This is more robust to outliers and scale differences between benchmarks but is harder to interpret.</li>
+</ol>
+<h3 id="custom-leaderboards-with-public-benchmarks">Custom Leaderboards with Public Benchmarks<a class="headerlink" href="#custom-leaderboards-with-public-benchmarks" title="Permanent link">&para;</a></h3>
+<p>Rather than relying on a single public leaderboard, you can create a custom leaderboard tailored to your needs. Select the benchmarks that most closely align with your use case, assign weights based on importance and rank models accordingly.</p>
+<p>For example, if you are building a medical Q&amp;A system, you might weight MMLU heavily (particularly the medical subsets), add a domain-specific benchmark like MedQA, and give lower weight to code-related benchmarks. This gives you a ranking that is far more relevant to your specific needs than any generic leaderboard.</p>
+<h3 id="are-openai-models-getting-worse">Are OpenAI Models Getting Worse<a class="headerlink" href="#are-openai-models-getting-worse" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p>"Every time OpenAI updates its models, people complain that their models seem to be getting worse."
+Chip Huyen</p>
+</blockquote>
+<p>This is a fascinating case study in the difficulty of evaluation. In mid-2023, researchers from Stanford and Berkeley published a study suggesting that GPT-4's performance on certain tasks had degraded significantly between March and June 2023. The study showed that GPT-4's accuracy on identifying prime numbers dropped from 97.6% to 2.4%.</p>
+<p>The reality is more nuanced. Model providers like OpenAI continuously update their models. These updates may improve performance on some dimensions while degrading performance on others. This is called <strong>model drift</strong>, and it is a real challenge for production systems. If you are building on top of a proprietary API, your system's behavior can change without any changes to your own code.</p>
+<p>This phenomenon illustrates a broader point. Evaluation is not a one-time activity. It must be continuous. You need to monitor model performance over time and detect regressions early.</p>
+<p><img alt="Figure 4-9. Changes in GPT-3.5 and GPT-4 performance from March to June 2023" src="../../assets/ch04/fig-4-9-gpt-performance-changes.png" width="700" /></p>
+<p class="figure-caption">Figure 4-9. Changes in GPT-3.5 and GPT-4 performance from March to June 2023</p>
+
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>If you are using proprietary API models, implement continuous evaluation. Set up automated tests that run against your evaluation set periodically. This is the only way to detect model drift before your users do.</p>
+</div>
+<h3 id="data-contamination-with-public-benchmarks">Data Contamination with Public Benchmarks<a class="headerlink" href="#data-contamination-with-public-benchmarks" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p>"A benchmark stops being useful as soon as it becomes public."
+Chip Huyen</p>
+</blockquote>
+<p>Data contamination occurs when a model has seen benchmark data during training. This inflates the model's scores without reflecting genuine capability improvement. It is one of the most insidious problems in AI evaluation.</p>
+<pre class="mermaid"><code>graph TD
+    A["Benchmark&lt;br/&gt;Published"] --&gt; B["Benchmark data&lt;br/&gt;enters public web"]
+    B --&gt; C["Web crawlers collect&lt;br/&gt;data for training"]
+    C --&gt; D["Model trained on&lt;br/&gt;contaminated data"]
+    D --&gt; E["Model evaluated on&lt;br/&gt;same benchmark"]
+    E --&gt; F["Inflated scores&lt;br/&gt;reported"]
+    F --&gt; G{"Contamination&lt;br/&gt;detected?"}
+    G --&gt;|No| H["Misleading model&lt;br/&gt;comparisons"]
+    G --&gt;|Yes| I["Benchmark&lt;br/&gt;discounted"]
+    I --&gt; J["New benchmark&lt;br/&gt;created"]
+    J --&gt; A
+
+    style A fill:#2D3748,stroke:#E2E8F0,color:#E2E8F0
+    style B fill:#4A5568,stroke:#E2E8F0,color:#E2E8F0
+    style C fill:#4A5568,stroke:#E2E8F0,color:#E2E8F0
+    style D fill:#9B2C2C,stroke:#E2E8F0,color:#E2E8F0
+    style E fill:#9B2C2C,stroke:#E2E8F0,color:#E2E8F0
+    style F fill:#9B2C2C,stroke:#E2E8F0,color:#E2E8F0
+    style G fill:#4A5568,stroke:#E2E8F0,color:#E2E8F0
+    style H fill:#742A2A,stroke:#E2E8F0,color:#E2E8F0
+    style I fill:#276749,stroke:#E2E8F0,color:#E2E8F0
+    style J fill:#276749,stroke:#E2E8F0,color:#E2E8F0</code></pre>
+<p><strong>How contamination happens.</strong> When a benchmark is published, its questions and answers become part of the public web. Web crawls used for training data collection inevitably pick up this data. Even if model developers try to filter out benchmark data, some contamination is nearly impossible to prevent. Some cases are more egregious, where models are intentionally trained on benchmark data to game leaderboard rankings.</p>
+<p><strong>Detection methods.</strong></p>
+<ol>
+<li><strong>N-gram overlapping.</strong> Check whether sequences of tokens from the benchmark appear verbatim in the training data. If a model can reproduce a benchmark question word for word, it has likely memorized it.</li>
+<li><strong>Perplexity analysis.</strong> If a model assigns unusually low perplexity to benchmark examples (meaning it finds them highly predictable), this may indicate that it has seen them during training. Compare the perplexity on benchmark examples to the perplexity on similar but novel examples.</li>
+</ol>
+<p><img alt="Figure 4-10. Relative difference in GPT-3 performance when evaluating using only the first choices" src="../../assets/ch04/fig-4-10-gpt3-evaluation-difference.png" width="700" /></p>
+<p class="figure-caption">Figure 4-10. Relative difference in GPT-3 performance when evaluating using only the first choices</p>
+
+<p><strong>Handling contamination.</strong> There is no perfect solution, but several strategies help.</p>
+<ul>
+<li><strong>Use private benchmarks.</strong> Create evaluation sets that are never published. This eliminates contamination risk entirely.</li>
+<li><strong>Use dynamic benchmarks.</strong> Some benchmarks regenerate questions from templates, making it harder for models to memorize specific examples.</li>
+<li><strong>Cross-reference with private evaluations.</strong> Use public benchmarks for initial screening but validate with your own private evaluation data before making final decisions.</li>
+<li><strong>Monitor for suspiciously high scores.</strong> If a model's public benchmark scores seem too good compared to its real-world performance, contamination may be the cause.</li>
+</ul>
+<h2 id="design-your-evaluation-pipeline">Design Your Evaluation Pipeline<a class="headerlink" href="#design-your-evaluation-pipeline" title="Permanent link">&para;</a></h2>
+<p>Designing a robust evaluation pipeline is a multi-step process. It requires careful thought about what to evaluate, how to evaluate it and how to validate the evaluation itself. The five steps below provide a systematic framework.</p>
+<pre class="mermaid"><code>graph LR
+    A["Step 1&lt;br/&gt;Evaluate All&lt;br/&gt;Components"] --&gt; B["Step 2&lt;br/&gt;Create Evaluation&lt;br/&gt;Guideline"]
+    B --&gt; C["Step 3&lt;br/&gt;Define Methods&lt;br/&gt;and Data"]
+    C --&gt; D["Step 4&lt;br/&gt;Evaluate Your&lt;br/&gt;Evaluation"]
+    D --&gt; E["Step 5&lt;br/&gt;Iterate"]
+    E --&gt;|"Feedback Loop"| A
+
+    style A fill:#2D3748,stroke:#E2E8F0,color:#E2E8F0
+    style B fill:#4A5568,stroke:#E2E8F0,color:#E2E8F0
+    style C fill:#276749,stroke:#E2E8F0,color:#E2E8F0
+    style D fill:#2B6CB0,stroke:#E2E8F0,color:#E2E8F0
+    style E fill:#9B2C2C,stroke:#E2E8F0,color:#E2E8F0</code></pre>
+<p><img alt="Figure 4-5. Overview of the evaluation workflow for your application" src="../../assets/ch04/fig-4-5-evaluation-workflow.png" width="700" /></p>
+<p class="figure-caption">Figure 4-5. Overview of the evaluation workflow for your application</p>
+
+<h3 id="step-1-evaluate-all-components-in-a-system">Step 1. Evaluate All Components in a System<a class="headerlink" href="#step-1-evaluate-all-components-in-a-system" title="Permanent link">&para;</a></h3>
+<p>AI systems are rarely a single model call. They typically involve multiple components. A retrieval step, a ranking step, one or more model calls, postprocessing and safety filters. Each component can fail independently, and end-to-end evaluation alone cannot tell you <em>where</em> things went wrong.</p>
+<p>You need to evaluate at three levels.</p>
+<pre class="mermaid"><code>graph TD
+    subgraph "Evaluation Levels"
+        direction TB
+        A["Per Task Evaluation"] --&gt; A1["Does the system&lt;br/&gt;complete the overall&lt;br/&gt;task correctly?"]
+        B["Per Turn Evaluation"] --&gt; B1["In a multi-turn&lt;br/&gt;interaction, is each&lt;br/&gt;turn appropriate?"]
+        C["Per Component&lt;br/&gt;Evaluation"] --&gt; C1["Does each individual&lt;br/&gt;component perform&lt;br/&gt;its function?"]
+    end
+
+    subgraph "Examples"
+        direction TB
+        D["Task Level"] --&gt; D1["Customer support&lt;br/&gt;issue resolved"]
+        E["Turn Level"] --&gt; E1["Each response is&lt;br/&gt;relevant and helpful"]
+        F["Component Level"] --&gt; F1["Retriever returns&lt;br/&gt;relevant documents"]
+        F --&gt; F2["Ranker orders&lt;br/&gt;correctly"]
+        F --&gt; F3["Generator produces&lt;br/&gt;accurate answer"]
+        F --&gt; F4["Safety filter&lt;br/&gt;catches violations"]
+    end
+
+    A1 --&gt; D
+    B1 --&gt; E
+    C1 --&gt; F
+
+    style A fill:#2D3748,stroke:#E2E8F0,color:#E2E8F0
+    style B fill:#2D3748,stroke:#E2E8F0,color:#E2E8F0
+    style C fill:#2D3748,stroke:#E2E8F0,color:#E2E8F0
+    style A1 fill:#4A5568,stroke:#E2E8F0,color:#E2E8F0
+    style B1 fill:#4A5568,stroke:#E2E8F0,color:#E2E8F0
+    style C1 fill:#4A5568,stroke:#E2E8F0,color:#E2E8F0
+    style D fill:#276749,stroke:#E2E8F0,color:#E2E8F0
+    style D1 fill:#276749,stroke:#E2E8F0,color:#E2E8F0
+    style E fill:#2B6CB0,stroke:#E2E8F0,color:#E2E8F0
+    style E1 fill:#2B6CB0,stroke:#E2E8F0,color:#E2E8F0
+    style F fill:#9B2C2C,stroke:#E2E8F0,color:#E2E8F0
+    style F1 fill:#9B2C2C,stroke:#E2E8F0,color:#E2E8F0
+    style F2 fill:#9B2C2C,stroke:#E2E8F0,color:#E2E8F0
+    style F3 fill:#9B2C2C,stroke:#E2E8F0,color:#E2E8F0
+    style F4 fill:#9B2C2C,stroke:#E2E8F0,color:#E2E8F0</code></pre>
+<p><strong>Per task evaluation.</strong> This is the highest level. Does the system accomplish the user's goal? For a customer support bot, did the customer's issue get resolved? For a code generation tool, does the generated code compile and pass tests? Task-level evaluation tells you whether the system is useful, but it does not tell you why it fails when it does.</p>
+<p><strong>Per turn evaluation.</strong> In multi-turn interactions (chatbots, agents), each turn must be evaluated independently. A conversation can fail at any point. The model might provide a great first response but go off track in subsequent turns. Per-turn evaluation helps you identify where conversations break down.</p>
+<p><strong>Per component evaluation.</strong> This is the most granular level. For a RAG (Retrieval-Augmented Generation) system, you would evaluate the retriever separately from the generator. If the retriever returns irrelevant documents, the generator cannot produce a good answer regardless of its capabilities. Component-level evaluation isolates failures and tells you exactly where to focus your improvement efforts.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Start with component-level evaluation and build up. If your retriever is returning irrelevant documents 30% of the time, no amount of prompt engineering on the generator will fix that. Fix components from the bottom up.</p>
+</div>
+<h3 id="step-2-create-an-evaluation-guideline">Step 2. Create an Evaluation Guideline<a class="headerlink" href="#step-2-create-an-evaluation-guideline" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p>LinkedIn shared that "the first hurdle was in creating an evaluation guideline."
+Chip Huyen</p>
+</blockquote>
+<p>An evaluation guideline is a document that specifies exactly how to evaluate model outputs. It defines the criteria, the scoring rubric and provides examples of good and bad outputs at each score level. Without a guideline, different evaluators (human or AI) will interpret evaluation criteria differently, leading to unreliable results.</p>
+<pre class="mermaid"><code>graph TD
+    A["Define Evaluation&lt;br/&gt;Criteria"] --&gt; B["Create Scoring&lt;br/&gt;Rubric"]
+    B --&gt; C["Provide Annotated&lt;br/&gt;Examples"]
+    C --&gt; D["Pilot with&lt;br/&gt;Annotators"]
+    D --&gt; E{"High Inter-&lt;br/&gt;annotator&lt;br/&gt;Agreement?"}
+    E --&gt;|No| F["Refine Guideline&lt;br/&gt;Clarify Ambiguities"]
+    F --&gt; D
+    E --&gt;|Yes| G["Finalize&lt;br/&gt;Guideline"]
+    G --&gt; H["Train All&lt;br/&gt;Evaluators"]
+    H --&gt; I["Begin&lt;br/&gt;Evaluation"]
+
+    style A fill:#2D3748,stroke:#E2E8F0,color:#E2E8F0
+    style B fill:#4A5568,stroke:#E2E8F0,color:#E2E8F0
+    style C fill:#4A5568,stroke:#E2E8F0,color:#E2E8F0
+    style D fill:#276749,stroke:#E2E8F0,color:#E2E8F0
+    style E fill:#4A5568,stroke:#E2E8F0,color:#E2E8F0
+    style F fill:#9B2C2C,stroke:#E2E8F0,color:#E2E8F0
+    style G fill:#276749,stroke:#E2E8F0,color:#E2E8F0
+    style H fill:#2B6CB0,stroke:#E2E8F0,color:#E2E8F0
+    style I fill:#2B6CB0,stroke:#E2E8F0,color:#E2E8F0</code></pre>
+<p><strong>Define evaluation criteria.</strong> Start by listing every dimension of quality that matters for your application. Common criteria include.</p>
+<ul>
+<li><strong>Correctness.</strong> Is the output factually accurate?</li>
+<li><strong>Relevance.</strong> Does the output address the user's question or need?</li>
+<li><strong>Completeness.</strong> Does the output cover all important aspects?</li>
+<li><strong>Conciseness.</strong> Is the output free of unnecessary information?</li>
+<li><strong>Tone.</strong> Does the output match the desired voice and style?</li>
+<li><strong>Safety.</strong> Is the output free of harmful, biased or inappropriate content?</li>
+</ul>
+<p><strong>Create scoring rubrics with examples.</strong> For each criterion, define a clear scoring scale and provide annotated examples. A rubric without examples is open to interpretation. Here is an example for a 5-point correctness rubric.</p>
+<table>
+<thead>
+<tr>
+<th><strong>Score</strong></th>
+<th><strong>Label</strong></th>
+<th><strong>Description</strong></th>
+<th><strong>Example</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>5</td>
+<td>Completely correct</td>
+<td>All facts accurate, no errors</td>
+<td>(Provide a specific example from your domain)</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Mostly correct</td>
+<td>Minor inaccuracies that do not affect usefulness</td>
+<td>(Provide a specific example)</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Partially correct</td>
+<td>Mix of correct and incorrect information</td>
+<td>(Provide a specific example)</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Mostly incorrect</td>
+<td>Significant errors that mislead the user</td>
+<td>(Provide a specific example)</td>
+</tr>
+<tr>
+<td>1</td>
+<td>Completely incorrect</td>
+<td>Factually wrong or entirely irrelevant</td>
+<td>(Provide a specific example)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Tie evaluation metrics to business metrics.</strong> This is where evaluation meets reality. A model might score 4.2 out of 5 on correctness, but what does that mean for your business?</p>
+<blockquote>
+<p>Understanding the impact of evaluation metrics on business metrics is helpful for planning.
+Chip Huyen</p>
+</blockquote>
+<p>Map your evaluation scores to business outcomes whenever possible. If improving correctness from 4.0 to 4.5 reduces customer support escalations by 20%, that gives you a concrete target and a clear justification for the investment.</p>
+<h3 id="step-3-define-evaluation-methods-and-data">Step 3. Define Evaluation Methods and Data<a class="headerlink" href="#step-3-define-evaluation-methods-and-data" title="Permanent link">&para;</a></h3>
+<p><strong>Select evaluation methods.</strong> The three main evaluation methods are.</p>
+<ol>
+<li><strong>Human evaluation.</strong> The gold standard for subjective quality assessment. Expensive, slow, but necessary for establishing ground truth.</li>
+<li><strong>AI evaluation (LLM as judge).</strong> Using a strong model to evaluate a weaker model's outputs. Faster and cheaper than human evaluation, but introduces its own biases (position bias, verbosity bias, self-preference).</li>
+<li><strong>Automatic metrics.</strong> Computational metrics like BLEU, ROUGE, exact match or code execution pass rate. Fast and cheap, but often correlate poorly with human judgment for open-ended tasks.</li>
+</ol>
+<p>The best evaluation pipelines use a combination of all three. Automatic metrics for fast, cheap filtering. AI evaluation for scalable quality assessment. Human evaluation for calibration and edge cases.</p>
+<p><strong>Annotate evaluation data.</strong> Your evaluation data should be representative of real production traffic. If your model handles customer support queries, your evaluation set should include the full distribution of query types, difficulty levels and edge cases.</p>
+<p><strong>Data slicing for fine-grained understanding.</strong> Aggregate metrics can be misleading. A model might achieve 90% accuracy overall while performing terribly on a specific subset of users or query types. This is where data slicing becomes essential.</p>
+<blockquote>
+<p>"If you care about something, put a test set on it."
+Chip Huyen</p>
+</blockquote>
+<p>Slice your evaluation data along every dimension that matters. User type, query category, input length, language, demographic group, time of day. Look for disparities. A model that performs well on average but poorly for a specific group may have a fairness problem.</p>
+<p><strong>Simpson's paradox.</strong> Data slicing also protects against Simpson's paradox, where a trend that appears in aggregate data reverses when the data is broken into groups. This can lead to dangerously wrong conclusions if you only look at aggregate metrics.</p>
+<table>
+<thead>
+<tr>
+<th><strong>Category</strong></th>
+<th><strong>Model A Accuracy</strong></th>
+<th><strong>Model A Volume</strong></th>
+<th><strong>Model B Accuracy</strong></th>
+<th><strong>Model B Volume</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Easy queries</td>
+<td>95%</td>
+<td>900</td>
+<td>98%</td>
+<td>100</td>
+</tr>
+<tr>
+<td>Hard queries</td>
+<td>60%</td>
+<td>100</td>
+<td>65%</td>
+<td>900</td>
+</tr>
+<tr>
+<td><strong>Overall</strong></td>
+<td><strong>91.5%</strong></td>
+<td><strong>1000</strong></td>
+<td><strong>68.3%</strong></td>
+<td><strong>1000</strong></td>
+</tr>
+</tbody>
+</table>
+<p>In this example, Model B is better on both easy and hard queries individually, but Model A appears better overall because it handles mostly easy queries. This is Simpson's paradox in action. Without data slicing, you would choose Model A, the objectively worse model.</p>
+<p><strong>Bootstrap estimation for evaluation set size.</strong> How many examples do you need in your evaluation set? Too few and your estimates are unreliable. Too many and you waste resources on annotation.</p>
+<p>Bootstrap estimation provides a principled answer. The idea is to resample your evaluation data with replacement, compute your metric on each resample and observe how the metric's confidence interval changes as you add more data. When the confidence interval is narrow enough for your decision-making needs, you have enough data.</p>
+<table>
+<thead>
+<tr>
+<th><strong>Desired Confidence Level</strong></th>
+<th><strong>Desired Margin of Error</strong></th>
+<th><strong>Approximate Sample Size Needed</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>90%</td>
+<td>+/- 5%</td>
+<td>~270</td>
+</tr>
+<tr>
+<td>95%</td>
+<td>+/- 5%</td>
+<td>~385</td>
+</tr>
+<tr>
+<td>95%</td>
+<td>+/- 3%</td>
+<td>~1,068</td>
+</tr>
+<tr>
+<td>95%</td>
+<td>+/- 1%</td>
+<td>~9,604</td>
+</tr>
+<tr>
+<td>99%</td>
+<td>+/- 3%</td>
+<td>~1,844</td>
+</tr>
+<tr>
+<td>99%</td>
+<td>+/- 1%</td>
+<td>~16,590</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>These are approximate numbers based on proportions and normal approximation. Your actual required sample size depends on the variance in your data and the specific metric you are estimating. Use bootstrap estimation on your actual data for a more precise answer.</p>
+</div>
+<p><strong>Statistical significance.</strong> When comparing two models, ensure that the difference in their evaluation scores is statistically significant. A 1% improvement on a test set of 100 examples is likely noise, not signal. Use paired tests (like McNemar's test for classification or a paired bootstrap for general metrics) to determine whether observed differences are real.</p>
+<h3 id="step-4-evaluate-your-evaluation-pipeline">Step 4. Evaluate Your Evaluation Pipeline<a class="headerlink" href="#step-4-evaluate-your-evaluation-pipeline" title="Permanent link">&para;</a></h3>
+<p>This is the meta-evaluation step. Your evaluation pipeline is itself a system that can fail, and you need to validate that it works correctly.</p>
+<p><strong>Reliability.</strong> If you run the same evaluation twice, do you get the same results? For human evaluation, this is measured by inter-annotator agreement (Cohen's kappa, Krippendorff's alpha). For AI evaluation, this is measured by consistency across multiple runs (since LLMs are stochastic).</p>
+<p><strong>Correlation with downstream outcomes.</strong> Does your evaluation pipeline's assessment correlate with real-world outcomes? If your pipeline rates Model A higher than Model B, do users actually prefer Model A? If not, your evaluation pipeline is measuring the wrong thing.</p>
+<p><strong>Cost and latency.</strong> How much does it cost to run your evaluation pipeline, and how long does it take? If evaluation takes weeks and costs thousands of dollars, you cannot iterate quickly. Find the right balance between evaluation rigor and operational efficiency.</p>
+<h3 id="step-5-iterate">Step 5. Iterate<a class="headerlink" href="#step-5-iterate" title="Permanent link">&para;</a></h3>
+<p>Evaluation is never done. As your application evolves, your user base changes and the world changes, your evaluation pipeline must evolve with it.</p>
+<p><strong>When to update your evaluation.</strong></p>
+<ul>
+<li>When you add new features or capabilities</li>
+<li>When you observe new failure modes in production</li>
+<li>When your user base or use case distribution shifts</li>
+<li>When new evaluation methods or benchmarks become available</li>
+<li>When your evaluation metrics diverge from business outcomes</li>
+</ul>
+<p><strong>How to iterate.</strong></p>
+<ol>
+<li>Analyze production failures and add representative examples to your evaluation set</li>
+<li>Revisit your evaluation criteria and rubrics periodically</li>
+<li>Test new evaluation methods against your existing gold standard</li>
+<li>Involve domain experts in evaluation updates</li>
+<li>Track the correlation between evaluation metrics and business metrics over time</li>
+</ol>
+<h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
+<p>This chapter covered the three pillars of evaluating AI systems. <strong>Model selection</strong> requires balancing quality, cost, latency, privacy and operational complexity. There is no universally best model. The best model is the one that meets your specific constraints. <strong>Public benchmarks</strong> are useful for initial screening but are plagued by aggregation issues, correlation blind spots and data contamination. Never rely solely on public benchmarks for model selection. <strong>Evaluation pipeline design</strong> is a systematic, five-step process. Evaluate all components, create clear guidelines, define methods and data, validate the pipeline itself and iterate continuously.</p>
+<p>The most important lesson is that evaluation is not a one-time gate. It is a continuous process that must evolve with your application.</p>
+<h2 id="practitioner-checklist">Practitioner Checklist<a class="headerlink" href="#practitioner-checklist" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[ ] Before selecting a model, define your constraints (latency, cost, privacy, quality thresholds)</li>
+<li>[ ] Evaluate domain specific capabilities with a curated test set of hard cases</li>
+<li>[ ] Test generation capabilities including factual consistency, toxicity and instruction following</li>
+<li>[ ] Assess open source vs proprietary tradeoffs based on your specific requirements</li>
+<li>[ ] Use public benchmarks for initial screening only, not as final selection criteria</li>
+<li>[ ] Check for data contamination when public benchmark scores seem unusually high</li>
+<li>[ ] Evaluate all components in your system independently, not just end-to-end</li>
+<li>[ ] Create a written evaluation guideline with scoring rubrics and examples</li>
+<li>[ ] Ensure inter-annotator agreement is high before scaling evaluation</li>
+<li>[ ] Tie evaluation metrics to business metrics</li>
+<li>[ ] Slice evaluation data across all dimensions you care about</li>
+<li>[ ] Use bootstrap estimation to determine if your evaluation set is large enough</li>
+<li>[ ] Validate that model comparison differences are statistically significant</li>
+<li>[ ] Implement continuous evaluation for production systems using proprietary APIs</li>
+<li>[ ] Schedule regular reviews and updates of your evaluation pipeline</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../03-evaluation-methodology/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 03. Evaluation Methodology">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                03. Evaluation Methodology
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../05-prompt-engineering/" class="md-footer__link md-footer__link--next" aria-label="Next: 05. Prompt Engineering">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                05. Prompt Engineering
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "navigation.footer", "toc.follow", "toc.integrate", "content.tabs.link", "search.highlight", "search.suggest", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@10/dist/mermaid.min.js"></script>
+      
+        <script src="../../javascripts/mermaid.js"></script>
+      
+    
+  </body>
+</html>

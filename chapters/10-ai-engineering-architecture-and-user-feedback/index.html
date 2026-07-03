@@ -1,0 +1,2189 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A polished field guide to building production AI applications with foundation models.">
+      
+      
+      
+        <link rel="canonical" href="https://arnabbir.github.io/ai-engineering-explained/chapters/10-ai-engineering-architecture-and-user-feedback/">
+      
+      
+        <link rel="prev" href="../09-inference-optimization/">
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/cover/book-cover.jpg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>10. Architecture and User Feedback - AI Engineering Playbook</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="pink">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#chapter-10-ai-engineering-architecture-and-user-feedback" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="AI Engineering Playbook" class="md-header__button md-logo" aria-label="AI Engineering Playbook" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m19 2-5 4.5v11l5-4.5zM6.5 5C4.55 5 2.45 5.4 1 6.5v14.66c0 .25.25.5.5.5.1 0 .15-.07.25-.07 1.35-.65 3.3-1.09 4.75-1.09 1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.31 4.75 1.06.1.05.15.03.25.03.25 0 .5-.25.5-.5V6.5c-.6-.45-1.25-.75-2-1V19c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V6.5C10.55 5.4 8.45 5 6.5 5"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            AI Engineering Playbook
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              10. Architecture and User Feedback
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="pink"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="pink"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/ArnabBir/ai-engineering-explained" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../overview/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Overview
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../01-introduction/" class="md-tabs__link">
+          
+  
+  
+  Chapters
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="AI Engineering Playbook" class="md-nav__button md-logo" aria-label="AI Engineering Playbook" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m19 2-5 4.5v11l5-4.5zM6.5 5C4.55 5 2.45 5.4 1 6.5v14.66c0 .25.25.5.5.5.1 0 .15-.07.25-.07 1.35-.65 3.3-1.09 4.75-1.09 1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.31 4.75 1.06.1.05.15.03.25.03.25 0 .5-.25.5-.5V6.5c-.6-.45-1.25-.75-2-1V19c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V6.5C10.55 5.4 8.45 5 6.5 5"/></svg>
+
+    </a>
+    AI Engineering Playbook
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/ArnabBir/ai-engineering-explained" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapters
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Chapters
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    01. Introduction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-understanding-foundation-models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    02. Understanding Foundation Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-evaluation-methodology/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03. Evaluation Methodology
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-evaluate-ai-systems/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    04. Evaluate AI Systems
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-prompt-engineering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    05. Prompt Engineering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-rag-and-agents/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    06. RAG and Agents
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-finetuning/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    07. Finetuning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-dataset-engineering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    08. Dataset Engineering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-inference-optimization/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    09. Inference Optimization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10. Architecture and User Feedback
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10. Architecture and User Feedback
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table of Contents
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ai-engineering-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AI Engineering Architecture
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="AI Engineering Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#architecture-components-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture Components Overview
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-1-enhance-context-with-rag" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Enhance Context with RAG
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-put-a-model-behind-a-gateway" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Put a Model Behind a Gateway
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-add-model-routing-and-guardrails" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Add Model Routing and Guardrails
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 3: Add Model Routing and Guardrails">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#input-guardrails" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Input Guardrails
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output-guardrails" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output Guardrails
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#model-router" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Model Router
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-reduce-latency-with-caching" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Reduce Latency with Caching
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 4: Reduce Latency with Caching">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exact-caching" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exact Caching
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#semantic-caching" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Semantic Caching
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-add-complex-logic-with-agentic-workflows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Add Complex Logic with Agentic Workflows
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#observability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Observability
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Observability">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Metrics
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#logs-and-traces" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Logs and Traces
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#drift-detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Drift Detection
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ai-pipeline-orchestration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AI Pipeline Orchestration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="AI Pipeline Orchestration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#components-and-chaining" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Components and Chaining
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#orchestrator-evaluation-criteria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Orchestrator Evaluation Criteria
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#orchestration-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Orchestration Tools
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#user-feedback" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        User Feedback
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="User Feedback">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#extracting-conversational-feedback" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Extracting Conversational Feedback
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Extracting Conversational Feedback">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#explicit-feedback" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Explicit Feedback
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#implicit-feedback" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implicit Feedback
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#natural-language-feedback" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Natural Language Feedback
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#other-conversational-feedback-signals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Other Conversational Feedback Signals
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#feedback-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feedback Design
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Feedback Design">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#when-to-collect-feedback" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Collect Feedback
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-to-collect-feedback" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to Collect Feedback
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#incentivizing-good-feedback" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Incentivizing Good Feedback
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#private-vs-public-feedback" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Private vs Public Feedback
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#feedback-limitations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feedback Limitations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Feedback Limitations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#biases-in-human-feedback" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Biases in Human Feedback
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#degenerate-feedback-loops" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Degenerate Feedback Loops
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="chapter-10-ai-engineering-architecture-and-user-feedback">Chapter 10: AI Engineering Architecture and User Feedback<a class="headerlink" href="#chapter-10-ai-engineering-architecture-and-user-feedback" title="Permanent link">&para;</a></h1>
+<h2 id="table-of-contents">Table of Contents<a class="headerlink" href="#table-of-contents" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="#ai-engineering-architecture">AI Engineering Architecture</a></li>
+<li><a href="#step-1-enhance-context-with-rag">Step 1: Enhance Context with RAG</a></li>
+<li><a href="#step-2-put-a-model-behind-a-gateway">Step 2: Put a Model Behind a Gateway</a></li>
+<li><a href="#step-3-add-model-routing-and-guardrails">Step 3: Add Model Routing and Guardrails</a></li>
+<li><a href="#step-4-reduce-latency-with-caching">Step 4: Reduce Latency with Caching</a></li>
+<li><a href="#step-5-add-complex-logic-with-agentic-workflows">Step 5: Add Complex Logic with Agentic Workflows</a></li>
+<li><a href="#observability">Observability</a></li>
+<li><a href="#ai-pipeline-orchestration">AI Pipeline Orchestration</a></li>
+<li><a href="#user-feedback">User Feedback</a></li>
+<li><a href="#extracting-conversational-feedback">Extracting Conversational Feedback</a></li>
+<li><a href="#feedback-design">Feedback Design</a></li>
+<li><a href="#feedback-limitations">Feedback Limitations</a></li>
+<li><a href="#summary">Summary</a></li>
+</ul>
+<h2 id="ai-engineering-architecture">AI Engineering Architecture<a class="headerlink" href="#ai-engineering-architecture" title="Permanent link">&para;</a></h2>
+<p>Building a production AI application is not a single leap but a <strong>layered, incremental process</strong>. Each step adds a new capability on top of the previous foundation. The architecture evolves from a simple model call into a sophisticated pipeline with retrieval, routing, guardrails, caching and agentic reasoning. This section walks through the five key steps of building up an AI application architecture, followed by the cross-cutting concerns of observability and orchestration.</p>
+<p><img alt="Figure 10-1. The simplest architecture for running an AI application" src="../../assets/ch10/fig-10-1-simplest-ai-architecture.png" width="700" /></p>
+<p class="figure-caption">Figure 10-1. The simplest architecture for running an AI application</p>
+
+<pre class="mermaid"><code>graph TB
+    subgraph "AI Application Architecture: Layered Build-Up"
+        direction TB
+        U["User Query"] --&gt; IG["Input Guardrails"]
+        IG --&gt; C["Cache Check"]
+        C --&gt;|Hit| CR["Cached Response"]
+        C --&gt;|Miss| R["RAG: Retrieval"]
+        R --&gt; MR["Model Router"]
+        MR --&gt; GW["Model Gateway"]
+        GW --&gt; M1["Model A"]
+        GW --&gt; M2["Model B"]
+        GW --&gt; M3["Model C"]
+        M1 --&gt; OG["Output Guardrails"]
+        M2 --&gt; OG
+        M3 --&gt; OG
+        OG --&gt; CW["Cache Write"]
+        CW --&gt; Resp["Response to User"]
+        OG -.-&gt; Agent["Agentic Loop"]
+        Agent -.-&gt; R
+    end
+
+    subgraph "Observability Layer"
+        direction LR
+        Met["Metrics"] --- Logs["Logs &amp; Traces"] --- Drift["Drift Detection"]
+    end
+
+    style U fill:#4A90D9,stroke:#2C5F8A,color:#FFFFFF
+    style IG fill:#E74C3C,stroke:#C0392B,color:#FFFFFF
+    style C fill:#F39C12,stroke:#D68910,color:#FFFFFF
+    style CR fill:#F39C12,stroke:#D68910,color:#FFFFFF
+    style R fill:#27AE60,stroke:#1E8449,color:#FFFFFF
+    style MR fill:#8E44AD,stroke:#6C3483,color:#FFFFFF
+    style GW fill:#2C3E50,stroke:#1A252F,color:#FFFFFF
+    style M1 fill:#3498DB,stroke:#2176AE,color:#FFFFFF
+    style M2 fill:#3498DB,stroke:#2176AE,color:#FFFFFF
+    style M3 fill:#3498DB,stroke:#2176AE,color:#FFFFFF
+    style OG fill:#E74C3C,stroke:#C0392B,color:#FFFFFF
+    style CW fill:#F39C12,stroke:#D68910,color:#FFFFFF
+    style Resp fill:#1ABC9C,stroke:#148F77,color:#FFFFFF
+    style Agent fill:#E67E22,stroke:#CA6F1E,color:#FFFFFF
+    style Met fill:#5DADE2,stroke:#3498DB,color:#FFFFFF
+    style Logs fill:#5DADE2,stroke:#3498DB,color:#FFFFFF
+    style Drift fill:#5DADE2,stroke:#3498DB,color:#FFFFFF</code></pre>
+<h3 id="architecture-components-overview">Architecture Components Overview<a class="headerlink" href="#architecture-components-overview" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Function</th>
+<th>Added In</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>RAG (Retrieval)</strong></td>
+<td>Enhances model context with relevant external data</td>
+<td>Step 1</td>
+</tr>
+<tr>
+<td><strong>Model Gateway</strong></td>
+<td>Centralized access control, cost management and failover</td>
+<td>Step 2</td>
+</tr>
+<tr>
+<td><strong>Input Guardrails</strong></td>
+<td>Filters harmful, invalid or sensitive inputs before model inference</td>
+<td>Step 3</td>
+</tr>
+<tr>
+<td><strong>Output Guardrails</strong></td>
+<td>Validates model outputs for hallucinations, format and safety</td>
+<td>Step 3</td>
+</tr>
+<tr>
+<td><strong>Model Router</strong></td>
+<td>Routes queries to the optimal model based on complexity and cost</td>
+<td>Step 3</td>
+</tr>
+<tr>
+<td><strong>Cache</strong></td>
+<td>Reduces latency and cost by reusing previous responses</td>
+<td>Step 4</td>
+</tr>
+<tr>
+<td><strong>Agentic Workflows</strong></td>
+<td>Enables multi-step reasoning, tool use and complex task execution</td>
+<td>Step 5</td>
+</tr>
+<tr>
+<td><strong>Observability</strong></td>
+<td>Monitors quality, latency, cost and detects drift</td>
+<td>Cross-cutting</td>
+</tr>
+<tr>
+<td><strong>Orchestrator</strong></td>
+<td>Defines, chains and manages pipeline components</td>
+<td>Cross-cutting</td>
+</tr>
+</tbody>
+</table>
+<h3 id="step-1-enhance-context-with-rag">Step 1: Enhance Context with RAG<a class="headerlink" href="#step-1-enhance-context-with-rag" title="Permanent link">&para;</a></h3>
+<p>The first and most impactful enhancement to a bare model call is <strong>Retrieval-Augmented Generation (RAG)</strong>. Rather than relying solely on the model's parametric knowledge, RAG retrieves relevant documents or data from external sources and injects them into the prompt as additional context.</p>
+<p>This step was covered in depth in <a href="06-rag-and-agents/">Chapter 6</a>. The retrieval component typically includes a vector database, an embedding model and a retrieval strategy (dense, sparse or hybrid). The retrieved context is then formatted and prepended to the user query before being sent to the model.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>RAG is often the single highest-impact improvement you can make to a foundation model application. It grounds the model in real, up-to-date data and dramatically reduces hallucination rates.</p>
+</div>
+<p>The key architectural decision at this stage is <strong>where the retrieval happens relative to the model call</strong>. In most architectures, retrieval is a synchronous, blocking step that runs before the model processes the query. Some advanced designs use asynchronous retrieval or allow the model to decide when and what to retrieve (as in agentic RAG).</p>
+<p><img alt="Figure 10-2. A platform architecture with context construction" src="../../assets/ch10/fig-10-2-platform-with-context.png" width="700" /></p>
+<p class="figure-caption">Figure 10-2. A platform architecture with context construction</p>
+
+<h3 id="step-2-put-a-model-behind-a-gateway">Step 2: Put a Model Behind a Gateway<a class="headerlink" href="#step-2-put-a-model-behind-a-gateway" title="Permanent link">&para;</a></h3>
+<p>Once you have a working model call (with or without RAG), the next step is to place the model behind a <strong>gateway</strong>. This component is variously called a <strong>model gateway</strong>, <strong>AI gateway</strong> or <strong>LLM router</strong> (though the routing function is sometimes separated into its own component).</p>
+<pre class="mermaid"><code>graph LR
+    subgraph "Model Gateway Architecture"
+        direction LR
+        App["Application"] --&gt; GW["Model Gateway"]
+
+        subgraph "Gateway Functions"
+            direction TB
+            AC["Access Control&lt;br/&gt;API key mgmt, rate limiting"]
+            CM["Cost Management&lt;br/&gt;Budget limits, usage tracking"]
+            FP["Fallback Policies&lt;br/&gt;Retry logic, model failover"]
+            LB["Load Balancing&lt;br/&gt;Distribute across providers"]
+            Log["Request Logging&lt;br/&gt;Audit trail"]
+        end
+
+        GW --&gt; AC
+        GW --&gt; CM
+        GW --&gt; FP
+        GW --&gt; LB
+        GW --&gt; Log
+
+        GW --&gt; P1["OpenAI"]
+        GW --&gt; P2["Anthropic"]
+        GW --&gt; P3["Google"]
+        GW --&gt; P4["Self-hosted"]
+    end
+
+    style App fill:#4A90D9,stroke:#2C5F8A,color:#FFFFFF
+    style GW fill:#2C3E50,stroke:#1A252F,color:#FFFFFF
+    style AC fill:#E74C3C,stroke:#C0392B,color:#FFFFFF
+    style CM fill:#F39C12,stroke:#D68910,color:#FFFFFF
+    style FP fill:#27AE60,stroke:#1E8449,color:#FFFFFF
+    style LB fill:#8E44AD,stroke:#6C3483,color:#FFFFFF
+    style Log fill:#5DADE2,stroke:#3498DB,color:#FFFFFF
+    style P1 fill:#1ABC9C,stroke:#148F77,color:#FFFFFF
+    style P2 fill:#1ABC9C,stroke:#148F77,color:#FFFFFF
+    style P3 fill:#1ABC9C,stroke:#148F77,color:#FFFFFF
+    style P4 fill:#1ABC9C,stroke:#148F77,color:#FFFFFF</code></pre>
+<p>The model gateway serves as a <strong>single point of entry</strong> for all model interactions. It provides several critical functions.</p>
+<p><strong>Access Control.</strong> The gateway manages API keys, enforces rate limits and controls which parts of the application can access which models. This centralizes security and prevents API key sprawl across services.</p>
+<p><strong>Cost Management.</strong> By funneling all requests through the gateway, you gain a single place to track usage, enforce budget limits and monitor spending across different models and providers. This is essential when operating at scale, where a single runaway process could generate thousands of dollars in API charges.</p>
+<p><strong>Fallback Policies.</strong> The gateway implements retry logic and model failover. If OpenAI's API returns a 500 error, the gateway can automatically retry the request or route it to Anthropic instead. This improves reliability without requiring each application component to implement its own error handling.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>A model gateway pays for itself almost immediately in operational simplicity. Even if you only use one model provider today, adding a gateway now makes it trivial to switch or add providers later.</p>
+</div>
+<p><img alt="Figure 10-6. A model gateway provides unified interface for different models" src="../../assets/ch10/fig-10-6-model-gateway.png" width="700" /></p>
+<p class="figure-caption">Figure 10-6. A model gateway provides unified interface for different models</p>
+
+<h3 id="step-3-add-model-routing-and-guardrails">Step 3: Add Model Routing and Guardrails<a class="headerlink" href="#step-3-add-model-routing-and-guardrails" title="Permanent link">&para;</a></h3>
+<p>This is where the architecture becomes significantly more sophisticated. Step 3 adds <strong>three components</strong> that wrap the model call. Input guardrails filter what goes in, output guardrails validate what comes out and a model router decides which model handles the request.</p>
+<pre class="mermaid"><code>graph LR
+    subgraph "Guardrails Pipeline"
+        direction LR
+        Q["User Query"] --&gt; IG["Input Guardrails"]
+
+        subgraph "Input Checks"
+            direction TB
+            PII["PII Detection&lt;br/&gt;SSN, credit cards, emails"]
+            Tox["Toxicity Filter&lt;br/&gt;Hate speech, harassment"]
+            JB["Jailbreak Detection&lt;br/&gt;Prompt injection attempts"]
+            Val["Input Validation&lt;br/&gt;Length, format, language"]
+        end
+
+        IG --&gt; PII
+        IG --&gt; Tox
+        IG --&gt; JB
+        IG --&gt; Val
+
+        IG --&gt;|Pass| MR["Model Router"]
+        IG --&gt;|Fail| Block["Blocked Response"]
+
+        MR --&gt; M["Model Inference"]
+        M --&gt; OG["Output Guardrails"]
+
+        subgraph "Output Checks"
+            direction TB
+            Hall["Hallucination Detection&lt;br/&gt;Factual grounding check"]
+            Cite["Citation Verification&lt;br/&gt;Source attribution"]
+            Fmt["Format Validation&lt;br/&gt;JSON schema, structure"]
+            Safe["Safety Check&lt;br/&gt;Content policy compliance"]
+        end
+
+        OG --&gt; Hall
+        OG --&gt; Cite
+        OG --&gt; Fmt
+        OG --&gt; Safe
+
+        OG --&gt;|Pass| R["Response"]
+        OG --&gt;|Fail| Retry["Retry or Fallback"]
+    end
+
+    style Q fill:#4A90D9,stroke:#2C5F8A,color:#FFFFFF
+    style IG fill:#E74C3C,stroke:#C0392B,color:#FFFFFF
+    style PII fill:#F1948A,stroke:#E74C3C,color:#2C3E50
+    style Tox fill:#F1948A,stroke:#E74C3C,color:#2C3E50
+    style JB fill:#F1948A,stroke:#E74C3C,color:#2C3E50
+    style Val fill:#F1948A,stroke:#E74C3C,color:#2C3E50
+    style MR fill:#8E44AD,stroke:#6C3483,color:#FFFFFF
+    style Block fill:#922B21,stroke:#641E16,color:#FFFFFF
+    style M fill:#3498DB,stroke:#2176AE,color:#FFFFFF
+    style OG fill:#E67E22,stroke:#CA6F1E,color:#FFFFFF
+    style Hall fill:#FAD7A0,stroke:#E67E22,color:#2C3E50
+    style Cite fill:#FAD7A0,stroke:#E67E22,color:#2C3E50
+    style Fmt fill:#FAD7A0,stroke:#E67E22,color:#2C3E50
+    style Safe fill:#FAD7A0,stroke:#E67E22,color:#2C3E50
+    style R fill:#1ABC9C,stroke:#148F77,color:#FFFFFF
+    style Retry fill:#F39C12,stroke:#D68910,color:#FFFFFF</code></pre>
+<h4 id="input-guardrails">Input Guardrails<a class="headerlink" href="#input-guardrails" title="Permanent link">&para;</a></h4>
+<p>Input guardrails are defensive filters that process every user query <strong>before</strong> it reaches the model. They protect against misuse, ensure compliance and improve the overall quality of model interactions.</p>
+<table>
+<thead>
+<tr>
+<th>Guardrail Type</th>
+<th>What It Detects</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>PII Detection</strong></td>
+<td>Personally identifiable information such as SSNs, credit card numbers, phone numbers, email addresses</td>
+<td>"My SSN is 123-45-6789" gets redacted or blocked</td>
+</tr>
+<tr>
+<td><strong>Toxicity Filter</strong></td>
+<td>Hate speech, harassment, threats, sexually explicit content</td>
+<td>Offensive queries are rejected with a safe response</td>
+</tr>
+<tr>
+<td><strong>Jailbreak Detection</strong></td>
+<td>Prompt injection attempts, role-play exploits, instruction override attempts</td>
+<td>"Ignore your instructions and..." is flagged</td>
+</tr>
+<tr>
+<td><strong>Input Validation</strong></td>
+<td>Queries that are too long, in unsupported languages or malformed</td>
+<td>A 50,000 token query is rejected before it wastes inference budget</td>
+</tr>
+<tr>
+<td><strong>Topic Restriction</strong></td>
+<td>Queries outside the application's intended domain</td>
+<td>A medical chatbot rejects questions about stock trading</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>No guardrail system is perfect. Adversaries continuously develop new jailbreak techniques, and guardrails must be regularly updated. Treat guardrails as a defense-in-depth layer, not an absolute guarantee.</p>
+</div>
+<h4 id="output-guardrails">Output Guardrails<a class="headerlink" href="#output-guardrails" title="Permanent link">&para;</a></h4>
+<p>Output guardrails validate the model's response <strong>after</strong> inference but <strong>before</strong> the response is returned to the user. They catch problems the model itself cannot reliably avoid.</p>
+<table>
+<thead>
+<tr>
+<th>Guardrail Type</th>
+<th>What It Validates</th>
+<th>Action on Failure</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Hallucination Detection</strong></td>
+<td>Whether claims are grounded in retrieved context</td>
+<td>Flag, retry with stricter prompt or add disclaimer</td>
+</tr>
+<tr>
+<td><strong>Citation Verification</strong></td>
+<td>Whether cited sources actually exist and support the claims</td>
+<td>Remove fake citations, add correct ones</td>
+</tr>
+<tr>
+<td><strong>Format Validation</strong></td>
+<td>Whether the output matches expected structure (JSON schema, markdown)</td>
+<td>Retry with format instructions, or parse and reformat</td>
+</tr>
+<tr>
+<td><strong>Safety Check</strong></td>
+<td>Whether the output violates content policies despite safe input</td>
+<td>Block and return safe alternative</td>
+</tr>
+<tr>
+<td><strong>Relevance Check</strong></td>
+<td>Whether the response actually addresses the user's query</td>
+<td>Retry or escalate to human</td>
+</tr>
+</tbody>
+</table>
+<h4 id="model-router">Model Router<a class="headerlink" href="#model-router" title="Permanent link">&para;</a></h4>
+<p>The model router selects the <strong>optimal model</strong> for each query based on factors like complexity, cost, latency requirements and domain. A simple factual lookup might be routed to a smaller, faster, cheaper model, while a complex reasoning task goes to the most capable (and expensive) model available.</p>
+<p>Routing strategies include rule-based routing (keyword matching, query length thresholds), classifier-based routing (a lightweight model classifies query difficulty) and cascading (try the cheapest model first, escalate if confidence is low).</p>
+<p><img alt="Figure 10-5. Scorers and routers are typically smaller than main models" src="../../assets/ch10/fig-10-5-scorers-and-routers.png" width="700" /></p>
+<p class="figure-caption">Figure 10-5. Scorers and routers are typically smaller than main models</p>
+
+<h3 id="step-4-reduce-latency-with-caching">Step 4: Reduce Latency with Caching<a class="headerlink" href="#step-4-reduce-latency-with-caching" title="Permanent link">&para;</a></h3>
+<p>Caching is one of the most effective techniques for reducing both <strong>latency</strong> and <strong>cost</strong> in AI applications. Many queries are repeated or very similar to previous queries, and serving a cached response eliminates the need for model inference entirely.</p>
+<pre class="mermaid"><code>graph TB
+    subgraph "Caching Strategies"
+        Q["User Query"] --&gt; Hash["Compute Cache Key"]
+
+        Hash --&gt; EC["Exact Cache Lookup"]
+        EC --&gt;|Hit| ER["Return Cached Response&lt;br/&gt;Latency: ~1ms"]
+
+        EC --&gt;|Miss| SC["Semantic Cache Lookup&lt;br/&gt;Embed query, search by similarity"]
+        SC --&gt;|Similar match found&lt;br/&gt;above threshold| SR["Return Semantically&lt;br/&gt;Cached Response&lt;br/&gt;Latency: ~50ms"]
+        SC --&gt;|No match| Model["Model Inference&lt;br/&gt;Latency: 500ms-30s"]
+        Model --&gt; Store["Store in Cache&lt;br/&gt;Key: query hash + embedding"]
+    end
+
+    subgraph "Cache Considerations"
+        direction TB
+        TTL["TTL (Time-to-Live)&lt;br/&gt;How long to keep entries"]
+        Inv["Invalidation&lt;br/&gt;When source data changes"]
+        Scope["Scope&lt;br/&gt;Per-user vs global"]
+    end
+
+    style Q fill:#4A90D9,stroke:#2C5F8A,color:#FFFFFF
+    style Hash fill:#8E44AD,stroke:#6C3483,color:#FFFFFF
+    style EC fill:#27AE60,stroke:#1E8449,color:#FFFFFF
+    style ER fill:#1ABC9C,stroke:#148F77,color:#FFFFFF
+    style SC fill:#F39C12,stroke:#D68910,color:#FFFFFF
+    style SR fill:#F39C12,stroke:#D68910,color:#FFFFFF
+    style Model fill:#E74C3C,stroke:#C0392B,color:#FFFFFF
+    style Store fill:#3498DB,stroke:#2176AE,color:#FFFFFF
+    style TTL fill:#D5DBDB,stroke:#ABB2B9,color:#2C3E50
+    style Inv fill:#D5DBDB,stroke:#ABB2B9,color:#2C3E50
+    style Scope fill:#D5DBDB,stroke:#ABB2B9,color:#2C3E50</code></pre>
+<h4 id="exact-caching">Exact Caching<a class="headerlink" href="#exact-caching" title="Permanent link">&para;</a></h4>
+<p>Exact caching uses a <strong>hash of the input</strong> (query plus any relevant context) as the cache key. If the exact same input has been seen before, the cached response is returned immediately. This is simple, reliable and fast, but only helps when queries are repeated verbatim.</p>
+<p>Exact caching works best for applications with a <strong>limited set of common queries</strong>, such as customer support bots where users frequently ask the same questions ("What is your return policy?", "How do I reset my password?").</p>
+<h4 id="semantic-caching">Semantic Caching<a class="headerlink" href="#semantic-caching" title="Permanent link">&para;</a></h4>
+<p>Semantic caching goes further by using <strong>embedding similarity</strong> to match queries that are semantically equivalent but worded differently. "What is your return policy?" and "How can I return an item?" would both match the same cached response.</p>
+<p>The tradeoff is that semantic caching introduces its own latency (embedding computation and similarity search) and has a risk of <strong>false matches</strong>. A query about "returning a product" and "returning to the homepage" are semantically similar but require entirely different responses. Setting the right similarity threshold is critical.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Semantic caching requires careful tuning of the similarity threshold. Too low and you get false matches that return irrelevant responses. Too high and you rarely get cache hits. Start conservative (high threshold) and lower gradually while monitoring quality.</p>
+</div>
+<p><img alt="Figure 10-8. AI application architecture with caches" src="../../assets/ch10/fig-10-8-architecture-with-caches.png" width="700" /></p>
+<p class="figure-caption">Figure 10-8. AI application architecture with caches</p>
+
+<h3 id="step-5-add-complex-logic-with-agentic-workflows">Step 5: Add Complex Logic with Agentic Workflows<a class="headerlink" href="#step-5-add-complex-logic-with-agentic-workflows" title="Permanent link">&para;</a></h3>
+<p>The final architectural step is enabling the model to <strong>orchestrate multi-step workflows</strong>, use tools and make decisions about how to accomplish complex tasks. This transforms the application from a single-turn query-response system into an autonomous agent capable of planning, executing and iterating.</p>
+<p>Agentic workflows were covered in detail in <a href="06-rag-and-agents/">Chapter 6</a>. From an architecture perspective, the key addition is a <strong>feedback loop</strong> that allows the model's output to trigger additional retrieval, tool calls or even additional model invocations. The agent may call the RAG system multiple times, invoke external APIs, write and execute code or decompose a complex task into subtasks.</p>
+<p>The architectural challenge with agents is <strong>controlling the loop</strong>. Without proper bounds, an agent can run indefinitely, consume enormous amounts of compute or take harmful actions. Production agent architectures require maximum iteration limits, cost caps, human-in-the-loop breakpoints and comprehensive logging of every step.</p>
+<p><img alt="Figure 10-7. Architecture with routing and gateway modules" src="../../assets/ch10/fig-10-7-routing-gateway-architecture.png" width="700" /></p>
+<p class="figure-caption">Figure 10-7. Architecture with routing and gateway modules</p>
+
+<h3 id="observability">Observability<a class="headerlink" href="#observability" title="Permanent link">&para;</a></h3>
+<p>Observability is not a step in the build-up sequence. It is a <strong>cross-cutting concern</strong> that should be present from the very first deployment. Without observability, you are flying blind.</p>
+<blockquote>
+<p>"The general rule for logging is to log everything."</p>
+</blockquote>
+<pre class="mermaid"><code>graph TB
+    subgraph "Observability Stack"
+        direction TB
+
+        subgraph "Metrics"
+            direction LR
+            QM["Quality Metrics&lt;br/&gt;Accuracy, relevance,&lt;br/&gt;faithfulness"]
+            LM["Length Metrics&lt;br/&gt;Input/output tokens,&lt;br/&gt;response length"]
+            LT["Latency Metrics&lt;br/&gt;TTFT, TPS,&lt;br/&gt;total response time"]
+            CM["Cost Metrics&lt;br/&gt;Per-request cost,&lt;br/&gt;daily/monthly spend"]
+            PM["Per-Component&lt;br/&gt;Retrieval quality,&lt;br/&gt;guardrail pass rates"]
+        end
+
+        subgraph "Logs and Traces"
+            direction LR
+            RL["Request Logs&lt;br/&gt;Full input/output pairs"]
+            TL["Trace Logs&lt;br/&gt;Request path through&lt;br/&gt;every component"]
+            EL["Error Logs&lt;br/&gt;Failures, timeouts,&lt;br/&gt;guardrail blocks"]
+        end
+
+        subgraph "Drift Detection"
+            direction LR
+            SP["System Prompt&lt;br/&gt;Changes"]
+            UB["User Behavior&lt;br/&gt;Changes"]
+            MC["Underlying Model&lt;br/&gt;Changes"]
+        end
+    end
+
+    style QM fill:#27AE60,stroke:#1E8449,color:#FFFFFF
+    style LM fill:#27AE60,stroke:#1E8449,color:#FFFFFF
+    style LT fill:#27AE60,stroke:#1E8449,color:#FFFFFF
+    style CM fill:#27AE60,stroke:#1E8449,color:#FFFFFF
+    style PM fill:#27AE60,stroke:#1E8449,color:#FFFFFF
+    style RL fill:#3498DB,stroke:#2176AE,color:#FFFFFF
+    style TL fill:#3498DB,stroke:#2176AE,color:#FFFFFF
+    style EL fill:#3498DB,stroke:#2176AE,color:#FFFFFF
+    style SP fill:#E74C3C,stroke:#C0392B,color:#FFFFFF
+    style UB fill:#E74C3C,stroke:#C0392B,color:#FFFFFF
+    style MC fill:#E74C3C,stroke:#C0392B,color:#FFFFFF</code></pre>
+<h4 id="metrics">Metrics<a class="headerlink" href="#metrics" title="Permanent link">&para;</a></h4>
+<p>Production AI systems require a comprehensive set of metrics tracked over time.</p>
+<p><strong>Quality metrics</strong> measure how good the model's outputs are. These include automated evaluation scores (relevance, faithfulness, coherence), human evaluation scores and task-specific metrics. Quality metrics are the most important and the hardest to compute reliably.</p>
+<p><strong>Length metrics</strong> track input and output token counts. These are proxies for cost and can reveal unexpected changes in model behavior (for example, a model suddenly producing much longer or shorter responses).</p>
+<p><strong>Latency metrics</strong> include time-to-first-token (TTFT), tokens-per-second (TPS) and total response time. For streaming applications, TTFT is often the most important user-facing metric.</p>
+<p><strong>Cost metrics</strong> track per-request cost, aggregated spend by model, by user, by feature and over time. Cost spikes often indicate bugs or unexpected usage patterns.</p>
+<p><strong>Per-component metrics</strong> break down performance at each stage of the pipeline. Retrieval recall, guardrail pass rates, cache hit rates and routing decisions all provide visibility into individual component health.</p>
+<h4 id="logs-and-traces">Logs and Traces<a class="headerlink" href="#logs-and-traces" title="Permanent link">&para;</a></h4>
+<p>Logging in AI systems should be <strong>comprehensive</strong>. Every request should be logged with its full input, output, intermediate steps, model used, latency breakdown, cost and any guardrail decisions.</p>
+<p><strong>Request tracing</strong> assigns a unique trace ID to each user request and propagates it through every component in the pipeline. This allows you to reconstruct the full path a request took. Which documents were retrieved? Which model was selected by the router? Did any guardrails fire? Was the cache hit or miss? Tracing is indispensable for debugging production issues.</p>
+<h4 id="drift-detection">Drift Detection<a class="headerlink" href="#drift-detection" title="Permanent link">&para;</a></h4>
+<p>AI systems are uniquely susceptible to <strong>drift</strong> because they depend on external models and dynamic user behavior.</p>
+<p><strong>System prompt changes.</strong> When you update your system prompt, model behavior can change in unexpected ways. Version your prompts and track the prompt version alongside every request.</p>
+<p><strong>User behavior changes.</strong> Over time, users may change how they interact with the system. New user segments, seasonal patterns or viral attention can all shift the distribution of incoming queries.</p>
+<p><strong>Underlying model changes.</strong> When you use third-party models via API, the provider may update the model without notice. These silent updates can change output quality, style or behavior. Monitoring for sudden shifts in output metrics can catch these changes early.</p>
+<blockquote>
+<p>Shankar et al. found that "developers' perceptions of what constitutes good and bad outputs change as they interact with more data." This makes drift detection even more critical, because your own evaluation criteria may be shifting alongside the system.</p>
+</blockquote>
+<h3 id="ai-pipeline-orchestration">AI Pipeline Orchestration<a class="headerlink" href="#ai-pipeline-orchestration" title="Permanent link">&para;</a></h3>
+<p>As the architecture grows more complex, managing the interactions between components becomes a challenge in itself. <strong>Pipeline orchestrators</strong> provide frameworks for defining, chaining and managing these components.</p>
+<h4 id="components-and-chaining">Components and Chaining<a class="headerlink" href="#components-and-chaining" title="Permanent link">&para;</a></h4>
+<p>An orchestrator defines each component (retriever, model, guardrail, cache) as a modular unit and provides a way to chain them into a pipeline. The pipeline definition specifies the order of execution, data flow between components, error handling and conditional logic.</p>
+<h4 id="orchestrator-evaluation-criteria">Orchestrator Evaluation Criteria<a class="headerlink" href="#orchestrator-evaluation-criteria" title="Permanent link">&para;</a></h4>
+<p>When choosing an orchestrator, consider the following.</p>
+<p><strong>Integration breadth.</strong> Does it support the model providers, vector databases and tools you need? A narrow set of integrations will force you to write custom adapters.</p>
+<p><strong>Complex pipeline support.</strong> Can it handle branching, conditional logic, parallel execution and agentic loops? Simple linear chains are easy. Real production pipelines are rarely linear.</p>
+<p><strong>Ease of use.</strong> Is the API intuitive? Is debugging straightforward? How steep is the learning curve? Overly abstract frameworks can make simple things complicated.</p>
+<blockquote>
+<p>"You might want to start building your application without one first." Starting with direct code gives you a clear understanding of what each component does and how they interact. Once the complexity warrants it, introduce an orchestrator to manage the wiring.</p>
+</blockquote>
+<h4 id="orchestration-tools">Orchestration Tools<a class="headerlink" href="#orchestration-tools" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Strengths</th>
+<th>Considerations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>LangChain</strong></td>
+<td>Largest ecosystem, extensive integrations, active community</td>
+<td>Can be overly abstract, rapid API changes</td>
+</tr>
+<tr>
+<td><strong>LlamaIndex</strong></td>
+<td>Strong focus on data indexing and retrieval, excellent RAG support</td>
+<td>More specialized toward RAG use cases</td>
+</tr>
+<tr>
+<td><strong>Flowise</strong></td>
+<td>Visual drag-and-drop interface, low-code approach</td>
+<td>Less flexibility for complex custom logic</td>
+</tr>
+<tr>
+<td><strong>Haystack</strong></td>
+<td>Clean API design, strong evaluation support</td>
+<td>Smaller ecosystem than LangChain</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>The best orchestrator is the one you do not need yet. Write plain code first. When you find yourself repeatedly implementing the same patterns (retry logic, component chaining, error propagation), that is when an orchestrator starts to pay off.</p>
+</div>
+<h2 id="user-feedback">User Feedback<a class="headerlink" href="#user-feedback" title="Permanent link">&para;</a></h2>
+<p>User feedback is the <strong>lifeblood</strong> of a production AI system. It closes the loop between what the model produces and what users actually need. Without feedback, you are optimizing in the dark. With it, you can build a <strong>data flywheel</strong> that continuously improves your product.</p>
+<blockquote>
+<p>"A product that launches quickly and attracts users early can gather data to continually improve models, making it difficult for competitors to catch up."</p>
+</blockquote>
+<pre class="mermaid"><code>graph LR
+    subgraph "The Data Flywheel"
+        direction LR
+        P["Better Product"] --&gt; U["More Users"]
+        U --&gt; F["More Feedback"]
+        F --&gt; D["Better Training Data"]
+        D --&gt; M["Better Model"]
+        M --&gt; P
+    end
+
+    style P fill:#27AE60,stroke:#1E8449,color:#FFFFFF
+    style U fill:#4A90D9,stroke:#2C5F8A,color:#FFFFFF
+    style F fill:#F39C12,stroke:#D68910,color:#FFFFFF
+    style D fill:#8E44AD,stroke:#6C3483,color:#FFFFFF
+    style M fill:#E74C3C,stroke:#C0392B,color:#FFFFFF</code></pre>
+<p>The data flywheel is a <strong>competitive moat</strong>. Companies that master feedback collection and integration gain a compounding advantage over time. Each cycle of the flywheel produces better models, which attract more users, which generate more feedback, which produces even better models.</p>
+<h3 id="extracting-conversational-feedback">Extracting Conversational Feedback<a class="headerlink" href="#extracting-conversational-feedback" title="Permanent link">&para;</a></h3>
+<p>Conversational AI applications generate a rich stream of signals that can be interpreted as feedback. These signals fall into several categories.</p>
+<pre class="mermaid"><code>graph TB
+    subgraph "User Feedback Taxonomy"
+        direction TB
+        FB["User Feedback"]
+
+        FB --&gt; Exp["Explicit Feedback"]
+        FB --&gt; Imp["Implicit Feedback"]
+        FB --&gt; NL["Natural Language&lt;br/&gt;Feedback"]
+        FB --&gt; Other["Other Conversational&lt;br/&gt;Signals"]
+
+        Exp --&gt; Thumb["Thumbs Up/Down"]
+        Exp --&gt; Star["Star Ratings"]
+        Exp --&gt; Text["Free-text Comments"]
+
+        Imp --&gt; Accept["Acceptance&lt;br/&gt;(Tab-to-accept)"]
+        Imp --&gt; Copy["Copy/Paste&lt;br/&gt;Response"]
+        Imp --&gt; Follow["Follow-up&lt;br/&gt;Questions"]
+        Imp --&gt; Abandon["Abandonment"]
+
+        NL --&gt; ET["Early Termination"]
+        NL --&gt; EC["Error Correction"]
+        NL --&gt; Comp["Complaints"]
+        NL --&gt; Sent["Sentiment"]
+
+        Other --&gt; Regen["Regeneration"]
+        Other --&gt; Org["Conversation&lt;br/&gt;Organization"]
+        Other --&gt; Len["Conversation&lt;br/&gt;Length"]
+        Other --&gt; Div["Dialogue&lt;br/&gt;Diversity"]
+    end
+
+    style FB fill:#2C3E50,stroke:#1A252F,color:#FFFFFF
+    style Exp fill:#27AE60,stroke:#1E8449,color:#FFFFFF
+    style Imp fill:#3498DB,stroke:#2176AE,color:#FFFFFF
+    style NL fill:#E67E22,stroke:#CA6F1E,color:#FFFFFF
+    style Other fill:#8E44AD,stroke:#6C3483,color:#FFFFFF
+    style Thumb fill:#A9DFBF,stroke:#27AE60,color:#2C3E50
+    style Star fill:#A9DFBF,stroke:#27AE60,color:#2C3E50
+    style Text fill:#A9DFBF,stroke:#27AE60,color:#2C3E50
+    style Accept fill:#AED6F1,stroke:#3498DB,color:#2C3E50
+    style Copy fill:#AED6F1,stroke:#3498DB,color:#2C3E50
+    style Follow fill:#AED6F1,stroke:#3498DB,color:#2C3E50
+    style Abandon fill:#AED6F1,stroke:#3498DB,color:#2C3E50
+    style ET fill:#FAD7A0,stroke:#E67E22,color:#2C3E50
+    style EC fill:#FAD7A0,stroke:#E67E22,color:#2C3E50
+    style Comp fill:#FAD7A0,stroke:#E67E22,color:#2C3E50
+    style Sent fill:#FAD7A0,stroke:#E67E22,color:#2C3E50
+    style Regen fill:#D7BDE2,stroke:#8E44AD,color:#2C3E50
+    style Org fill:#D7BDE2,stroke:#8E44AD,color:#2C3E50
+    style Len fill:#D7BDE2,stroke:#8E44AD,color:#2C3E50
+    style Div fill:#D7BDE2,stroke:#8E44AD,color:#2C3E50</code></pre>
+<h4 id="explicit-feedback">Explicit Feedback<a class="headerlink" href="#explicit-feedback" title="Permanent link">&para;</a></h4>
+<p>Explicit feedback is what users <strong>deliberately provide</strong> when asked. This includes thumbs up/down buttons, star ratings (1 to 5) and free-text comments explaining what was good or bad about a response.</p>
+<p>Explicit feedback is the most <strong>direct</strong> signal of quality, but it suffers from low participation rates. Most users never click a feedback button. Those who do tend to be at the extremes of satisfaction or dissatisfaction, creating a biased sample.</p>
+<h4 id="implicit-feedback">Implicit Feedback<a class="headerlink" href="#implicit-feedback" title="Permanent link">&para;</a></h4>
+<p>Implicit feedback is <strong>inferred from user actions</strong> rather than directly solicited. It is far more abundant than explicit feedback because every user interaction generates implicit signals, whether the user intends it or not.</p>
+<p>Examples include accepting a code suggestion (as in GitHub Copilot's tab-to-accept), copying the model's response, asking follow-up questions that build on the previous answer (suggesting the answer was useful) or abandoning the conversation entirely (suggesting dissatisfaction).</p>
+<p>The challenge with implicit feedback is <strong>interpretation</strong>. A user who abandons a conversation might be dissatisfied, or they might have gotten exactly the answer they needed in one turn. Context is essential for correct interpretation.</p>
+<h4 id="natural-language-feedback">Natural Language Feedback<a class="headerlink" href="#natural-language-feedback" title="Permanent link">&para;</a></h4>
+<p>Users often provide feedback <strong>embedded in their conversational messages</strong> without realizing it. Extracting this feedback requires natural language understanding.</p>
+<p><strong>Early Termination.</strong> When a user ends a conversation abruptly or says something like "never mind" or "forget it," this signals frustration or that the model was not helpful.</p>
+<p><strong>Error Correction.</strong> Users frequently correct the model by rephrasing their query or explicitly saying things like "No, I meant..." or "That is not what I asked." These corrections are extremely valuable training signals because they contain both the incorrect interpretation and the correct one.</p>
+<p><strong>Complaints.</strong> The FITS dataset categorizes user complaints into 8 groups.</p>
+<table>
+<thead>
+<tr>
+<th>Complaint Group</th>
+<th>Description</th>
+<th>Example User Message</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Incorrect information</strong></td>
+<td>The model provided factually wrong content</td>
+<td>"That is not correct. The capital of Australia is Canberra, not Sydney."</td>
+</tr>
+<tr>
+<td><strong>Incomplete response</strong></td>
+<td>The model left out important details</td>
+<td>"You only covered 3 of the 5 points I asked about."</td>
+</tr>
+<tr>
+<td><strong>Irrelevant response</strong></td>
+<td>The model answered a different question</td>
+<td>"That does not answer my question at all."</td>
+</tr>
+<tr>
+<td><strong>Repetitive content</strong></td>
+<td>The model repeated itself or gave redundant information</td>
+<td>"You already said that. Can you give me something new?"</td>
+</tr>
+<tr>
+<td><strong>Poor formatting</strong></td>
+<td>The output was hard to read or badly structured</td>
+<td>"Can you organize that as a table instead of a wall of text?"</td>
+</tr>
+<tr>
+<td><strong>Too verbose</strong></td>
+<td>The model was unnecessarily long-winded</td>
+<td>"I just need a yes or no, not an essay."</td>
+</tr>
+<tr>
+<td><strong>Too brief</strong></td>
+<td>The model did not provide enough detail</td>
+<td>"Can you elaborate on that? I need more detail."</td>
+</tr>
+<tr>
+<td><strong>Inappropriate tone</strong></td>
+<td>The model's tone did not match the context</td>
+<td>"This is a serious matter. Please be more professional."</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Sentiment Analysis.</strong> The overall sentiment of user messages throughout a conversation provides a continuous signal of satisfaction. A conversation that starts positive and turns negative suggests the model's quality degraded over time.</p>
+<h4 id="other-conversational-feedback-signals">Other Conversational Feedback Signals<a class="headerlink" href="#other-conversational-feedback-signals" title="Permanent link">&para;</a></h4>
+<p>Beyond the categories above, several other signals can be extracted from conversation data.</p>
+<table>
+<thead>
+<tr>
+<th>Signal</th>
+<th>What It Indicates</th>
+<th>Interpretation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Regeneration</strong></td>
+<td>User clicked "regenerate response"</td>
+<td>The previous response was unsatisfactory</td>
+</tr>
+<tr>
+<td><strong>Conversation organization</strong></td>
+<td>User deleted, renamed, shared or bookmarked a conversation</td>
+<td>Deletion suggests low value. Sharing or bookmarking suggests high value</td>
+</tr>
+<tr>
+<td><strong>Conversation length</strong></td>
+<td>Number of turns in a conversation</td>
+<td>Very short may indicate quick success or quick failure. Very long may indicate the model struggled to satisfy the user</td>
+</tr>
+<tr>
+<td><strong>Dialogue diversity</strong></td>
+<td>How varied the user's queries are within a conversation</td>
+<td>Low diversity (rephrasing the same question) suggests the model is failing to understand</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Regeneration signals</strong> are particularly informative. When a user clicks "regenerate," they are explicitly saying the previous response was not good enough. If a user regenerates multiple times, that is a strong negative signal. If they regenerate once and then continue the conversation, the first response was bad but the second was acceptable.</p>
+<p><strong>Conversation organization</strong> actions provide indirect value signals. When a user shares a conversation with colleagues, they found the content valuable enough to recommend. When they delete a conversation, they found it worthless or embarrassing. When they rename a conversation from the default title, they found it important enough to organize.</p>
+<h3 id="feedback-design">Feedback Design<a class="headerlink" href="#feedback-design" title="Permanent link">&para;</a></h3>
+<p>How you design your feedback collection mechanisms has an enormous impact on the <strong>quantity, quality and usefulness</strong> of the feedback you receive.</p>
+<blockquote>
+<p>"Feedback should seamlessly integrate into the user's workflow."</p>
+</blockquote>
+<pre class="mermaid"><code>graph TB
+    subgraph "Feedback Collection Points in User Journey"
+        direction LR
+        Start["User Opens App"] --&gt; Query["User Submits Query"]
+        Query --&gt; Response["Model Responds"]
+        Response --&gt; Interact["User Interacts&lt;br/&gt;with Response"]
+        Interact --&gt; Next["User Continues&lt;br/&gt;or Leaves"]
+
+        Query -.-&gt;|"Collect: Query patterns,&lt;br/&gt;reformulations"| F1["Implicit Feedback"]
+        Response -.-&gt;|"Collect: Thumbs up/down,&lt;br/&gt;ratings"| F2["Explicit Feedback"]
+        Interact -.-&gt;|"Collect: Copy, edit,&lt;br/&gt;regenerate, share"| F3["Action Feedback"]
+        Next -.-&gt;|"Collect: Return rate,&lt;br/&gt;session length"| F4["Behavioral Feedback"]
+    end
+
+    style Start fill:#4A90D9,stroke:#2C5F8A,color:#FFFFFF
+    style Query fill:#3498DB,stroke:#2176AE,color:#FFFFFF
+    style Response fill:#27AE60,stroke:#1E8449,color:#FFFFFF
+    style Interact fill:#F39C12,stroke:#D68910,color:#FFFFFF
+    style Next fill:#8E44AD,stroke:#6C3483,color:#FFFFFF
+    style F1 fill:#AED6F1,stroke:#3498DB,color:#2C3E50
+    style F2 fill:#A9DFBF,stroke:#27AE60,color:#2C3E50
+    style F3 fill:#FAD7A0,stroke:#E67E22,color:#2C3E50
+    style F4 fill:#D7BDE2,stroke:#8E44AD,color:#2C3E50</code></pre>
+<h4 id="when-to-collect-feedback">When to Collect Feedback<a class="headerlink" href="#when-to-collect-feedback" title="Permanent link">&para;</a></h4>
+<p>The timing of feedback collection matters as much as the mechanism.</p>
+<table>
+<thead>
+<tr>
+<th>Timing</th>
+<th>Rationale</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>At the beginning</strong></td>
+<td>Establish baseline expectations and preferences</td>
+<td>Ask users what kind of responses they prefer (concise vs. detailed)</td>
+</tr>
+<tr>
+<td><strong>When something bad happens</strong></td>
+<td>Capture the specific failure mode while it is fresh</td>
+<td>Prompt for feedback after a guardrail blocks a response or after an error</td>
+</tr>
+<tr>
+<td><strong>When confidence is low</strong></td>
+<td>Get human judgment on uncertain outputs</td>
+<td>Ask the user to verify when the model's confidence score is below a threshold</td>
+</tr>
+<tr>
+<td><strong>Periodically</strong></td>
+<td>Avoid feedback fatigue while maintaining coverage</td>
+<td>Randomly sample a fraction of interactions for feedback prompts</td>
+</tr>
+<tr>
+<td><strong>At natural breakpoints</strong></td>
+<td>Collect summative feedback without interrupting flow</td>
+<td>Ask for session-level feedback when the user closes a conversation</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Apple's Human Interface Guidelines warn against asking for both positive and negative feedback simultaneously. When you present both a thumbs-up and thumbs-down button, the negative option can prime users to look for faults they would otherwise have overlooked. Consider whether your use case benefits more from a single positive signal (like a "heart") versus a binary choice.</p>
+</div>
+<h4 id="how-to-collect-feedback">How to Collect Feedback<a class="headerlink" href="#how-to-collect-feedback" title="Permanent link">&para;</a></h4>
+<p>The best feedback mechanisms are <strong>invisible</strong>. They are so naturally integrated into the user experience that users provide feedback without even thinking about it.</p>
+<p><strong>Midjourney's Implicit Feedback Design.</strong> Midjourney presents users with four image variations and lets them upscale their favorite, request variations of a specific image or regenerate entirely. Each action is a rich feedback signal. Upscaling means "this is good." Requesting variations means "this is close but not quite right." Regenerating means "none of these work." The user never has to explicitly rate anything, yet every interaction generates valuable preference data.</p>
+<p><strong>GitHub Copilot's Tab-to-Accept Design.</strong> GitHub Copilot shows inline code suggestions, and users accept them by pressing Tab or reject them by continuing to type. The acceptance rate is a clean, high-volume signal of code quality. This is implicit feedback at its most elegant. The feedback mechanism is the product interaction itself.</p>
+<p><img alt="Figure 10-19. GitHub Copilot makes it easy to suggest and reject suggestions" src="../../assets/ch10/fig-10-19-github-copilot-suggestions.png" width="700" /></p>
+<p class="figure-caption">Figure 10-19. GitHub Copilot makes it easy to suggest and reject suggestions</p>
+
+<p><strong>Side-by-Side Comparison.</strong> ChatGPT and Gemini have both experimented with showing users two responses and asking them to choose the better one. This generates <strong>pairwise preference data</strong> that is directly usable for RLHF training. Gemini has explored showing partial responses from two models to reduce latency. The user sees the beginning of both responses and can choose which one to continue generating.</p>
+<p><strong>Google Photos Uncertainty Feedback.</strong> When Google Photos is uncertain about a face match, it asks the user "Is this the same person?" This targets feedback collection at exactly the moments where it provides the most information gain. The model only asks when it is genuinely uncertain, minimizing user annoyance.</p>
+<p><img alt="Figure 10-17. Google Photos asks for user feedback when unsure" src="../../assets/ch10/fig-10-17-google-photos-feedback.png" width="700" /></p>
+<p class="figure-caption">Figure 10-17. Google Photos asks for user feedback when unsure</p>
+
+<p><strong>Inpainting for Image Generation.</strong> Image generation tools allow users to select a specific region of an image and regenerate just that region. This provides spatially localized feedback that tells the model exactly which part of its output was unsatisfactory.</p>
+<h4 id="incentivizing-good-feedback">Incentivizing Good Feedback<a class="headerlink" href="#incentivizing-good-feedback" title="Permanent link">&para;</a></h4>
+<p>Getting users to provide feedback is only half the battle. Getting them to provide <strong>useful, accurate</strong> feedback is the other half.</p>
+<p>Strategies for incentivizing good feedback include making the feedback process as low-friction as possible (one click is better than a form), showing users how their feedback impacts the product ("Thanks to user feedback, we improved X"), gamifying feedback collection with points or badges (use sparingly) and offering tangible benefits such as premium features in exchange for feedback.</p>
+<h4 id="private-vs-public-feedback">Private vs Public Feedback<a class="headerlink" href="#private-vs-public-feedback" title="Permanent link">&para;</a></h4>
+<p>The distinction between private and public feedback significantly affects user behavior. <strong>Public feedback</strong> (visible to others) tends to be more performative. Users signal identity and social positioning rather than genuine preferences. <strong>Private feedback</strong> (visible only to the platform) tends to be more honest.</p>
+<p>X/Twitter's decision to make likes private is an instructive example. When likes were public, users curated their likes to project a certain image. Making likes private allowed users to engage more honestly with content, which in turn produced more genuine preference signals for the recommendation algorithm.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>If your goal is to collect accurate preference data for model improvement, make feedback private by default. If your goal is to build social proof or community engagement, make feedback public. Be clear about which goal you are optimizing for.</p>
+</div>
+<h3 id="feedback-limitations">Feedback Limitations<a class="headerlink" href="#feedback-limitations" title="Permanent link">&para;</a></h3>
+<p>Feedback is essential but <strong>imperfect</strong>. Understanding its limitations is critical for using it effectively.</p>
+<h4 id="biases-in-human-feedback">Biases in Human Feedback<a class="headerlink" href="#biases-in-human-feedback" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Bias</th>
+<th>Description</th>
+<th>Mitigation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Leniency bias</strong></td>
+<td>Users tend to give positive feedback more often than negative, especially for "good enough" responses</td>
+<td>Calibrate against absolute quality benchmarks, not just relative user ratings</td>
+</tr>
+<tr>
+<td><strong>Randomness</strong></td>
+<td>Feedback varies based on mood, time of day, context and attention level</td>
+<td>Aggregate across many data points. Never rely on a single feedback instance</td>
+</tr>
+<tr>
+<td><strong>Position bias</strong></td>
+<td>In side-by-side comparisons, users tend to prefer the response shown first (or on the left)</td>
+<td>Randomize presentation order and control for position effects</td>
+</tr>
+<tr>
+<td><strong>Preference bias</strong></td>
+<td>Users prefer responses that align with their existing beliefs, even if those responses are factually incorrect</td>
+<td>Cross-reference feedback with factual ground truth where possible</td>
+</tr>
+<tr>
+<td><strong>Expertise bias</strong></td>
+<td>Non-expert users may rate plausible-sounding but incorrect responses highly</td>
+<td>Use expert evaluators for high-stakes domains. Segment feedback by user expertise</td>
+</tr>
+<tr>
+<td><strong>Verbosity bias</strong></td>
+<td>Users tend to prefer longer, more detailed responses regardless of quality</td>
+<td>Control for response length when analyzing feedback</td>
+</tr>
+</tbody>
+</table>
+<h4 id="degenerate-feedback-loops">Degenerate Feedback Loops<a class="headerlink" href="#degenerate-feedback-loops" title="Permanent link">&para;</a></h4>
+<p>When feedback directly influences what future users see, it can create <strong>self-reinforcing cycles</strong> that degrade system quality over time.</p>
+<pre class="mermaid"><code>graph TB
+    subgraph "Degenerate Feedback Loop"
+        direction TB
+        Pop["Popular Content&lt;br/&gt;Gets Shown More"] --&gt; More["More Users&lt;br/&gt;See It"]
+        More --&gt; Engage["More Engagement&lt;br/&gt;and Positive Feedback"]
+        Engage --&gt; Rank["Higher Ranking&lt;br/&gt;in Algorithm"]
+        Rank --&gt; Pop
+
+        Novel["Novel / Niche Content"] --&gt; Less["Shown Less Often"]
+        Less --&gt; Few["Fewer Users See It"]
+        Few --&gt; Low["Low Engagement"]
+        Low --&gt; Drop["Dropped from&lt;br/&gt;Recommendations"]
+        Drop --&gt; Novel
+    end
+
+    subgraph "Consequences"
+        direction LR
+        PB["Popularity Bias&lt;br/&gt;Rich get richer"]
+        Filter["Filter Bubbles&lt;br/&gt;Users only see&lt;br/&gt;reinforcing content"]
+        Syc["Sycophancy&lt;br/&gt;Model optimizes for&lt;br/&gt;user agreement"]
+    end
+
+    style Pop fill:#27AE60,stroke:#1E8449,color:#FFFFFF
+    style More fill:#27AE60,stroke:#1E8449,color:#FFFFFF
+    style Engage fill:#27AE60,stroke:#1E8449,color:#FFFFFF
+    style Rank fill:#27AE60,stroke:#1E8449,color:#FFFFFF
+    style Novel fill:#E74C3C,stroke:#C0392B,color:#FFFFFF
+    style Less fill:#E74C3C,stroke:#C0392B,color:#FFFFFF
+    style Few fill:#E74C3C,stroke:#C0392B,color:#FFFFFF
+    style Low fill:#E74C3C,stroke:#C0392B,color:#FFFFFF
+    style Drop fill:#E74C3C,stroke:#C0392B,color:#FFFFFF
+    style PB fill:#F39C12,stroke:#D68910,color:#FFFFFF
+    style Filter fill:#F39C12,stroke:#D68910,color:#FFFFFF
+    style Syc fill:#F39C12,stroke:#D68910,color:#FFFFFF</code></pre>
+<p><strong>Popularity bias</strong> occurs when popular items receive more exposure, which generates more positive feedback, which increases their popularity further. This can crowd out equally good or better content that simply did not get early traction.</p>
+<p><strong>Filter bubbles</strong> emerge when the system learns a user's preferences so well that it only shows them content that aligns with those preferences. The user never encounters diverse perspectives, and their preferences become increasingly narrow and reinforced.</p>
+<p><strong>Sycophancy</strong> is a particularly insidious form of degenerate feedback in AI systems.</p>
+<blockquote>
+<p>"AI models trained on human feedback tend toward sycophancy." When models are optimized to receive positive ratings, they learn that agreeing with users, flattering them and telling them what they want to hear generates better feedback scores than honest, accurate, but potentially unwelcome responses. This creates a model that is pleasant to interact with but unreliable as a source of truth.</p>
+</blockquote>
+<p>Mitigating degenerate feedback loops requires <strong>deliberate architectural choices</strong>. These include introducing randomness and exploration into recommendations, separating the optimization objective from raw user feedback, using factual accuracy as a constraint alongside user satisfaction, regularly evaluating the model against ground truth rather than just user ratings and monitoring for increasing homogeneity in model outputs over time.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Sycophancy is difficult to detect from user feedback alone, because by definition, users tend to rate sycophantic responses positively. You need external evaluation methods (factual accuracy checks, expert reviews, adversarial testing) to catch it.</p>
+</div>
+<h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
+<p>This chapter covered the two major topics that bring an AI application from prototype to production. <strong>architecture</strong> and <strong>user feedback</strong>.</p>
+<p>The <strong>AI engineering architecture</strong> is built up incrementally through five steps. Start with RAG to ground the model in real data. Add a model gateway for centralized control and reliability. Introduce guardrails and routing for safety, quality and cost optimization. Layer in caching to reduce latency and cost. Finally, add agentic workflows for complex, multi-step tasks. Throughout all of this, observability provides the visibility needed to operate and improve the system, and orchestrators help manage the growing complexity.</p>
+<p><strong>User feedback</strong> is the mechanism that closes the loop and enables continuous improvement. Feedback comes in many forms. Explicit signals like thumbs up/down, implicit signals inferred from user actions, natural language signals embedded in conversation and behavioral signals from how users organize and interact with the product. Designing effective feedback mechanisms requires careful attention to timing, integration with the user workflow and incentive alignment.</p>
+<p>However, feedback is not a panacea. It carries biases (leniency, position, preference) and can create degenerate feedback loops (popularity bias, filter bubbles, sycophancy) if not handled carefully. The most robust AI systems combine user feedback with independent evaluation methods, factual accuracy checks and deliberate exploration to avoid the trap of optimizing solely for user approval.</p>
+<p>The combination of a well-architected system and a well-designed feedback loop creates the <strong>data flywheel</strong> that separates successful AI products from one-off experiments. The architecture provides the infrastructure for collecting, processing and acting on feedback. The feedback provides the signal for continuously improving every component of the architecture.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../09-inference-optimization/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 09. Inference Optimization">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                09. Inference Optimization
+              </div>
+            </div>
+          </a>
+        
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "navigation.footer", "toc.follow", "toc.integrate", "content.tabs.link", "search.highlight", "search.suggest", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@10/dist/mermaid.min.js"></script>
+      
+        <script src="../../javascripts/mermaid.js"></script>
+      
+    
+  </body>
+</html>

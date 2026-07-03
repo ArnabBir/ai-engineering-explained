@@ -1,0 +1,1916 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A polished field guide to building production AI applications with foundation models.">
+      
+      
+      
+        <link rel="canonical" href="https://arnabbir.github.io/ai-engineering-explained/chapters/01-introduction/">
+      
+      
+        <link rel="prev" href="../../overview/">
+      
+      
+        <link rel="next" href="../02-understanding-foundation-models/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/cover/book-cover.jpg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>01. Introduction - AI Engineering Playbook</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="pink">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#chapter-1-introduction-to-building-ai-applications-with-foundation-models" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="AI Engineering Playbook" class="md-header__button md-logo" aria-label="AI Engineering Playbook" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m19 2-5 4.5v11l5-4.5zM6.5 5C4.55 5 2.45 5.4 1 6.5v14.66c0 .25.25.5.5.5.1 0 .15-.07.25-.07 1.35-.65 3.3-1.09 4.75-1.09 1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.31 4.75 1.06.1.05.15.03.25.03.25 0 .5-.25.5-.5V6.5c-.6-.45-1.25-.75-2-1V19c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V6.5C10.55 5.4 8.45 5 6.5 5"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            AI Engineering Playbook
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              01. Introduction
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="pink"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="pink"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/ArnabBir/ai-engineering-explained" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../overview/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Overview
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
+          
+  
+  
+  Chapters
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="AI Engineering Playbook" class="md-nav__button md-logo" aria-label="AI Engineering Playbook" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m19 2-5 4.5v11l5-4.5zM6.5 5C4.55 5 2.45 5.4 1 6.5v14.66c0 .25.25.5.5.5.1 0 .15-.07.25-.07 1.35-.65 3.3-1.09 4.75-1.09 1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.31 4.75 1.06.1.05.15.03.25.03.25 0 .5-.25.5-.5V6.5c-.6-.45-1.25-.75-2-1V19c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V6.5C10.55 5.4 8.45 5 6.5 5"/></svg>
+
+    </a>
+    AI Engineering Playbook
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/ArnabBir/ai-engineering-explained" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chapters
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Chapters
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    01. Introduction
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    01. Introduction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table of Contents
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-rise-of-ai-engineering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Rise of AI Engineering
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Rise of AI Engineering">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#from-language-models-to-large-language-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        From Language Models to Large Language Models
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#from-large-language-models-to-foundation-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        From Large Language Models to Foundation Models
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#from-foundation-models-to-ai-engineering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        From Foundation Models to AI Engineering
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#foundation-model-use-cases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Foundation Model Use Cases
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Foundation Model Use Cases">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#coding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Coding
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#image-and-video-production" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Image and Video Production
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#writing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Writing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#education" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Education
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#conversational-bots" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conversational Bots
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#information-aggregation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Information Aggregation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-organization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Organization
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#workflow-automation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workflow Automation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#planning-ai-applications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Planning AI Applications
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Planning AI Applications">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#use-case-evaluation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use Case Evaluation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setting-expectations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Setting Expectations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#milestone-planning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Milestone Planning
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#maintenance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Maintenance
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-ai-engineering-stack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The AI Engineering Stack
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The AI Engineering Stack">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#three-layers-of-the-ai-stack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Three Layers of the AI Stack
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ai-engineering-versus-ml-engineering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AI Engineering Versus ML Engineering
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ai-engineering-versus-full-stack-engineering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AI Engineering Versus Full Stack Engineering
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-takeaways" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Takeaways
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#practitioner-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Practitioner Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-understanding-foundation-models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    02. Understanding Foundation Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-evaluation-methodology/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03. Evaluation Methodology
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-evaluate-ai-systems/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    04. Evaluate AI Systems
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-prompt-engineering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    05. Prompt Engineering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-rag-and-agents/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    06. RAG and Agents
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-finetuning/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    07. Finetuning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-dataset-engineering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    08. Dataset Engineering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-inference-optimization/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    09. Inference Optimization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-ai-engineering-architecture-and-user-feedback/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10. Architecture and User Feedback
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="chapter-1-introduction-to-building-ai-applications-with-foundation-models">Chapter 1. Introduction to Building AI Applications with Foundation Models<a class="headerlink" href="#chapter-1-introduction-to-building-ai-applications-with-foundation-models" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p>"If I could use only one word to describe AI post 2020, it would be <em>scale</em>."
+Chip Huyen</p>
+</blockquote>
+<p>This chapter lays the groundwork for everything that follows. It answers three fundamental questions. What is AI engineering? Why has it exploded in the last two years? And what can you actually build with it? If you are already building AI applications, this chapter will sharpen your understanding of the landscape. If you are evaluating whether to start, it will give you the strategic framework to make that decision.</p>
+<h2 id="table-of-contents">Table of Contents<a class="headerlink" href="#table-of-contents" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="#the-rise-of-ai-engineering">The Rise of AI Engineering</a></li>
+<li><a href="#from-language-models-to-large-language-models">From Language Models to Large Language Models</a></li>
+<li><a href="#from-large-language-models-to-foundation-models">From Large Language Models to Foundation Models</a></li>
+<li><a href="#from-foundation-models-to-ai-engineering">From Foundation Models to AI Engineering</a></li>
+<li><a href="#foundation-model-use-cases">Foundation Model Use Cases</a></li>
+<li><a href="#coding">Coding</a></li>
+<li><a href="#image-and-video-production">Image and Video Production</a></li>
+<li><a href="#writing">Writing</a></li>
+<li><a href="#education">Education</a></li>
+<li><a href="#conversational-bots">Conversational Bots</a></li>
+<li><a href="#information-aggregation">Information Aggregation</a></li>
+<li><a href="#data-organization">Data Organization</a></li>
+<li><a href="#workflow-automation">Workflow Automation</a></li>
+<li><a href="#planning-ai-applications">Planning AI Applications</a></li>
+<li><a href="#use-case-evaluation">Use Case Evaluation</a></li>
+<li><a href="#setting-expectations">Setting Expectations</a></li>
+<li><a href="#milestone-planning">Milestone Planning</a></li>
+<li><a href="#maintenance">Maintenance</a></li>
+<li><a href="#the-ai-engineering-stack">The AI Engineering Stack</a></li>
+<li><a href="#three-layers-of-the-ai-stack">Three Layers of the AI Stack</a></li>
+<li><a href="#ai-engineering-versus-ml-engineering">AI Engineering Versus ML Engineering</a></li>
+<li><a href="#ai-engineering-versus-full-stack-engineering">AI Engineering Versus Full Stack Engineering</a></li>
+<li><a href="#key-takeaways">Key Takeaways</a></li>
+<li><a href="#practitioner-checklist">Practitioner Checklist</a></li>
+</ul>
+<h2 id="the-rise-of-ai-engineering">The Rise of AI Engineering<a class="headerlink" href="#the-rise-of-ai-engineering" title="Permanent link">&para;</a></h2>
+<p>The scaling up of AI models has two major consequences. First, AI models are becoming more powerful and capable of more tasks, enabling more applications. Second, training large language models requires data, compute resources and specialized talent that only a few organizations can afford. This has led to the emergence of <strong>model as a service</strong>. Models developed by these few organizations are made available for others to use as a service.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>The demand for AI applications has increased while the barrier to entry for building AI applications has decreased. This has turned AI engineering into one of the fastest growing engineering disciplines.</p>
+</div>
+<p><strong>AI engineering</strong> is the process of building applications on top of readily available models. It differs from traditional ML engineering in a critical way. Instead of developing your own models, you leverage existing foundation models and adapt them to your needs.</p>
+<h3 id="from-language-models-to-large-language-models">From Language Models to Large Language Models<a class="headerlink" href="#from-language-models-to-large-language-models" title="Permanent link">&para;</a></h3>
+<p>A <strong>language model</strong> encodes statistical information about one or more languages. Intuitively, this information tells us how likely a word is to appear in a given context. Given "My favorite color is __", a language model that encodes English should predict "blue" more often than "car".</p>
+<p>The basic unit of a language model is a <strong>token</strong>. A token can be a character, a word or a part of a word (like <em>tion</em>), depending on the model. GPT-4 breaks the phrase "I can't wait to build AI applications" into nine tokens. The word "can't" is broken into two tokens. <em>can</em> and <em>'t</em>.</p>
+<p><img alt="Figure 1-1. An example of how GPT-4 tokenizes a phrase" src="../../assets/ch01/fig-1-1-tokenization-example.png" width="700" /></p>
+<p class="figure-caption">Figure 1-1. An example of how GPT-4 tokenizes a phrase</p>
+
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>For GPT-4, an average token is approximately three quarters the length of a word. So 100 tokens are approximately 75 words. The set of all tokens a model can work with is the model's <strong>vocabulary</strong>. Mixtral 8x7B has a vocabulary size of 32,000. GPT-4's vocabulary size is 100,256.</p>
+</div>
+<p><strong>Why tokens instead of words or characters?</strong> Three reasons.</p>
+<ol>
+<li>Compared to characters, tokens allow the model to break words into meaningful components. "cooking" becomes "cook" and "ing", both carrying some meaning.</li>
+<li>Because there are fewer unique tokens than unique words, this reduces the model's vocabulary size, making the model more efficient.</li>
+<li>Tokens help the model process unknown words. A made up word like "chatgpting" could be split into "chatgpt" and "ing", helping the model understand its structure.</li>
+</ol>
+<p><strong>Two types of language models.</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>How It Predicts</th>
+<th>Example</th>
+<th>Common Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Masked Language Model</strong></td>
+<td>Predicts missing tokens anywhere in a sequence, using context from both before and after</td>
+<td>BERT</td>
+<td>Sentiment analysis, text classification, code debugging</td>
+</tr>
+<tr>
+<td><strong>Autoregressive Language Model</strong></td>
+<td>Predicts the next token using only preceding tokens</td>
+<td>GPT-4, Claude, Gemini</td>
+<td>Text generation, all generative tasks</td>
+</tr>
+</tbody>
+</table>
+<p><img alt="Figure 1-2. Autoregressive language model and masked language model" src="../../assets/ch01/fig-1-2-autoregressive-vs-masked-lm.png" width="700" /></p>
+<p class="figure-caption">Figure 1-2. Autoregressive language model and masked language model</p>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In this book, unless explicitly stated, <em>language model</em> refers to an autoregressive model.</p>
+</div>
+<p>You can think of a language model as a <strong>completion machine</strong>. Given a text (prompt), it tries to complete that text. As simple as it sounds, completion is incredibly powerful. Many tasks, including translation, summarization, coding and solving math problems, can be framed as completion tasks.</p>
+<p><strong>The key breakthrough. Self supervision.</strong> Language models can be trained using self supervision, while many other models require supervision. Supervision refers to training ML algorithms using labeled data, which can be expensive and slow to obtain. Self supervision helps overcome this data labeling bottleneck.</p>
+<p>With self supervision, instead of requiring explicit labels, the model infers labels from the input data. The sentence "I love street food." gives six training samples automatically.</p>
+<table>
+<thead>
+<tr>
+<th>Input (Context)</th>
+<th>Output (Next Token)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>\&lt;BOS&gt;</td>
+<td>I</td>
+</tr>
+<tr>
+<td>\&lt;BOS&gt;, I</td>
+<td>love</td>
+</tr>
+<tr>
+<td>\&lt;BOS&gt;, I, love</td>
+<td>street</td>
+</tr>
+<tr>
+<td>\&lt;BOS&gt;, I, love, street</td>
+<td>food</td>
+</tr>
+<tr>
+<td>\&lt;BOS&gt;, I, love, street, food</td>
+<td>.</td>
+</tr>
+<tr>
+<td>\&lt;BOS&gt;, I, love, street, food, .</td>
+<td>\&lt;EOS&gt;</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Self supervised learning means that language models can learn from text sequences without requiring any labeling. Because text sequences are everywhere, in books, blog posts, articles and Reddit comments, it is possible to construct a massive amount of training data, allowing language models to scale up to become LLMs.</p>
+</div>
+<p><strong>How large is large?</strong> When OpenAI's first GPT model came out in June 2018, its 117 million parameters were considered large. By February 2019, GPT-2 had 1.5 billion parameters, making 117 million look small. As of the writing of the book, a model with 100 billion parameters is considered large. Perhaps one day, this size will be considered small.</p>
+<h3 id="from-large-language-models-to-foundation-models">From Large Language Models to Foundation Models<a class="headerlink" href="#from-large-language-models-to-foundation-models" title="Permanent link">&para;</a></h3>
+<p>Language models are limited to text. As humans, we perceive the world not just via language but also through vision, hearing, touch and more. For this reason, language models are being extended to incorporate more data modalities. GPT-4V and Claude 3 can understand images and texts. Some models even understand videos, 3D assets and protein structures.</p>
+<p><img alt="Figure 1-3. A multimodal model can generate the next token using information from multiple modalities" src="../../assets/ch01/fig-1-3-multimodal-model.png" width="700" /></p>
+<p class="figure-caption">Figure 1-3. A multimodal model can generate the next token using information from multiple modalities</p>
+
+<pre class="mermaid"><code>graph TD
+    subgraph Traditional["Traditional AI Research (Siloed)"]
+        style Traditional fill:#1a1a2e,stroke:#e94560,color:#eee
+        NLP["NLP&lt;br/&gt;Text Only"]
+        CV["Computer Vision&lt;br/&gt;Images Only"]
+        Audio["Audio&lt;br/&gt;Speech Only"]
+    end
+
+    subgraph Foundation["Foundation Models (Unified)"]
+        style Foundation fill:#533483,stroke:#e94560,color:#fff
+        FM["Foundation Model&lt;br/&gt;Text + Images + Audio + Video + Code"]
+    end
+
+    NLP --&gt; FM
+    CV --&gt; FM
+    Audio --&gt; FM
+
+    style NLP fill:#0f3460,stroke:#eee,color:#eee
+    style CV fill:#0f3460,stroke:#eee,color:#eee
+    style Audio fill:#0f3460,stroke:#eee,color:#eee
+    style FM fill:#e94560,stroke:#1a1a2e,color:#fff</code></pre>
+<p><img alt="Figure 1-4. Tasks used by the Super-NaturalInstructions benchmark" src="../../assets/ch01/fig-1-4-super-natural-instructions.png" width="700" /></p>
+<p class="figure-caption">Figure 1-4. Tasks used by the Super-NaturalInstructions benchmark</p>
+
+<p>The term <strong>foundation model</strong> signifies both the importance of these models in AI applications and the fact that they can be built upon for different needs. Foundation models mark two major transitions.</p>
+<ol>
+<li><strong>From siloed research to unified models.</strong> For a long time, AI research was divided by data modalities. NLP dealt only with text. Computer vision dealt only with images. Foundation models unify these.</li>
+<li><strong>From task specific to general purpose.</strong> Previously, models were developed for specific tasks. A model trained for sentiment analysis would not be able to do translation. Foundation models, thanks to their scale, are capable of a wide range of tasks out of the box.</li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>A model that can work with more than one data modality is also called a <strong>multimodal model</strong>. This book uses the term <em>foundation models</em> to refer to both large language models and large multimodal models.</p>
+</div>
+<p><strong>Three common techniques to adapt a foundation model to your needs.</strong></p>
+<table>
+<thead>
+<tr>
+<th>Technique</th>
+<th>What It Does</th>
+<th>Data Required</th>
+<th>Effort</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Prompt Engineering</strong></td>
+<td>Craft instructions and examples to guide the model</td>
+<td>Minimal</td>
+<td>Low</td>
+</tr>
+<tr>
+<td><strong>RAG</strong></td>
+<td>Connect the model to an external knowledge base</td>
+<td>Moderate</td>
+<td>Medium</td>
+</tr>
+<tr>
+<td><strong>Finetuning</strong></td>
+<td>Further train the model on task specific data</td>
+<td>Significant</td>
+<td>High</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>"Adapting an existing powerful model to your task is generally a lot easier than building a model for your task from scratch. For example, ten examples and one weekend versus one million examples and six months."
+Chip Huyen</p>
+</blockquote>
+<h3 id="from-foundation-models-to-ai-engineering">From Foundation Models to AI Engineering<a class="headerlink" href="#from-foundation-models-to-ai-engineering" title="Permanent link">&para;</a></h3>
+<p>The availability and accessibility of powerful foundation models create three factors that, together, produce ideal conditions for the rapid growth of AI engineering.</p>
+<pre class="mermaid"><code>graph LR
+    F1["General Purpose&lt;br/&gt;AI Capabilities"]
+    F2["Increased AI&lt;br/&gt;Investments"]
+    F3["Low Entrance Barrier&lt;br/&gt;to Building"]
+    AIE["Explosive Growth of&lt;br/&gt;AI Engineering"]
+
+    F1 --&gt; AIE
+    F2 --&gt; AIE
+    F3 --&gt; AIE
+
+    style F1 fill:#e94560,stroke:#1a1a2e,color:#fff
+    style F2 fill:#533483,stroke:#1a1a2e,color:#fff
+    style F3 fill:#0f3460,stroke:#1a1a2e,color:#fff
+    style AIE fill:#1a1a2e,stroke:#e94560,color:#eee</code></pre>
+<p><strong>Factor 1. General purpose AI capabilities.</strong> Foundation models can do more tasks than any previous AI. Applications previously thought impossible are now possible. AI can write, code, translate, create images and reason. This vastly increases both the user base and the demand for AI applications.</p>
+<p><strong>Factor 2. Increased AI investments.</strong> Goldman Sachs Research estimated that AI investment could approach $100 billion in the US and $200 billion globally by 2025. FactSet found that one in three S&amp;P 500 companies mentioned AI in their earnings calls for Q2 2023. That is three times more than the year before.</p>
+<p><img alt="Figure 1-5. The number of S&amp;P 500 companies that mention AI in their earnings calls" src="../../assets/ch01/fig-1-5-sp500-ai-mentions.png" width="700" /></p>
+<p class="figure-caption">Figure 1-5. The number of S&P 500 companies that mention AI in their earnings calls</p>
+
+<p><strong>Factor 3. Low entrance barrier.</strong> The model as a service approach makes it easier to leverage AI. APIs give you access to powerful models via single API calls. AI also makes it possible to build applications with minimal coding. First, AI can write code for you. Second, you can work with models in plain English instead of a programming language.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Within just two years, four open source AI engineering tools (AutoGPT, Stable Diffusion Web UI, LangChain, Ollama) had already garnered more stars on GitHub than Bitcoin. They are on track to surpass even the most popular web development frameworks, including React and Vue.</p>
+</div>
+<p><img alt="Figure 1-6. Star history of popular AI engineering repositories" src="../../assets/ch01/fig-1-6-star-history.png" width="700" /></p>
+<p class="figure-caption">Figure 1-6. Star history of popular AI engineering repositories</p>
+
+<h2 id="foundation-model-use-cases">Foundation Model Use Cases<a class="headerlink" href="#foundation-model-use-cases" title="Permanent link">&para;</a></h2>
+<p>The number of potential applications you could build with foundation models seems endless. The author examined 205 open source AI applications with at least 500 stars on GitHub and interviewed 50 companies on their AI strategies. The use cases fall into eight major categories.</p>
+<p><img alt="Figure 1-7. Distribution of use cases among open source AI applications" src="../../assets/ch01/fig-1-7-use-case-distribution.png" width="700" /></p>
+<p class="figure-caption">Figure 1-7. Distribution of use cases among open source AI applications</p>
+
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Consumer Examples</th>
+<th>Enterprise Examples</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Coding</strong></td>
+<td>Code completion, code generation</td>
+<td>Code review, test generation, documentation</td>
+</tr>
+<tr>
+<td><strong>Image and Video</strong></td>
+<td>Photo editing, design, video generation</td>
+<td>Ad generation, presentations, marketing</td>
+</tr>
+<tr>
+<td><strong>Writing</strong></td>
+<td>Email, social media, blog posts</td>
+<td>Copywriting, SEO, reports, memos</td>
+</tr>
+<tr>
+<td><strong>Education</strong></td>
+<td>Tutoring, essay grading</td>
+<td>Employee onboarding, upskill training</td>
+</tr>
+<tr>
+<td><strong>Conversational Bots</strong></td>
+<td>General chatbot, AI companion</td>
+<td>Customer support, product copilots</td>
+</tr>
+<tr>
+<td><strong>Information Aggregation</strong></td>
+<td>Summarization, talk to your docs</td>
+<td>Market research, competitive intelligence</td>
+</tr>
+<tr>
+<td><strong>Data Organization</strong></td>
+<td>Image search, personal knowledge base</td>
+<td>Document processing, data extraction</td>
+</tr>
+<tr>
+<td><strong>Workflow Automation</strong></td>
+<td>Travel planning, event planning</td>
+<td>Lead generation, invoicing, data entry</td>
+</tr>
+</tbody>
+</table>
+<p><img alt="Figure 1-8. Companies are more willing to deploy internal-facing applications" src="../../assets/ch01/fig-1-8-internal-vs-external-apps.png" width="700" /></p>
+<p class="figure-caption">Figure 1-8. Companies are more willing to deploy internal-facing applications</p>
+
+<h3 id="coding">Coding<a class="headerlink" href="#coding" title="Permanent link">&para;</a></h3>
+<p>Coding is hands down the most popular use case across multiple generative AI surveys. GitHub Copilot's annual recurring revenue crossed $100 million only two years after its launch.</p>
+<p><strong>Specialized coding tasks powered by AI.</strong>
+- Extracting structured data from web pages and PDFs
+- Converting natural language to code (SQL, pandas)
+- Screenshot to code generation
+- Language and framework migration
+- Automated documentation
+- Test generation
+- Commit message generation</p>
+<p>McKinsey researchers found that AI can help developers be <strong>twice as productive</strong> for documentation, and <strong>25 to 50% more productive</strong> for code generation and code refactoring. Minimal productivity improvement was observed for highly complex tasks.</p>
+<p><img alt="Figure 1-9. AI can help developers be significantly more productive" src="../../assets/ch01/fig-1-9-ai-developer-productivity.png" width="700" /></p>
+<p class="figure-caption">Figure 1-9. AI can help developers be significantly more productive</p>
+
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>AI is much better at frontend development than backend development, according to developers of AI coding tools. The productivity gains are real but uneven across task complexity.</p>
+</div>
+<h3 id="image-and-video-production">Image and Video Production<a class="headerlink" href="#image-and-video-production" title="Permanent link">&para;</a></h3>
+<p>AI is great for creative tasks thanks to its probabilistic nature. Midjourney generated $200 million in annual recurring revenue at just one and a half years old. As of December 2023, among the top 10 free apps for Graphics and Design on the Apple App Store, half had AI in their names.</p>
+<p>Enterprise use cases include ad generation, promotional images and videos, marketing material variations by season and location and rapid A/B testing of creative assets.</p>
+<h3 id="writing">Writing<a class="headerlink" href="#writing" title="Permanent link">&para;</a></h3>
+<p>An MIT study (Noy and Zhang, 2023) assigned writing tasks to 453 college educated professionals and randomly exposed half to ChatGPT. Results showed that average time taken <strong>decreased by 40%</strong> and output quality <strong>rose by 18%</strong>. ChatGPT helped close the gap in output quality between workers, meaning it was more helpful to those with less inclination for writing.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>AI's strength in SEO has enabled a new generation of content farms. These farms produce AI generated junk content to game search rankings and sell advertising. One such website produced 1,200 articles a day. In June 2023, NewsGuard identified almost 400 ads from 141 popular brands on junk AI generated websites.</p>
+</div>
+<h3 id="education">Education<a class="headerlink" href="#education" title="Permanent link">&para;</a></h3>
+<p>AI is especially helpful for language learning and personalized tutoring. Duolingo found that out of four stages of course creation, <strong>lesson personalization</strong> is the stage that benefits the most from AI. Khan Academy offers AI powered teaching assistants to students and course assistants to teachers.</p>
+<p><img alt="Figure 1-10. Four stages of Duolingo course creation and AI impact" src="../../assets/ch01/fig-1-10-duolingo-ai-stages.png" width="700" /></p>
+<p class="figure-caption">Figure 1-10. Four stages of Duolingo course creation and AI impact</p>
+
+<blockquote>
+<p>"If the risk is that AI can replace many skills, the opportunity is that AI can be used as a tutor to learn any skill."
+Chip Huyen</p>
+</blockquote>
+<h3 id="conversational-bots">Conversational Bots<a class="headerlink" href="#conversational-bots" title="Permanent link">&para;</a></h3>
+<p>For enterprises, the most popular bots are <strong>customer support bots</strong>. They help companies save costs while improving customer experience because they can respond to users sooner than human agents. AI can also be product copilots that guide customers through painful tasks such as filing insurance claims, doing taxes or looking up corporate policies.</p>
+<p>Beyond text, conversational interfaces include voice assistants (Google Assistant, Siri, Alexa) and 3D conversational bots that are gaining traction in gaming (smart NPCs), retail and marketing.</p>
+<h3 id="information-aggregation">Information Aggregation<a class="headerlink" href="#information-aggregation" title="Permanent link">&para;</a></h3>
+<p>According to Salesforce's 2023 Generative AI Snapshot Research, <strong>74% of generative AI users</strong> use it to distill complex ideas and summarize information. When Instacart launched an internal prompt marketplace, one of the most popular templates was "Fast Breakdown", which summarizes meeting notes, emails and Slack conversations with facts, open questions and action items.</p>
+<h3 id="data-organization">Data Organization<a class="headerlink" href="#data-organization" title="Permanent link">&para;</a></h3>
+<p>AI can automatically generate text descriptions about images and videos, or help match text queries with visuals. It can extract structured information from unstructured data. Simple use cases include extracting data from credit cards, receipts and tickets. More complex use cases include contracts, reports and charts. The intelligent data processing (IDP) industry is estimated to reach <strong>$12.81 billion by 2030</strong>, growing 32.9% each year.</p>
+<h3 id="workflow-automation">Workflow Automation<a class="headerlink" href="#workflow-automation" title="Permanent link">&para;</a></h3>
+<p>AI agents that can plan and use tools represent one of the most exciting frontiers. Agents are AI systems that can access external tools to accomplish tasks. To book a restaurant, an agent might search for the restaurant's number, make a call and add an appointment to your calendar.</p>
+<blockquote>
+<p>"AI agents have the potential to make every person vastly more productive and generate vastly more economic value."
+Chip Huyen</p>
+</blockquote>
+<h2 id="planning-ai-applications">Planning AI Applications<a class="headerlink" href="#planning-ai-applications" title="Permanent link">&para;</a></h2>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>It is easy to build a cool demo with foundation models. It is hard to create a profitable product. If you are doing this for a living, take a step back and consider <em>why</em> you are building this and <em>how</em> you should go about it.</p>
+</div>
+<h3 id="use-case-evaluation">Use Case Evaluation<a class="headerlink" href="#use-case-evaluation" title="Permanent link">&para;</a></h3>
+<p>The first question to ask is <strong>why</strong> you want to build this application. Here are three levels of risk, from high to low.</p>
+<ol>
+<li><strong>Existential threat.</strong> If you do not do this, competitors with AI can make you obsolete. Common for businesses involving document processing, information aggregation, financial analysis, insurance and creative work.</li>
+<li><strong>Missed opportunity.</strong> If you do not do this, you will miss opportunities to boost profits and productivity. AI can make user acquisition cheaper, increase retention and improve internal operations.</li>
+<li><strong>Strategic hedging.</strong> You are unsure where AI fits yet, but you do not want to be left behind. Many companies have failed by waiting too long to take the leap.</li>
+</ol>
+<p><strong>The role of AI and humans.</strong> Three dimensions to consider.</p>
+<pre class="mermaid"><code>graph TD
+    subgraph Dimensions["AI Role Dimensions"]
+        style Dimensions fill:#1a1a2e,stroke:#e94560,color:#eee
+        D1["Critical vs Complementary&lt;br/&gt;&lt;i&gt;Can the app work without AI?&lt;/i&gt;"]
+        D2["Reactive vs Proactive&lt;br/&gt;&lt;i&gt;Does AI respond to requests or anticipate needs?&lt;/i&gt;"]
+        D3["Dynamic vs Static&lt;br/&gt;&lt;i&gt;Does the model update with user feedback?&lt;/i&gt;"]
+    end
+
+    D1 --&gt; Impl["Implementation Requirements"]
+    D2 --&gt; Impl
+    D3 --&gt; Impl
+
+    style D1 fill:#e94560,stroke:#1a1a2e,color:#fff
+    style D2 fill:#533483,stroke:#1a1a2e,color:#fff
+    style D3 fill:#0f3460,stroke:#1a1a2e,color:#fff
+    style Impl fill:#1a1a2e,stroke:#e94560,color:#eee</code></pre>
+<table>
+<thead>
+<tr>
+<th>Dimension</th>
+<th>Implication</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Critical</strong> AI</td>
+<td>Must be highly accurate and reliable</td>
+</tr>
+<tr>
+<td><strong>Complementary</strong> AI</td>
+<td>Users are more accepting of mistakes</td>
+</tr>
+<tr>
+<td><strong>Reactive</strong> features</td>
+<td>Usually need to be fast (low latency)</td>
+</tr>
+<tr>
+<td><strong>Proactive</strong> features</td>
+<td>Can be precomputed, but need higher quality bar since users did not ask for them</td>
+</tr>
+<tr>
+<td><strong>Dynamic</strong> features</td>
+<td>Each user may need their own model or personalization mechanism</td>
+</tr>
+<tr>
+<td><strong>Static</strong> features</td>
+<td>One model serves a group of users, updated only periodically</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Microsoft's Crawl Walk Run Framework for AI Automation.</strong></p>
+<ol>
+<li><strong>Crawl.</strong> Human involvement is mandatory.</li>
+<li><strong>Walk.</strong> AI can directly interact with internal employees.</li>
+<li><strong>Run.</strong> Increased automation, potentially including direct AI interactions with external users.</li>
+</ol>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>The role of humans can change over time as the quality of the AI system improves. Start with AI generating suggestions for human agents. If the acceptance rate is high (for example, 95% of responses used verbatim for simple requests), you can let customers interact with AI directly for those simple requests.</p>
+</div>
+<p><strong>AI product defensibility.</strong> In AI, there are generally three types of competitive advantages. <strong>Technology</strong>, <strong>data</strong> and <strong>distribution</strong>. With foundation models, core technologies will be similar across companies. Distribution advantage likely belongs to big companies. The data advantage is more nuanced. If a startup can get to market first and gather sufficient usage data to continually improve their products, data will be their moat.</p>
+<h3 id="setting-expectations">Setting Expectations<a class="headerlink" href="#setting-expectations" title="Permanent link">&para;</a></h3>
+<p>Once you have decided to build, figure out what success looks like. The most important metric is how this will impact your business. For a customer support chatbot, business metrics might include.</p>
+<ul>
+<li>What percentage of customer messages the chatbot should automate</li>
+<li>How many more messages it should allow you to process</li>
+<li>How much quicker you can respond</li>
+<li>How much human labor the chatbot can save</li>
+</ul>
+<p><strong>Usefulness threshold.</strong> How good does it have to be before it is useful? Metrics to track.</p>
+<table>
+<thead>
+<tr>
+<th>Metric Group</th>
+<th>Examples</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Quality</strong></td>
+<td>Response accuracy, relevance, coherence</td>
+</tr>
+<tr>
+<td><strong>Latency</strong></td>
+<td>TTFT (time to first token), TPOT (time per output token), total latency</td>
+</tr>
+<tr>
+<td><strong>Cost</strong></td>
+<td>Cost per inference request</td>
+</tr>
+<tr>
+<td><strong>Other</strong></td>
+<td>Interpretability, fairness, safety</td>
+</tr>
+</tbody>
+</table>
+<p><img alt="Figure 1-11. The cost of AI reasoning rapidly drops over time" src="../../assets/ch01/fig-1-11-cost-of-ai-reasoning.png" width="700" /></p>
+<p class="figure-caption">Figure 1-11. The cost of AI reasoning rapidly drops over time</p>
+
+<h3 id="milestone-planning">Milestone Planning<a class="headerlink" href="#milestone-planning" title="Permanent link">&para;</a></h3>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p><strong>The last mile problem.</strong> Initial success with foundation models can be misleading. It might take a weekend to build a demo but months, even years, to build a product. LinkedIn reported that it took one month to achieve 80% of the desired experience. The initial success made them grossly underestimate how much time it would take to improve the product. It took four more months to surpass 95%.</p>
+</div>
+<pre class="mermaid"><code>graph LR
+    Demo["Weekend Demo&lt;br/&gt;80% Quality"]
+    Gap["The Last Mile&lt;br/&gt;80% to 95%"]
+    Prod["Production&lt;br/&gt;95%+ Quality"]
+
+    Demo --&gt;|"Easy, fast"| Gap
+    Gap --&gt;|"Months of work"| Prod
+
+    style Demo fill:#533483,stroke:#1a1a2e,color:#fff
+    style Gap fill:#e94560,stroke:#1a1a2e,color:#fff
+    style Prod fill:#0f3460,stroke:#1a1a2e,color:#fff</code></pre>
+<blockquote>
+<p>"The journey from 0 to 60 is easy, whereas progressing from 60 to 100 becomes exceedingly challenging."
+Ding et al., UltraChat (2023)</p>
+</blockquote>
+<h3 id="maintenance">Maintenance<a class="headerlink" href="#maintenance" title="Permanent link">&para;</a></h3>
+<p>Product planning does not stop at achieving its goals. You need to think about how this product might change over time. The AI space has been moving incredibly fast. Building on top of foundation models today means committing to riding this bullet train.</p>
+<p><strong>Changes to plan for.</strong></p>
+<table>
+<thead>
+<tr>
+<th>Change Type</th>
+<th>Example</th>
+<th>Difficulty</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Good but disruptive</strong></td>
+<td>Models get cheaper, context lengths grow, outputs improve</td>
+<td>Easy to moderate</td>
+</tr>
+<tr>
+<td><strong>Vendor risk</strong></td>
+<td>Provider goes out of business, pricing changes dramatically</td>
+<td>Moderate</td>
+</tr>
+<tr>
+<td><strong>Regulatory</strong></td>
+<td>New laws around IP, data privacy, compute restrictions (e.g., GDPR, US export controls)</td>
+<td>Hard</td>
+</tr>
+<tr>
+<td><strong>Fatal</strong></td>
+<td>IP regulations change, model trained on others' data creates legal liability</td>
+<td>Potentially fatal</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The best option today might turn into the worst option tomorrow. You may decide to build a model in house because it seems cheaper than paying for model providers, only to find out after three months that providers have dropped their prices in half.</p>
+</div>
+<h2 id="the-ai-engineering-stack">The AI Engineering Stack<a class="headerlink" href="#the-ai-engineering-stack" title="Permanent link">&para;</a></h2>
+<h3 id="three-layers-of-the-ai-stack">Three Layers of the AI Stack<a class="headerlink" href="#three-layers-of-the-ai-stack" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>graph TD
+    subgraph Layer1["Layer 1. Application Development"]
+        style Layer1 fill:#e94560,stroke:#1a1a2e,color:#fff
+        PE["Prompt Engineering"]
+        EV["Evaluation"]
+        IF["AI Interface / UX"]
+    end
+
+    subgraph Layer2["Layer 2. Model Development"]
+        style Layer2 fill:#533483,stroke:#1a1a2e,color:#fff
+        MT["Modeling and Training"]
+        DE["Dataset Engineering"]
+        IO["Inference Optimization"]
+    end
+
+    subgraph Layer3["Layer 3. Infrastructure"]
+        style Layer3 fill:#0f3460,stroke:#1a1a2e,color:#fff
+        MS["Model Serving"]
+        CM["Compute and Data Management"]
+        MO["Monitoring"]
+    end
+
+    Layer1 --&gt; Layer2
+    Layer2 --&gt; Layer3</code></pre>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>In 2023, the categories that saw the highest growth in open source tooling were applications and application development. The infrastructure layer saw much less growth. This is expected. Even though models and applications have changed, the core infrastructural needs (resource management, serving, monitoring) remain the same.</p>
+</div>
+<p><img alt="Figure 1-14. Three layers of the AI engineering stack" src="../../assets/ch01/fig-1-14-three-layers-ai-stack.png" width="700" /></p>
+<p class="figure-caption">Figure 1-14. Three layers of the AI engineering stack</p>
+
+<p><img alt="Figure 1-15. Cumulative count of repositories by category over time" src="../../assets/ch01/fig-1-15-cumulative-repo-count.png" width="700" /></p>
+<p class="figure-caption">Figure 1-15. Cumulative count of repositories by category over time</p>
+
+<h3 id="ai-engineering-versus-ml-engineering">AI Engineering Versus ML Engineering<a class="headerlink" href="#ai-engineering-versus-ml-engineering" title="Permanent link">&para;</a></h3>
+<p>At a high level, building applications using foundation models differs from traditional ML engineering in three major ways.</p>
+<table>
+<thead>
+<tr>
+<th>Dimension</th>
+<th>Traditional ML Engineering</th>
+<th>AI Engineering</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Model Source</strong></td>
+<td>You train your own models</td>
+<td>You use models someone else trained</td>
+</tr>
+<tr>
+<td><strong>Compute Pressure</strong></td>
+<td>Moderate</td>
+<td>High. Models are bigger, need more GPUs, incur higher latency</td>
+</tr>
+<tr>
+<td><strong>Output Type</strong></td>
+<td>Close ended (e.g., fraud or not fraud)</td>
+<td>Open ended. Infinite possible outputs, much harder to evaluate</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Model adaptation techniques fall into two categories.</strong></p>
+<pre class="mermaid"><code>graph TD
+    MA["Model Adaptation"]
+
+    PB["Prompt Based Techniques&lt;br/&gt;&lt;i&gt;No weight updates&lt;/i&gt;"]
+    FT["Finetuning Techniques&lt;br/&gt;&lt;i&gt;Weight updates required&lt;/i&gt;"]
+
+    MA --&gt; PB
+    MA --&gt; FT
+
+    PB --&gt; PE2["Prompt Engineering"]
+    PB --&gt; RAG["RAG"]
+    FT --&gt; SFT["Supervised Finetuning"]
+    FT --&gt; PEFT["Parameter Efficient Finetuning"]
+
+    style MA fill:#1a1a2e,stroke:#e94560,color:#eee
+    style PB fill:#533483,stroke:#1a1a2e,color:#fff
+    style FT fill:#e94560,stroke:#1a1a2e,color:#fff
+    style PE2 fill:#0f3460,stroke:#eee,color:#eee
+    style RAG fill:#0f3460,stroke:#eee,color:#eee
+    style SFT fill:#0f3460,stroke:#eee,color:#eee
+    style PEFT fill:#0f3460,stroke:#eee,color:#eee</code></pre>
+<p><strong>Prompt based techniques</strong> adapt a model without updating the model weights. You adapt a model by giving it instructions and context instead of changing the model itself. Easier to get started, requires less data. Many successful applications have been built with just prompt engineering.</p>
+<p><strong>Finetuning</strong> requires updating model weights. You adapt a model by making changes to the model itself. More complicated, requires more data, but can improve quality, latency and cost significantly. Many things are not possible without changing model weights.</p>
+<p><strong>How model development responsibilities change with AI engineering.</strong></p>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Traditional ML</th>
+<th>AI Engineering</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Modeling and Training</strong></td>
+<td>ML knowledge required for training from scratch</td>
+<td>ML knowledge is nice to have, not a must have</td>
+</tr>
+<tr>
+<td><strong>Dataset Engineering</strong></td>
+<td>Feature engineering with tabular data</td>
+<td>Deduplication, tokenization, context retrieval, quality control</td>
+</tr>
+<tr>
+<td><strong>Inference Optimization</strong></td>
+<td>Important</td>
+<td>Even more important due to model scale</td>
+</tr>
+</tbody>
+</table>
+<p><strong>On the differences among training, pre training, finetuning and post training.</strong></p>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Meaning</th>
+<th>Who Does It</th>
+<th>Resource Intensity</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Pre training</strong></td>
+<td>Training a model from scratch with randomly initialized weights</td>
+<td>Model developers</td>
+<td>Extremely high (up to 98% of total compute)</td>
+</tr>
+<tr>
+<td><strong>Post training</strong></td>
+<td>Further training after pre training to improve instruction following</td>
+<td>Model developers</td>
+<td>Moderate</td>
+</tr>
+<tr>
+<td><strong>Finetuning</strong></td>
+<td>Continuing to train a previously trained model for your specific task</td>
+<td>Application developers</td>
+<td>Low to moderate</td>
+</tr>
+</tbody>
+</table>
+<p><img alt="Figure 1-12. Many companies put AI engineering and ML engineering under the same umbrella" src="../../assets/ch01/fig-1-12-ai-vs-ml-engineering-jobs.png" width="700" /></p>
+<p class="figure-caption">Figure 1-12. Many companies put AI engineering and ML engineering under the same umbrella</p>
+
+<p><img alt="Figure 1-13. AI engineering job listings" src="../../assets/ch01/fig-1-13-ai-engineering-job-listings.png" width="700" /></p>
+<p class="figure-caption">Figure 1-13. AI engineering job listings</p>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Pre training and post training make up a spectrum. Their processes and toolings are very similar. Some people use <em>post training</em> when it is done by model developers and <em>finetuning</em> when it is done by application developers, but conceptually they are the same.</p>
+</div>
+<h3 id="ai-engineering-versus-full-stack-engineering">AI Engineering Versus Full Stack Engineering<a class="headerlink" href="#ai-engineering-versus-full-stack-engineering" title="Permanent link">&para;</a></h3>
+<p>AI engineers and full stack engineers share significant overlap. Both need to build interfaces, handle APIs, manage data and deploy to production. The key difference is that AI engineers must also understand model behavior, evaluation methodology and the unique challenges of working with probabilistic systems.</p>
+<p><img alt="Figure 1-16. The new AI engineering workflow rewards those who can iterate fast" src="../../assets/ch01/fig-1-16-ai-engineering-workflow.png" width="700" /></p>
+<p class="figure-caption">Figure 1-16. The new AI engineering workflow rewards those who can iterate fast</p>
+
+<p>Many companies are finding that the best AI engineers are those who combine strong software engineering skills with an understanding of ML fundamentals. The ideal profile is not a pure ML researcher or a pure frontend developer, but someone who can operate across the full stack while understanding the nuances of working with foundation models.</p>
+<h2 id="key-takeaways">Key Takeaways<a class="headerlink" href="#key-takeaways" title="Permanent link">&para;</a></h2>
+<ol>
+<li>
+<p><strong>AI engineering</strong> is the process of building applications on top of readily available foundation models. It differs from traditional ML engineering primarily in that you adapt existing models rather than build your own.</p>
+</li>
+<li>
+<p><strong>Self supervision</strong> is the key breakthrough that enabled language models to scale. By inferring labels from input data, models can learn from virtually unlimited text without expensive manual labeling.</p>
+</li>
+<li>
+<p><strong>Foundation models</strong> unify previously siloed AI disciplines (NLP, computer vision, audio) into general purpose models that work across data modalities.</p>
+</li>
+<li>
+<p><strong>Three factors</strong> drive the explosion of AI engineering. General purpose capabilities, increased investment and low barriers to entry.</p>
+</li>
+<li>
+<p><strong>Eight major use case categories</strong> cover the landscape. Coding, image and video, writing, education, conversational bots, information aggregation, data organization and workflow automation. Coding is the most popular by a wide margin.</p>
+</li>
+<li>
+<p><strong>Planning matters.</strong> Evaluate whether your use case is driven by existential threat, opportunity or strategic hedging. Set measurable business metrics. Plan for the last mile problem where going from 80% to 95% quality takes far longer than going from 0% to 80%.</p>
+</li>
+<li>
+<p><strong>Three layers</strong> make up the AI stack. Application development (where most action is), model development and infrastructure.</p>
+</li>
+<li>
+<p><strong>Two adaptation approaches</strong> define how you customize a model. Prompt based techniques (no weight changes, easier) and finetuning (weight changes, harder but more powerful).</p>
+</li>
+</ol>
+<h2 id="practitioner-checklist">Practitioner Checklist<a class="headerlink" href="#practitioner-checklist" title="Permanent link">&para;</a></h2>
+<p>Use this checklist before moving to Chapter 2.</p>
+<ul>
+<li>[ ] Identified whether your use case is driven by existential threat, missed opportunity or strategic hedging</li>
+<li>[ ] Determined whether AI is critical or complementary to your application</li>
+<li>[ ] Clarified the role of humans. Will AI provide suggestions, handle simple cases or operate fully autonomously?</li>
+<li>[ ] Defined measurable business metrics for success (messages automated, response time reduction, cost savings)</li>
+<li>[ ] Set a usefulness threshold with quality, latency and cost metrics</li>
+<li>[ ] Considered the last mile problem in your project timeline</li>
+<li>[ ] Evaluated whether to build or buy</li>
+<li>[ ] Assessed product defensibility. What is your moat? Technology, data or distribution?</li>
+<li>[ ] Planned for maintenance and the rapid pace of change in the AI space</li>
+<li>[ ] Decided which layer of the AI stack you will start at (most should start at application development)</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../../overview/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Overview">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Overview
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../02-understanding-foundation-models/" class="md-footer__link md-footer__link--next" aria-label="Next: 02. Understanding Foundation Models">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                02. Understanding Foundation Models
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "navigation.footer", "toc.follow", "toc.integrate", "content.tabs.link", "search.highlight", "search.suggest", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@10/dist/mermaid.min.js"></script>
+      
+        <script src="../../javascripts/mermaid.js"></script>
+      
+    
+  </body>
+</html>
