@@ -1,0 +1,84 @@
+site_name: AI Engineering Playbook
+site_description: A polished field guide to building production AI applications with foundation models.
+site_url: https://arnabbir.github.io/ai-engineering-explained/
+repo_url: https://github.com/ArnabBir/ai-engineering-explained
+docs_dir: docs
+
+theme:
+  name: material
+  language: en
+  icon:
+    logo: material/book-open-page-variant
+    repo: fontawesome/brands/github
+  font:
+    text: Inter
+    code: JetBrains Mono
+  favicon: assets/cover/book-cover.jpg
+  palette:
+    - scheme: default
+      primary: deep purple
+      accent: pink
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - scheme: slate
+      primary: deep purple
+      accent: pink
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - navigation.footer
+    - toc.follow
+    - toc.integrate
+    - content.tabs.link
+    - search.highlight
+    - search.suggest
+    - content.code.copy
+
+plugins:
+  - search
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+
+extra_css:
+  - stylesheets/extra.css
+
+extra_javascript:
+  - https://unpkg.com/mermaid@10/dist/mermaid.min.js
+  - javascripts/mermaid.js
+
+nav:
+  - Home: index.md
+  - Overview: overview.md
+  - Chapters:
+      - '01. Introduction': chapters/01-introduction.md
+      - '02. Understanding Foundation Models': chapters/02-understanding-foundation-models.md
+      - '03. Evaluation Methodology': chapters/03-evaluation-methodology.md
+      - '04. Evaluate AI Systems': chapters/04-evaluate-ai-systems.md
+      - '05. Prompt Engineering': chapters/05-prompt-engineering.md
+      - '06. RAG and Agents': chapters/06-rag-and-agents.md
+      - '07. Finetuning': chapters/07-finetuning.md
+      - '08. Dataset Engineering': chapters/08-dataset-engineering.md
+      - '09. Inference Optimization': chapters/09-inference-optimization.md
+      - '10. Architecture and User Feedback': chapters/10-ai-engineering-architecture-and-user-feedback.md
