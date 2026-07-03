@@ -90,7 +90,7 @@ graph TB
 
 The first and most impactful enhancement to a bare model call is **Retrieval-Augmented Generation (RAG)**. Rather than relying solely on the model's parametric knowledge, RAG retrieves relevant documents or data from external sources and injects them into the prompt as additional context.
 
-This step was covered in depth in [Chapter 6](06-rag-and-agents/). The retrieval component typically includes a vector database, an embedding model and a retrieval strategy (dense, sparse or hybrid). The retrieved context is then formatted and prepended to the user query before being sent to the model.
+This step was covered in depth in [Chapter 6](../06-rag-and-agents/). The retrieval component typically includes a vector database, an embedding model and a retrieval strategy (dense, sparse or hybrid). The retrieved context is then formatted and prepended to the user query before being sent to the model.
 
 !!! note "Note"
     RAG is often the single highest-impact improvement you can make to a foundation model application. It grounds the model in real, up-to-date data and dramatically reduces hallucination rates.
@@ -330,7 +330,7 @@ The tradeoff is that semantic caching introduces its own latency (embedding comp
 
 The final architectural step is enabling the model to **orchestrate multi-step workflows**, use tools and make decisions about how to accomplish complex tasks. This transforms the application from a single-turn query-response system into an autonomous agent capable of planning, executing and iterating.
 
-Agentic workflows were covered in detail in [Chapter 6](06-rag-and-agents/). From an architecture perspective, the key addition is a **feedback loop** that allows the model's output to trigger additional retrieval, tool calls or even additional model invocations. The agent may call the RAG system multiple times, invoke external APIs, write and execute code or decompose a complex task into subtasks.
+Agentic workflows were covered in detail in [Chapter 6](../06-rag-and-agents/). From an architecture perspective, the key addition is a **feedback loop** that allows the model's output to trigger additional retrieval, tool calls or even additional model invocations. The agent may call the RAG system multiple times, invoke external APIs, write and execute code or decompose a complex task into subtasks.
 
 The architectural challenge with agents is **controlling the loop**. Without proper bounds, an agent can run indefinitely, consume enormous amounts of compute or take harmful actions. Production agent architectures require maximum iteration limits, cost caps, human-in-the-loop breakpoints and comprehensive logging of every step.
 

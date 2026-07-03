@@ -16,14 +16,14 @@ theme:
   favicon: assets/cover/book-cover.jpg
   palette:
     - scheme: default
-      primary: deep purple
-      accent: pink
+      primary: black
+      accent: grey
       toggle:
         icon: material/weather-night
         name: Switch to dark mode
     - scheme: slate
-      primary: deep purple
-      accent: pink
+      primary: black
+      accent: grey
       toggle:
         icon: material/weather-sunny
         name: Switch to light mode

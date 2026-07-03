@@ -5,8 +5,14 @@
     <p class="book-hero__eyebrow">Printable playbook. Visual handbook. Production reference.</p>
     <p class="book-hero__lede">A richly structured guide to building AI applications with foundation models, reworked as a fast, navigable reading experience for the web.</p>
     <div class="book-hero__actions">
-      <a class="md-button md-button--primary" href="chapters/01-introduction/">Start reading</a>
-      <a class="md-button" href="overview/">Browse the roadmap</a>
+      <a class="md-button md-button--primary" href="./chapters/01-introduction/">Start reading</a>
+      <a class="md-button" href="./overview/">Browse the roadmap</a>
+    </div>
+    <div class="book-metrics">
+      <span class="book-metric">10 chapters</span>
+      <span class="book-metric">157 figures</span>
+      <span class="book-metric">70+ diagrams</span>
+      <span class="book-metric">400+ pages distilled</span>
     </div>
   </div>
   <div class="book-hero__cover">
@@ -30,19 +36,6 @@
 </div>
 
 ---
-
-<img src="assets/cover/book-cover.jpg" alt="AI Engineering by Chip Huyen" width="280"/>
-
-# AI Engineering Playbook
-
-**A comprehensive field guide to building production AI applications with foundation models**
-
-Based on *AI Engineering. Building Applications with Foundation Models* by **Chip Huyen** (O'Reilly, 2025)
-
-![Chapters](https://img.shields.io/badge/Chapters-10-e94560?style=for-the-badge&labelColor=1a1a2e)
-![Figures](https://img.shields.io/badge/Figures-157-533483?style=for-the-badge&labelColor=1a1a2e)
-![Diagrams](https://img.shields.io/badge/Mermaid_Diagrams-70+-0f3460?style=for-the-badge&labelColor=1a1a2e)
-![Pages](https://img.shields.io/badge/Book_Pages-400+-16213e?style=for-the-badge&labelColor=1a1a2e)
 
 !!! note "Note"
     This playbook distills the entire book into structured, actionable chapters designed for Principal AI Engineers, technical leads and practitioners building real world AI systems. Every chapter contains architecture diagrams, extracted book figures, author insights, practitioner checklists and deep technical breakdowns.
@@ -232,4 +225,3 @@ ISBN 978-1-098-16630-4
 
 !!! important "Important"
     This playbook is a study companion and reference guide. It does not replace the original book. For the complete text, examples and full context, please purchase the book from O'Reilly.
-
